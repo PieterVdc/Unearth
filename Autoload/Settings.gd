@@ -1,6 +1,6 @@
 extends Node
 enum {
-	SET = 0
+	SET = 0,
 	GET = 1
 }
 var haveInitializedAllSettings = false

@@ -37,7 +37,7 @@ const listOrientations = [
 ]
 
 enum {
-	READ = 0
+	READ = 0,
 	WRITE = 1
 }
 

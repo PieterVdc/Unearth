@@ -4,10 +4,10 @@ extends VBoxContainer
 var availabilityState : set = set_availability_state
 
 enum {
-	OPTION_START
-	OPTION_RESEARCH
-	OPTION_DISABLED
-	ENABLED
+	OPTION_START,
+	OPTION_RESEARCH,
+	OPTION_DISABLED,
+	ENABLED,
 	DISABLED
 }
 

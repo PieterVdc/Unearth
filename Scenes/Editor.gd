@@ -18,8 +18,8 @@ extends Node
 @onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
 	
 enum {
-	VIEW_2D = 0
-	VIEW_3D = 1
+	VIEW_2D = 0,
+	VIEW_3D = 1,
 	SET_EDITED_WITHOUT_SAVING_STATE = 777
 }
 

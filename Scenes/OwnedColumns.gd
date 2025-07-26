@@ -7,11 +7,11 @@ extends Node
 #}
 
 enum {
-	RED = 0
-	BLUE = 1
-	GREEN = 2
-	YELLOW = 3
-	WHITE = 4
+	RED = 0,
+	BLUE = 1,
+	GREEN = 2,
+	YELLOW = 3,
+	WHITE = 4,
 	NONE = 5
 }
 # Within each marker array, the cubes are arranged by owner
@@ -26,12 +26,12 @@ const ownedCube = [
 	[162,412,415,418,421,77], # BANNER_RIGHT
 ]
 enum {
-	FLOOR_MARKER = 0
-	WALL_MARKER = 1
-	HEARTPORTAL_MARKER = 2
-	BARRACKS_FLAG = 3
-	BANNER_LEFT = 4
-	BANNER_MIDDLE = 5
+	FLOOR_MARKER = 0,
+	WALL_MARKER = 1,
+	HEARTPORTAL_MARKER = 2,
+	BARRACKS_FLAG = 3,
+	BANNER_LEFT = 4,
+	BANNER_MIDDLE = 5,
 	BANNER_RIGHT = 6
 }
 

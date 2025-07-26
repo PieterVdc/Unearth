@@ -8,9 +8,9 @@ extends VBoxContainer
 var BRUSH_SIZE = 1
 
 enum {
-	BRUSH
-	PENCIL
-	RECTANGLE
+	BRUSH,
+	PENCIL,
+	RECTANGLE,
 	PAINTBUCKET
 }
 

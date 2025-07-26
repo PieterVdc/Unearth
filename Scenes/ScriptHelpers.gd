@@ -10,8 +10,8 @@ var SCRIPT_ICON_SIZE_BASE = 0.5: set = script_icon_size_base
 var scnScriptHelperObject = preload('res://Scenes/ScriptHelperObject.tscn')
 
 enum {
-	IS_TILE
-	IS_SUBTILE
+	IS_TILE,
+	IS_SUBTILE,
 	IS_LOCATION
 }
 

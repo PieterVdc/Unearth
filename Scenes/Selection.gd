@@ -35,9 +35,9 @@ extends Node2D
 @onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
 
 enum {
-	CONSTRUCT_BRUSH
-	CONSTRUCT_PENCIL
-	CONSTRUCT_RECTANGLE
+	CONSTRUCT_BRUSH,
+	CONSTRUCT_PENCIL,
+	CONSTRUCT_RECTANGLE,
 	CONSTRUCT_FILL
 }
 

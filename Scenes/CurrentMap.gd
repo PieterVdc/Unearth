@@ -35,7 +35,7 @@ var LuaScript_enabled = false
 
 
 enum {
-	PATHSTRING
+	PATHSTRING,
 	MODIFIED_DATE
 }
 

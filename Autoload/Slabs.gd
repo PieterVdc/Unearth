@@ -17,13 +17,13 @@ func reset_slab_data_to_default(): # Reset data. Takes 1ms.
 
 
 enum {
-	NAME
-	IS_SOLID # Whether units can walk there, and how fortified walls do their bitmask, AND for 3D generation optimization
-	BITMASK_TYPE
-	EDITOR_TAB
-	WIBBLE_TYPE
-	LIQUID_TYPE
-	IS_OWNABLE
+	NAME,
+	IS_SOLID, # Whether units can walk there, and how fortified walls do their bitmask, AND for 3D generation optimization
+	BITMASK_TYPE,
+	EDITOR_TAB,
+	WIBBLE_TYPE,
+	LIQUID_TYPE,
+	IS_OWNABLE,
 }
 
 var auto_wall_updates_these = {
@@ -104,31 +104,31 @@ const OWNABLE = true
 const FLOOR_SLAB = false
 const BLOCK_SLAB = true
 enum {
-	BITMASK_FLOOR
-	BITMASK_BLOCK
-	BITMASK_SIMPLE
-	BITMASK_CLAIMED
-	BITMASK_REINFORCED
-	BITMASK_DOOR1
+	BITMASK_FLOOR,
+	BITMASK_BLOCK,
+	BITMASK_SIMPLE,
+	BITMASK_CLAIMED,
+	BITMASK_REINFORCED,
+	BITMASK_DOOR1,
 	BITMASK_DOOR2
 }
 enum {
-	WLB_PATH = 0
-	WLB_LAVA = 1
-	WLB_WATER = 2
+	WLB_PATH = 0,
+	WLB_LAVA = 1,
+	WLB_WATER = 2,
 	WLB_BRIDGE = 3
 }
 enum {
-	WIBBLE_OFF = 0
-	WIBBLE_ON = 1
+	WIBBLE_OFF = 0,
+	WIBBLE_ON = 1,
 	WIBBLE_ANIMATED = 2
 }
 enum {
-	TAB_MAINSLAB = 0
-	TAB_OTHER = 1
-	TAB_CUSTOM = 2
-	TAB_STYLE = 3
-	TAB_OWNER = 4
+	TAB_MAINSLAB = 0,
+	TAB_OTHER = 1,
+	TAB_CUSTOM = 2,
+	TAB_STYLE = 3,
+	TAB_OWNER = 4,
 	TAB_NONE = 5
 }
 ########################################################################
@@ -143,15 +143,15 @@ enum {
 	DOORSLAB_ORIENTATION = 1,
 }
 enum {
-	DOORTHING_WOOD = 1
-	DOORTHING_BRACED = 2
-	DOORTHING_STEEL = 3
+	DOORTHING_WOOD = 1,
+	DOORTHING_BRACED = 2,
+	DOORTHING_STEEL = 3,
 	DOORTHING_MAGIC = 4
 }
 #Slabs.door_data[slabID][DOORSLAB_THING]
 #Slabs.door_data[slabID][DOORSLAB_ORIENTATION]
 enum { # These might be backwards
-	DOOR_ORIENT_NS = 0
+	DOOR_ORIENT_NS = 0,
 	DOOR_ORIENT_EW = 1
 }
 

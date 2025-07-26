@@ -56,8 +56,8 @@ func place_new_action_point(newThingType, newSubtype, newPosition, newOwnership)
 	oScriptHelpers.start() # Update when action points change
 
 enum {
-	MIRROR_THING
-	MIRROR_LIGHT
+	MIRROR_THING,
+	MIRROR_LIGHT,
 	MIRROR_ACTIONPOINT
 }
 

@@ -11,22 +11,22 @@ extends Window
 @onready var oUi = Nodelist.list["oUi"]
 
 enum {
-	GRIDCON_PATH
+	GRIDCON_PATH,
 	ICON_PATH
 }
 
 enum { # I only used the official DK keeperfx categories as a guide rather than strict adherence. What strict adherence gets you is all the egg objects classified as Furniture, while Chicken sits alone in its own Food category.
-	TAB_ACTION
-	TAB_CREATURE
-	TAB_GOLD
-	TAB_TRAP
-	TAB_SPELL
-	TAB_SPECIAL
-	TAB_BOX
-	TAB_LAIR
-	TAB_EFFECTGEN
-	TAB_FURNITURE
-	TAB_DECORATION
+	TAB_ACTION,
+	TAB_CREATURE,
+	TAB_GOLD,
+	TAB_TRAP,
+	TAB_SPELL,
+	TAB_SPECIAL,
+	TAB_BOX,
+	TAB_LAIR,
+	TAB_EFFECTGEN,
+	TAB_FURNITURE,
+	TAB_DECORATION,
 	TAB_MISC
 }
 

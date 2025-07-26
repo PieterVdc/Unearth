@@ -23,15 +23,15 @@ enum obj {
 }
 
 enum dir {
-	s = 0
-	w = 1
-	n = 2
-	e = 3
-	sw = 4
-	nw = 5
-	ne = 6
-	se = 7
-	all = 8
+	s = 0,
+	w = 1,
+	n = 2,
+	e = 3,
+	sw = 4,
+	nw = 5,
+	ne = 6,
+	se = 7,
+	all = 8,
 	center = 27
 }
 

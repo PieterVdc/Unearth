@@ -124,7 +124,7 @@ var listRoom = [
 [Slabs.SCAVENGER_ROOM, "SCAVENGER", 0],
 ]
 enum {
-	IS_MAGIC
+	IS_MAGIC,
 	IS_ROOM
 }
 var listResearchOrder = [
