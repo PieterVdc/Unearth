@@ -1,19 +1,19 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oUi = Nodelist.list["oUi"]
 
 var ownership = 5 # Not used by Dungeon Keeper, this is just to make it easy for the editor.
 var thingType = Things.TYPE.EXTRA
 var subtype = 2 # As written in Things.DATA_EXTRA
 
-var locationX = null setget set_location_x
-var locationY = null setget set_location_y
-var locationZ = null setget set_location_z
-var lightRange = null setget set_lightrange
+var locationX = null: set = set_location_x
+var locationY = null: set = set_location_y
+var locationZ = null: set = set_location_z
+var lightRange = null: set = set_lightrange
 var lightIntensity = null
-var parentTile = null setget set_parentTile
+var parentTile = null: set = set_parentTile
 
 var data3 = null
 var data4 = null

@@ -1,22 +1,22 @@
 extends Node
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 var dictionary = {} # Just two different ways to read the palette, for speed.
 
 var palette_data_array: Array = []
-var flat_palette_bytes: PoolByteArray = PoolByteArray()
+var flat_palette_bytes: PackedByteArray = PackedByteArray()
 var palette_entry_count: int = 0
 var palette_image_texture: ImageTexture = null
 
 func initialize_palette_resources(paletteFilePath: String) -> bool:
 	palette_data_array = _read_colors_from_file(paletteFilePath)
-	if palette_data_array.empty():
+	if palette_data_array.is_empty():
 		printerr("Failed to load palette data from: ", paletteFilePath)
 		if palette_image_texture == null:
 			oMessage.big("Error", "Palette data (" + paletteFilePath.get_file() + ") could not be loaded.")
 		palette_image_texture = null
-		flat_palette_bytes = PoolByteArray()
+		flat_palette_bytes = PackedByteArray()
 		palette_entry_count = 0
 		return false
 	flat_palette_bytes.resize(palette_data_array.size() * 3)
@@ -31,7 +31,7 @@ func initialize_palette_resources(paletteFilePath: String) -> bool:
 	var paletteImage = Image.new()
 	paletteImage.create_from_data(palette_entry_count, 1, false, Image.FORMAT_RGB8, flat_palette_bytes)
 	var tempPaletteTexture = ImageTexture.new()
-	tempPaletteTexture.create_from_image(paletteImage, 0)
+	tempPaletteTexture.create_from_image(paletteImage) #,0
 	if tempPaletteTexture == null or tempPaletteTexture.get_width() == 0:
 		printerr("Failed to create palette texture from data in: ", paletteFilePath)
 		oMessage.big("Error", "Palette texture could not be created from " + paletteFilePath.get_file() + ". Tilesets may not display correctly.")

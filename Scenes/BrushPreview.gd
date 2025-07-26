@@ -1,14 +1,14 @@
 extends Node2D
-onready var oBrushPreviewDisplay = Nodelist.list["oBrushPreviewDisplay"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oEditingTools = Nodelist.list["oEditingTools"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
-onready var oQuickMapPreview = Nodelist.list["oQuickMapPreview"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oBrushPreviewDisplay = Nodelist.list["oBrushPreviewDisplay"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oEditingTools = Nodelist.list["oEditingTools"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
+@onready var oQuickMapPreview = Nodelist.list["oQuickMapPreview"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
 
 var img = Image.new()
 var tex = ImageTexture.new()
@@ -18,13 +18,13 @@ var offsetBrushPos = 0
 
 func _ready():
 	img.create(1, 1, false, Image.FORMAT_RGBA8)
-	tex.create_from_image(img, 0)
-	yield(get_tree(),'idle_frame')
+	tex.create_from_image(img) #,0
+	await get_tree().idle_frame
 	update_img()
 
 func update_img():
 	if is_instance_valid(oEditingTools) == false:
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 	
 	img.resize(oEditingTools.BRUSH_SIZE,oEditingTools.BRUSH_SIZE, Image.INTERPOLATE_NEAREST)
 	var imgW = img.get_width()
@@ -44,11 +44,11 @@ func update_img():
 	
 	img.fill(Color(0,0,0,0))
 	
-	img.lock()
+	false # img.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	for pos in brushShapeArray:
 		img.set_pixelv(pos, Color(1,1,1,0.25))
-	img.unlock()
+	false # img.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 	tex.set_data(img)
 	
@@ -56,7 +56,7 @@ func update_img():
 	offsetBrushPos = -Vector2(floor(halfSize),floor(halfSize))
 	
 	oBrushPreviewDisplay.texture = tex
-	oBrushPreviewDisplay.rect_size = Vector2(imgW*96, imgH*96)
+	oBrushPreviewDisplay.size = Vector2(imgW*96, imgH*96)
 	
 
 func _process(delta):
@@ -65,7 +65,7 @@ func _process(delta):
 		visible = false
 		return
 	
-	oBrushPreviewDisplay.rect_position = (oSelector.cursorTile+offsetBrushPos) * Vector2(96,96)
+	oBrushPreviewDisplay.position = (oSelector.cursorTile+offsetBrushPos) * Vector2(96,96)
 	visible = true
 	if oUi.mouseOnUi == true: visible = false
 	

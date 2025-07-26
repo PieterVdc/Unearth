@@ -1,20 +1,20 @@
 extends Node
 
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oDataLof = Nodelist.list["oDataLof"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oDataLua = Nodelist.list["oDataLua"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oDataLua = Nodelist.list["oDataLua"]
 
 var value # just so I don't have to initialize the var in every function
 
@@ -38,7 +38,7 @@ func write_keeperfx_lof():
 	var setDate = str(dict["year"])+"-"+str(dict["month"])+"-"+str(dict["day"])
 	newString += "DATE = " + str(setDate) + "\n"
 	newString += "MAPSIZE = " + str(M.xSize) + " " + str(M.ySize)
-	var scriptBytes = newString.to_ascii()
+	var scriptBytes = newString.to_ascii_buffer()
 	buffer.put_data(scriptBytes)
 	return buffer
 
@@ -52,7 +52,7 @@ func write_lif(filePath):
 	
 	value = mapNumber + ', ' + oDataMapName.data
 	
-	buffer.put_data(value.to_utf8())
+	buffer.put_data(value.to_utf8_buffer())
 	return buffer
 
 func write_txt():
@@ -63,7 +63,7 @@ func write_txt():
 	# Notepad++ displays correctly and apparently so does Notepad on Windows 10.
 	
 	value = value.replace(char(0x200B), "") # Remove zero width spaces
-	var scriptBytes = value.to_ascii()
+	var scriptBytes = value.to_ascii_buffer()
 	buffer.put_data(scriptBytes)
 	return buffer
 
@@ -71,7 +71,7 @@ func write_lua():
 	var buffer = StreamPeerBuffer.new()
 	value = oDataLua.data
 	value = value.replace(char(0x200B), "") # Remove zero width spaces
-	var luaBytes = value.to_utf8() # Use UTF8 for Lua as well
+	var luaBytes = value.to_utf8_buffer() # Use UTF8 for Lua as well
 	buffer.put_data(luaBytes)
 	return buffer
 
@@ -166,7 +166,7 @@ func write_tngfx():
 		Things.TYPE.DOOR: "Door"
 	}
 
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	lines.append("[common]")
 	lines.append("") # This gets changed at the end
 	
@@ -216,7 +216,7 @@ func write_tngfx():
 			entryNumber += 1
 	
 	lines.set(1, "ThingsCount = " + str(entryNumber))
-	buffer.put_data("\n".join(lines).to_ascii())
+	buffer.put_data("\n".join(lines).to_ascii_buffer())
 	
 	return buffer
 
@@ -242,7 +242,7 @@ func write_apt():
 
 func write_aptfx():
 	var buffer = StreamPeerBuffer.new()
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	lines.append("[common]")
 	lines.append("") # This gets changed at the end
 	
@@ -267,15 +267,15 @@ func write_aptfx():
 		entryNumber += 1
 	
 	lines.set(1, "ActionPointsCount = " + str(entryNumber))
-	buffer.put_data("\n".join(lines).to_ascii())
+	buffer.put_data("\n".join(lines).to_ascii_buffer())
 	return buffer
 
 func write_lgt():
 	var buffer = StreamPeerBuffer.new()
-	var numberOfLightPoints = get_tree().get_nodes_in_group("Light").size()
+	var numberOfLightPoints = get_tree().get_nodes_in_group("Light3D").size()
 	buffer.put_32(numberOfLightPoints)
 	
-	for lightNode in get_tree().get_nodes_in_group("Light"):
+	for lightNode in get_tree().get_nodes_in_group("Light3D"):
 		if lightNode.is_queued_for_deletion() == true:
 			continue
 		buffer.put_8(fmod(lightNode.lightRange,1.0) * 256) # 0
@@ -301,12 +301,12 @@ func write_lgt():
 
 func write_lgtfx():
 	var buffer = StreamPeerBuffer.new()
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	lines.append("[common]")
 	lines.append("") # This gets changed at the end
 	
 	var entryNumber = 0
-	for lightNode in get_tree().get_nodes_in_group("Light"):
+	for lightNode in get_tree().get_nodes_in_group("Light3D"):
 		if lightNode.is_queued_for_deletion() == true:
 			continue
 		lines.append("")
@@ -330,7 +330,7 @@ func write_lgtfx():
 		entryNumber += 1
 	
 	lines.set(1, "LightsCount = " + str(entryNumber))
-	buffer.put_data("\n".join(lines).to_ascii())
+	buffer.put_data("\n".join(lines).to_ascii_buffer())
 	return buffer
 
 
@@ -360,7 +360,7 @@ func write_clm():
 
 	buffer.put_32(oDataClm.column_count)
 	buffer.put_32(0)
-	var data = PoolByteArray()
+	var data = PackedByteArray()
 	data.resize(oDataClm.column_count * 24)
 
 	var utilized = oDataClm.utilized

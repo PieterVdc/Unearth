@@ -1,19 +1,19 @@
 [gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Scenes/ThingInstance.gd" type="Script" id=1]
-[ext_resource path="res://dk_images/creature_flower_32/level_06.png" type="Texture" id=2]
-[ext_resource path="res://dk_images/creature_flower_32/level_09.png" type="Texture" id=3]
-[ext_resource path="res://dk_images/creature_flower_32/level_08.png" type="Texture" id=4]
-[ext_resource path="res://dk_images/creature_flower_32/level_04.png" type="Texture" id=5]
-[ext_resource path="res://dk_images/creature_flower_32/level_03.png" type="Texture" id=6]
-[ext_resource path="res://dk_images/creature_flower_32/level_02.png" type="Texture" id=7]
-[ext_resource path="res://dk_images/creature_flower_32/level_05.png" type="Texture" id=8]
-[ext_resource path="res://dk_images/creature_flower_32/level_07.png" type="Texture" id=9]
-[ext_resource path="res://dk_images/creature_flower_32/level_10.png" type="Texture" id=10]
-[ext_resource path="res://dk_images/creature_flower_32/level_01.png" type="Texture" id=11]
+[ext_resource path="res://dk_images/creature_flower_32/level_06.png" type="Texture2D" id=2]
+[ext_resource path="res://dk_images/creature_flower_32/level_09.png" type="Texture2D" id=3]
+[ext_resource path="res://dk_images/creature_flower_32/level_08.png" type="Texture2D" id=4]
+[ext_resource path="res://dk_images/creature_flower_32/level_04.png" type="Texture2D" id=5]
+[ext_resource path="res://dk_images/creature_flower_32/level_03.png" type="Texture2D" id=6]
+[ext_resource path="res://dk_images/creature_flower_32/level_02.png" type="Texture2D" id=7]
+[ext_resource path="res://dk_images/creature_flower_32/level_05.png" type="Texture2D" id=8]
+[ext_resource path="res://dk_images/creature_flower_32/level_07.png" type="Texture2D" id=9]
+[ext_resource path="res://dk_images/creature_flower_32/level_10.png" type="Texture2D" id=10]
+[ext_resource path="res://dk_images/creature_flower_32/level_01.png" type="Texture2D" id=11]
 [ext_resource path="res://Theme/UnearthTheme.theme" type="Theme" id=12]
-[ext_resource path="res://Theme/Stoke-Light.ttf" type="DynamicFontData" id=13]
-[ext_resource path="res://Art/whitearrow.png" type="Texture" id=14]
+[ext_resource path="res://Theme/Stoke-Light3D.ttf" type="FontFile" id=13]
+[ext_resource path="res://Art/whitearrow.png" type="Texture2D" id=14]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 16 )
@@ -26,7 +26,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="FontFile" id=2]
 size = 24
 use_mipmaps = true
 font_data = ExtResource( 13 )
@@ -41,25 +41,25 @@ shape = SubResource( 1 )
 
 [node name="ThingTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
-margin_left = -16.0
-margin_top = -16.0
-margin_right = 16.0
-margin_bottom = 16.0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
-rect_min_size = Vector2( 32, 32 )
-rect_pivot_offset = Vector2( 16, 16 )
+custom_minimum_size = Vector2( 32, 32 )
+pivot_offset = Vector2( 16, 16 )
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch_mode = 6
 
-[node name="WhiteArrow" type="Sprite" parent="."]
+[node name="WhiteArrow" type="Sprite2D" parent="."]
 visible = false
 z_index = 9
 texture = ExtResource( 14 )
 
-[node name="CreatureLevel" type="AnimatedSprite" parent="."]
+[node name="CreatureLevel" type="AnimatedSprite2D" parent="."]
 visible = false
 position = Vector2( -1, -21 )
 z_index = 10
@@ -72,14 +72,14 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 7
 size_flags_vertical = 7
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/line_spacing = 0
-custom_constants/shadow_as_outline = 1
-custom_fonts/font = SubResource( 2 )
+theme_override_colors/font_shadow_color = Color( 0, 0, 0, 1 )
+theme_override_constants/line_spacing = 0
+theme_override_constants/shadow_outline_size = 1
+theme_override_fonts/font = SubResource( 2 )
 align = 1
 valign = 1
 
-[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 rect = Rect2( -32, -32, 64, 64 )
 
 [node name="TextNameLabel" type="Label" parent="."]
@@ -89,15 +89,15 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 theme = ExtResource( 12 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
-custom_constants/shadow_as_outline = 0
+theme_override_colors/font_shadow_color = Color( 0, 0, 0, 1 )
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 0
 text = "Error"
 align = 1
 valign = 1
 
 [connection signal="mouse_entered" from="MouseDetection" to="." method="_on_MouseDetection_mouse_entered"]
 [connection signal="mouse_exited" from="MouseDetection" to="." method="_on_MouseDetection_mouse_exited"]
-[connection signal="screen_entered" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]
-[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

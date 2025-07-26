@@ -1,16 +1,16 @@
 extends Node
-onready var oVoxelGen = Nodelist.list["oVoxelGen"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oVoxelGen = Nodelist.list["oVoxelGen"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oTerrainMesh = Nodelist.list["oTerrainMesh"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
 
 signal terrain3D_finished_generating
 
 func start():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	
 	var arrayOfArrays = initialize_array_of_arrays()
 	
@@ -18,7 +18,7 @@ func start():
 	
 	var totalLoadingSize:float = max(1, M.ySize*M.xSize)
 	var currentLoad:float = 0.0
-	var loadTime = OS.get_ticks_msec()
+	var loadTime = Time.get_ticks_msec()
 	
 	for ySlab in M.ySize:
 		for xSlab in M.xSize:
@@ -27,10 +27,10 @@ func start():
 			# Loading bar
 			
 			currentLoad += 1
-			if OS.get_ticks_msec() > loadTime+100:
+			if Time.get_ticks_msec() > loadTime+100:
 				loadTime += 100
 				oLoadingBar.value = (currentLoad/(totalLoadingSize))*100
-				yield(get_tree(),'idle_frame')
+				await get_tree().idle_frame
 			
 			
 			for ySubtile in 3:
@@ -55,9 +55,9 @@ func start():
 	loading_bar_end()
 	
 	oTerrainMesh.mesh = oVoxelGen.complete_slx_mesh(arrayOfArrays)
-	print('Codetime: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Codetime: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	
-	yield(get_tree(),'idle_frame') # Important to solve race condition
+	await get_tree().idle_frame # Important to solve race condition
 	emit_signal("terrain3D_finished_generating")
 
 func loading_bar_start():

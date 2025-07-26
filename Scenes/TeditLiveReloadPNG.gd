@@ -1,10 +1,10 @@
 extends Node
 
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oReadPalette = Nodelist.list["oReadPalette"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oReadPalette = Nodelist.list["oReadPalette"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 var editingImg = Image.new()
 var fileTimes = []
@@ -21,7 +21,7 @@ func _ready():
 
 func reloader_loop():
 	if packFilePath != "": execute()
-	yield(get_tree().create_timer(0.25), "timeout")
+	await get_tree().create_timer(0.25).timeout
 	reloader_loop()
 
 
@@ -32,7 +32,7 @@ func initialize_pack(contentString: String, reloaderPath: String):
 	var flContent = contentString
 	if flContent == "": return
 	partsList = Array(flContent.split('\n', false))
-	if partsList.empty() == false and partsList[0].begins_with("textures_pack_"):
+	if partsList.is_empty() == false and partsList[0].begins_with("textures_pack_"):
 		partsList.pop_front()
 	var validParts = []
 	for i in partsList.size():
@@ -57,7 +57,7 @@ func initialize_pack(contentString: String, reloaderPath: String):
 
 func execute():
 	var partsModifiedIndices = get_modified_parts(packFolder)
-	if partsModifiedIndices.empty(): return
+	if partsModifiedIndices.is_empty(): return
 	var isTmapb = is_tmapb_type()
 	process_modified_parts(partsModifiedIndices, packFolder, isTmapb)
 	var tmapNumberStr = get_tmap_number_string()
@@ -71,7 +71,7 @@ func execute():
 func get_modified_parts(baseDir: String) -> Array:
 	var partsModifiedIndices = []
 	for i in partsList.size():
-		if partsList[i].empty(): continue
+		if partsList[i].is_empty(): continue
 		var path = baseDir.plus_file(partsList[i][0])
 		if modifiedCheck.file_exists(path):
 			var currentTime = modifiedCheck.get_modified_time(path)
@@ -101,9 +101,9 @@ func process_modified_parts(partsModifiedIndices: Array, baseDir: String, isTmap
 			printerr("Failed to convert tile to L8 from: ", path)
 			continue
 		var destinationCoords = Vector2((partIndex % 8) * 32, (partIndex / 8) * 32)
-		editingImg.lock()
+		false # editingImg.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 		editingImg.blit_rect(tileSubImageL8, Rect2(0,0, tileSubImageL8.get_width(), tileSubImageL8.get_height()), destinationCoords)
-		editingImg.unlock()
+		false # editingImg.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
 func is_tmapb_type() -> bool:
@@ -140,7 +140,7 @@ func extract_number_from_string(text: String) -> String:
 
 
 func find_closest_palette_index(targetColor: Color, paletteArray: Array) -> int:
-	if paletteArray.empty(): return 0
+	if paletteArray.is_empty(): return 0
 	var closestIndex = 0
 	var minDistanceSq = -1.0
 	for i in paletteArray.size():
@@ -159,12 +159,12 @@ func find_closest_palette_index(targetColor: Color, paletteArray: Array) -> int:
 func convert_rgb_image_to_l8(rgbImage: Image) -> Image:
 	if rgbImage == null or rgbImage.is_empty(): return null
 	var localPaletteArray: Array = oReadPalette.get_palette_data()
-	if localPaletteArray.empty(): return null
+	if localPaletteArray.is_empty(): return null
 	var l8Image = Image.new()
 	l8Image.create(rgbImage.get_width(), rgbImage.get_height(), false, Image.FORMAT_L8)
 	var colorToIndexCache = {}
-	rgbImage.lock()
-	l8Image.lock()
+	false # rgbImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # l8Image.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for yCoord in rgbImage.get_height():
 		for xCoord in rgbImage.get_width():
 			var rgbColor = rgbImage.get_pixel(xCoord, yCoord)
@@ -174,6 +174,6 @@ func convert_rgb_image_to_l8(rgbImage: Image) -> Image:
 				colorToIndexCache[rgbColor] = paletteIndex
 			var grayValue = float(paletteIndex) / 255.0
 			l8Image.set_pixel(xCoord, yCoord, Color(grayValue, grayValue, grayValue))
-	rgbImage.unlock()
-	l8Image.unlock()
+	false # rgbImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # l8Image.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	return l8Image 

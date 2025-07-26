@@ -1,16 +1,16 @@
 extends Control
-onready var oScriptGenerator = Nodelist.list["oScriptGenerator"]
-onready var oRoomsAvailable = Nodelist.list["oRoomsAvailable"]
-onready var oMagicAvailable = Nodelist.list["oMagicAvailable"]
-onready var oResearchables = Nodelist.list["oResearchables"]
-onready var oSGRectHighlighter = Nodelist.list["oSGRectHighlighter"]
-onready var oKeeperFXScriptCheckBox = Nodelist.list["oKeeperFXScriptCheckBox"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oScriptGenerator = Nodelist.list["oScriptGenerator"]
+@onready var oRoomsAvailable = Nodelist.list["oRoomsAvailable"]
+@onready var oMagicAvailable = Nodelist.list["oMagicAvailable"]
+@onready var oResearchables = Nodelist.list["oResearchables"]
+@onready var oSGRectHighlighter = Nodelist.list["oSGRectHighlighter"]
+@onready var oKeeperFXScriptCheckBox = Nodelist.list["oKeeperFXScriptCheckBox"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 
-onready var oColorRect = $"HBoxContainer/TextureRectIcon/ColorRect"
-onready var oEstimatedTime = $"HBoxContainer/EstimatedTime"
-onready var oEstimatedTimeTotal = $"HBoxContainer/EstimatedTimeTotal"
+@onready var oColorRect = $"HBoxContainer/TextureRectIcon/ColorRect"
+@onready var oEstimatedTime = $"HBoxContainer/EstimatedTime"
+@onready var oEstimatedTimeTotal = $"HBoxContainer/EstimatedTimeTotal"
 
 enum {
 	MAGIC
@@ -68,7 +68,7 @@ func set_estimated_time(speedNumber):
 	else:
 		oEstimatedTime.text = str(minutes)+ " min " + str(seconds)+ " sec"
 	
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	
 	var totalSeconds = storeSeconds
 	for id in get_tree().get_nodes_in_group("ResearchableItem"):
@@ -85,9 +85,9 @@ func set_estimated_time(speedNumber):
 
 func _on_ResearchableItem_gui_input(event):
 	# pressed
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		
-		if event.pressed == true:
+		if event.button_pressed == true:
 			# Workaround to allow detecting mouse_entered while holding down left click
 			visible = false
 			visible = true
@@ -199,5 +199,5 @@ func _on_ResearchableItem_mouse_entered():
 		# Move highlighted to current's position
 		get_parent().move_child(highlightedID, get_index())
 		oScriptGenerator.adjust_estimated_time()
-		if oKeeperFXScriptCheckBox.pressed == false:
+		if oKeeperFXScriptCheckBox.button_pressed == false:
 			oMessage.quick("'KeeperFX script' must be enabled for order rearrangement to take effect")

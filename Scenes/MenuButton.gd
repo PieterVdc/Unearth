@@ -7,7 +7,7 @@ func _ready():
 	popup.add_item("item a")
 	popup.add_item("item b")
 	popup.add_item("item c")
-	popup.connect("id_pressed", self, "_on_item_pressed")
+	popup.connect("id_pressed", Callable(self, "_on_item_pressed"))
 
 func _on_item_pressed(ID):
 	print(popup.get_item_text(ID), " pressed")

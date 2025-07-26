@@ -1,7 +1,7 @@
 extends Node
-onready var oReadData = Nodelist.list["oReadData"]
-onready var oDataLof = Nodelist.list["oDataLof"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oReadData = Nodelist.list["oReadData"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var data = ""
 
@@ -43,7 +43,7 @@ func get_special_lif_text(pathString): # Uses the path only as a string rather t
 		var buffer = oBuffers.file_path_to_buffer(readSpecial)
 		var lifArray = oReadData.lif_buffer_to_array(buffer)
 		
-		if lifArray.empty() == false:
+		if lifArray.is_empty() == false:
 			var mapNumber = PATH_UPPERCASE.get_file().get_basename().trim_prefix("MAP")
 			for line in lifArray.size():
 				if mapNumber == lifArray[line][0].pad_zeros(5):

@@ -1,19 +1,19 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Theme/ButtonGroupOnlyOwnership.tres" type="ButtonGroup" id=1]
-[ext_resource path="res://edited_images/plyrsym_32/symbol_player_red_std.png" type="Texture" id=2]
+[ext_resource path="res://edited_images/plyrsym_32/symbol_player_red_std.png" type="Texture2D" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.431373, 0.4, 0.501961, 1 )
 
 [node name="OnlyOwnershipButton" type="Button"]
-rect_min_size = Vector2( 70, 70 )
+custom_minimum_size = Vector2( 70, 70 )
 focus_mode = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-custom_styles/pressed = SubResource( 1 )
+theme_override_styles/pressed = SubResource( 1 )
 toggle_mode = true
-enabled_focus_mode = 0
+focus_mode = 0
 group = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

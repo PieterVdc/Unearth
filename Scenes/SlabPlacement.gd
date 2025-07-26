@@ -1,40 +1,40 @@
 extends Node
-onready var oReadData = Nodelist.list["oReadData"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oPlaceThingWithSlab = Nodelist.list["oPlaceThingWithSlab"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oDamagedWallLineEdit = Nodelist.list["oDamagedWallLineEdit"]
-onready var oAutoWallArtButton = Nodelist.list["oAutoWallArtButton"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oOwnableNaturalTerrain = Nodelist.list["oOwnableNaturalTerrain"]
-onready var oBridgesOnlyOnLiquidCheckbox = Nodelist.list["oBridgesOnlyOnLiquidCheckbox"]
-onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
-onready var oMirrorFlipCheckBox = Nodelist.list["oMirrorFlipCheckBox"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oFortifyCheckBox = Nodelist.list["oFortifyCheckBox"]
-onready var oRoundPathNearLiquid = Nodelist.list["oRoundPathNearLiquid"]
-onready var oRoundEarthNearPath = Nodelist.list["oRoundEarthNearPath"]
-onready var oRoundEarthNearLiquid = Nodelist.list["oRoundEarthNearLiquid"]
-onready var oRoundRockNearPath = Nodelist.list["oRoundRockNearPath"]
-onready var oRoundRockNearLiquid = Nodelist.list["oRoundRockNearLiquid"]
-onready var oRoundGoldNearPath = Nodelist.list["oRoundGoldNearPath"]
-onready var oRoundGoldNearLiquid = Nodelist.list["oRoundGoldNearLiquid"]
-onready var oRoundWaterNearLava = Nodelist.list["oRoundWaterNearLava"]
-onready var oAutomaticTorchSlabsCheckbox = Nodelist.list["oAutomaticTorchSlabsCheckbox"]
-onready var oPathStonePercent = Nodelist.list["oPathStonePercent"]
-onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
+@onready var oReadData = Nodelist.list["oReadData"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oPlaceThingWithSlab = Nodelist.list["oPlaceThingWithSlab"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oDamagedWallLineEdit = Nodelist.list["oDamagedWallLineEdit"]
+@onready var oAutoWallArtButton = Nodelist.list["oAutoWallArtButton"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oOwnableNaturalTerrain = Nodelist.list["oOwnableNaturalTerrain"]
+@onready var oBridgesOnlyOnLiquidCheckbox = Nodelist.list["oBridgesOnlyOnLiquidCheckbox"]
+@onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oMirrorFlipCheckBox = Nodelist.list["oMirrorFlipCheckBox"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oFortifyCheckBox = Nodelist.list["oFortifyCheckBox"]
+@onready var oRoundPathNearLiquid = Nodelist.list["oRoundPathNearLiquid"]
+@onready var oRoundEarthNearPath = Nodelist.list["oRoundEarthNearPath"]
+@onready var oRoundEarthNearLiquid = Nodelist.list["oRoundEarthNearLiquid"]
+@onready var oRoundRockNearPath = Nodelist.list["oRoundRockNearPath"]
+@onready var oRoundRockNearLiquid = Nodelist.list["oRoundRockNearLiquid"]
+@onready var oRoundGoldNearPath = Nodelist.list["oRoundGoldNearPath"]
+@onready var oRoundGoldNearLiquid = Nodelist.list["oRoundGoldNearLiquid"]
+@onready var oRoundWaterNearLava = Nodelist.list["oRoundWaterNearLava"]
+@onready var oAutomaticTorchSlabsCheckbox = Nodelist.list["oAutomaticTorchSlabsCheckbox"]
+@onready var oPathStonePercent = Nodelist.list["oPathStonePercent"]
+@onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
 
 enum dir {
 	s = 0
@@ -147,7 +147,7 @@ func mirror_placement(shapePositionArray, mirrorWhat):
 
 
 func slabID_is_ownable(slabID):
-	if oOwnableNaturalTerrain.pressed == false and Slabs.data.has(slabID) and Slabs.data[slabID][Slabs.IS_OWNABLE] == false:
+	if oOwnableNaturalTerrain.button_pressed == false and Slabs.data.has(slabID) and Slabs.data[slabID][Slabs.IS_OWNABLE] == false:
 		return false
 	return true
 
@@ -178,7 +178,7 @@ func place_shape_of_slab_id(shapePositionArray, slabID, ownership):
 		
 		if removeFromShape.has(pos) == false:
 			oDataSlab.set_cellv(pos, slabID)
-			if oFortifyCheckBox.pressed == true:
+			if oFortifyCheckBox.button_pressed == true:
 				# The "ownership != 5" ensures that we don't accidentally spread those difficult-to-see neutral fortified walls
 				# The "removeFromShape.has(pos) == false" check is for when you place a bridge in a spot you can't place it in
 				if ownership != 5 and \
@@ -228,7 +228,7 @@ func place_shape_of_slab_id(shapePositionArray, slabID, ownership):
 	
 	#print('Slab IDs set in : '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
 
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
 
 var lookupClmSpeedup = {}
 
@@ -245,7 +245,7 @@ func get_column_index_from_lookup(cubes, floorTexture):
 
 func generate_slabs_based_on_id(shapePositionArray, updateNearby):
 	oOverheadOwnership.update_ownership_image_based_on_shape(shapePositionArray)
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	
 	oEditor.mapHasBeenEdited = true
 	
@@ -301,7 +301,7 @@ func generate_slabs_based_on_id(shapePositionArray, updateNearby):
 	oLoadingBar.value = 0
 	var totalLoadingSize:float = max(1,shapePositionArray.size()) #abs((rectStart.x)-(rectEnd.x+1)) * abs((rectStart.y)-(rectEnd.y+1))
 	var currentLoad:float = 0.0
-	var loadTime = OS.get_ticks_msec()
+	var loadTime = Time.get_ticks_msec()
 	
 	for pos in shapePositionArray:
 		var slabID = oDataSlab.get_cell(pos.x, pos.y)
@@ -314,17 +314,17 @@ func generate_slabs_based_on_id(shapePositionArray, updateNearby):
 		
 		currentLoad += 1
 		
-		if OS.get_ticks_msec() > loadTime+100:
+		if Time.get_ticks_msec() > loadTime+100:
 			loadTime += 100
 			oLoadingBar.value = (currentLoad/(totalLoadingSize))*100
-			yield(get_tree(),'idle_frame')
+			await get_tree().idle_frame
 	
 	# Clear lookup dictionary after operation to free memory
 	lookupClmSpeedup.clear()
 	
 	oLoadingBar.visible = false
 	
-	print('Generated slabs in : '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
+	print('Generated slabs in : '+str(Time.get_ticks_msec()-CODETIME_START)+'ms')
 	
 	oDataSlab.update_texture()
 	oOverheadGraphics.overhead2d_update_rect_single_threaded(shapePositionArray)
@@ -334,7 +334,7 @@ func generate_slabs_based_on_id(shapePositionArray, updateNearby):
 	if is_instance_valid(oFlashingColumns):
 		oFlashingColumns.invalidate_columnset_texture()
 	
-	yield(get_tree(),'idle_frame') # This is necessary for yielding this function to work. Unlike 'await' in Godot 4.0, You can only yield a function which itself also yields.
+	await get_tree().idle_frame # This is necessary for yielding this function to work. Unlike 'await' in Godot 4.0, You can only yield a function which itself also yields.
 
 func do_update_auto_walls(slabID):
 	# If this ID has been set to WALL_AUTOMATIC, by whatever reason, then it must be updated. This doesn't mean you're placing a WALL_AUTOMATIC, just that this slab has been set to it.
@@ -357,7 +357,7 @@ func do_update_auto_walls(slabID):
 			return true
 		
 		# If you're fortifying nearby walls, then they must be automatically set too
-		if oFortifyCheckBox.pressed == true:
+		if oFortifyCheckBox.button_pressed == true:
 			return true
 		
 		# Never update a wall unless you're modifying it with WALL_AUTOMATIC or Fortify.
@@ -414,7 +414,7 @@ func slab_place_fake(xSlab, ySlab, slabID, ownership, surrID):
 
 
 func _on_ConfirmAutoGen_confirmed():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	oMessage.quick("Auto-generated all slabs")
 	var updateNearby = true
 	#Vector2(0,0), Vector2(M.xSize-1,M.ySize-1)
@@ -424,10 +424,10 @@ func _on_ConfirmAutoGen_confirmed():
 			shapePositionArray.append(Vector2(xSlab,ySlab))
 	
 	autogen_was_called = true
-	yield(generate_slabs_based_on_id(shapePositionArray, updateNearby), "completed")
+	await generate_slabs_based_on_id(shapePositionArray, updateNearby).completed
 	autogen_was_called = false
 	
-	print('Auto-generated all slabs: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Auto-generated all slabs: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func auto_earth(xSlab:int, ySlab:int, slabID, surrID):
 	
@@ -458,7 +458,7 @@ func auto_wall(xSlab:int, ySlab:int, slabID, surrID):
 	return slabID
 
 func try_upgrade_to_torch_slab(xSlab:int, ySlab:int, currentSlabID, surrID):
-	if oAutomaticTorchSlabsCheckbox.pressed == false:
+	if oAutomaticTorchSlabsCheckbox.button_pressed == false:
 		return currentSlabID
 	
 	# Check adjacent slabs for claimed ground if we are at every 5th slab along the x-axis or y-axis
@@ -1173,38 +1173,38 @@ func randomize_gold_transition(constructedSlabData, surrID, neighborType):
 func make_frail(constructedSlabData, slabID, surrID):
 	match slabID:
 		Slabs.ROCK:
-			if oRoundRockNearPath.pressed == true:
+			if oRoundRockNearPath.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.PATH, false)
-			if oRoundRockNearLiquid.pressed == true:
+			if oRoundRockNearLiquid.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.WATER, false)
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.LAVA, false)
 		Slabs.GOLD:
 			if has_neighbor_of_type(surrID, Slabs.DENSE_GOLD).values().has(true):
 				randomize_gold_transition(constructedSlabData, surrID, Slabs.DENSE_GOLD)
 			
-			if oRoundGoldNearPath.pressed == true:
+			if oRoundGoldNearPath.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.PATH, false)
-			if oRoundGoldNearLiquid.pressed == true:
+			if oRoundGoldNearLiquid.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.WATER, true)
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.LAVA, true)
 		Slabs.DENSE_GOLD:
 			if has_neighbor_of_type(surrID, Slabs.GOLD).values().has(true):
 				randomize_gold_transition(constructedSlabData, surrID, Slabs.GOLD)
 		Slabs.EARTH:
-			if oRoundEarthNearPath.pressed == true:
+			if oRoundEarthNearPath.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.PATH, false)
-			if oRoundEarthNearLiquid.pressed == true:
+			if oRoundEarthNearLiquid.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.WATER, true)
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.LAVA, true)
 		Slabs.PATH:
-			if oRoundPathNearLiquid.pressed == true:
+			if oRoundPathNearLiquid.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.WATER, false)
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.LAVA, false)
 		Slabs.LAVA:
-			if oRoundWaterNearLava.pressed == true:
+			if oRoundWaterNearLava.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.WATER, false)
 		Slabs.WATER:
-			if oRoundWaterNearLava.pressed == true:
+			if oRoundWaterNearLava.button_pressed == true:
 				frail_condition(constructedSlabData, slabID, surrID, Slabs.LAVA, false)
 
 func frail_condition(constructedSlabData, slabID, surrID, frailCornerType, onlyAdjustSoloBlocks):

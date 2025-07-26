@@ -1,20 +1,20 @@
 extends Node2D
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
-onready var oPlaceLockedCheckBox = Nodelist.list["oPlaceLockedCheckBox"]
-onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
-onready var oMirrorFlipCheckBox = Nodelist.list["oMirrorFlipCheckBox"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oPlaceThingsAnywhere = Nodelist.list["oPlaceThingsAnywhere"]
-onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
+@onready var oPlaceLockedCheckBox = Nodelist.list["oPlaceLockedCheckBox"]
+@onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
+@onready var oMirrorFlipCheckBox = Nodelist.list["oMirrorFlipCheckBox"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oPlaceThingsAnywhere = Nodelist.list["oPlaceThingsAnywhere"]
+@onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 
 var thingScn = preload("res://Scenes/ThingInstance.tscn")
@@ -25,7 +25,7 @@ func _ready():
 	erase_instances_loop()
 
 func place_new_light(newThingType, newSubtype, newPosition, newOwnership):
-	var id = lightScn.instance()
+	var id = lightScn.instantiate()
 	id.locationX = newPosition.x
 	id.locationY = newPosition.y
 	id.locationZ = newPosition.z
@@ -45,7 +45,7 @@ func place_new_light(newThingType, newSubtype, newPosition, newOwnership):
 	add_child(id)
 
 func place_new_action_point(newThingType, newSubtype, newPosition, newOwnership):
-	var id = actionPointScn.instance()
+	var id = actionPointScn.instantiate()
 	id.locationX = newPosition.x
 	id.locationY = newPosition.y
 	id.pointRange = oPlacingSettings.pointRange
@@ -62,7 +62,7 @@ enum {
 }
 
 func mirror_adjusted_value(instanceBeingAdjusted, variableNameToAdjust, originalPosition):
-	if oMirrorPlacementCheckBox.pressed == false:
+	if oMirrorPlacementCheckBox.button_pressed == false:
 		return
 	
 	var actions = []
@@ -147,8 +147,8 @@ func mirror_deletion_of_instance(instanceBeingDeleted):
 func placement_is_obstructed(thingType, placeSubtile):
 	placeSubtile = Vector2(floor(placeSubtile.x), floor(placeSubtile.y))
 	var detectTerrainHeight = oDataClm.height[oDataClmPos.get_cell_clmpos(placeSubtile.x,placeSubtile.y)]
-	if oPlaceThingsAnywhere.pressed == false and detectTerrainHeight >= 5 and thingType != Things.TYPE.EXTRA: # Lights and Action Points can always be placed anywhere
-		if oMirrorPlacementCheckBox.pressed == true:
+	if oPlaceThingsAnywhere.button_pressed == false and detectTerrainHeight >= 5 and thingType != Things.TYPE.EXTRA: # Lights and Action Points can always be placed anywhere
+		if oMirrorPlacementCheckBox.button_pressed == true:
 			oMessage.quick("Symmetrical placement obstructed at subtile " + str(placeSubtile))
 		return true
 	return false
@@ -235,7 +235,7 @@ func place_new_thing(newThingType, newSubtype, newPosition, newOwnership): # Pla
 	var xSlab = floor(newPosition.x / 3)
 	var ySlab = floor(newPosition.y / 3)
 	var slabID = oDataSlab.get_cell(xSlab, ySlab)
-	var id = thingScn.instance()
+	var id = thingScn.instantiate()
 	
 	id.data9 = 0
 	id.data10 = 0
@@ -353,7 +353,7 @@ func place_new_thing(newThingType, newSubtype, newPosition, newOwnership): # Pla
 func spawn_attached(xSlab, ySlab, slabID, ownership, subtile, tngObj): # Spawns from tng file
 	var id
 	if tngObj[Slabset.obj.IS_LIGHT] == 1:
-		id = lightScn.instance()
+		id = lightScn.instantiate()
 		id.data3 = 0
 		id.data4 = 0
 		id.data5 = 0
@@ -368,7 +368,7 @@ func spawn_attached(xSlab, ySlab, slabID, ownership, subtile, tngObj): # Spawns 
 		id.lightIntensity = tngObj[Slabset.obj.THING_SUBTYPE] # The intensity is stored in the subtype of tngObj
 		# ThingType and subtype must be handled in LightInstance.gd
 	else:
-		id = thingScn.instance()
+		id = thingScn.instantiate()
 		id.data9 = 0
 		id.data10 = 0
 		id.data11_12 = 0
@@ -444,7 +444,7 @@ var instances_to_erase = []
 
 func erase_instances_loop(): # started by _ready()
 	for i in 2: # We need 2 idle_frames to separate the wait from the 1 idle_frame that perform_undo uses
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 	var items_freed = 0
 	var max_items_to_free = max(1, instances_to_erase.size() * 0.01)
 	#var FREEING_CODETIME_START = OS.get_ticks_msec()
@@ -456,7 +456,7 @@ func erase_instances_loop(): # started by _ready()
 			id.free()
 		if instances_to_erase.size() > 2000: # If you're not erasing them fast enough, leaving too many instances on the field creates its own lag.
 			continue
-		elif instances_to_erase.empty() == true or items_freed > max_items_to_free:
+		elif instances_to_erase.is_empty() == true or items_freed > max_items_to_free:
 			break
 	#if items_freed > 0:
 		#print(items_freed)
@@ -465,7 +465,7 @@ func erase_instances_loop(): # started by _ready()
 	erase_instances_loop()
 
 func kill_instance(id): # Multi-thread safe
-	id.position = Vector2(rand_range(-10000000,-20000000),rand_range(-10000000,-20000000)) # Stacking them on the same position causes lag for some reason.
+	id.position = Vector2(randf_range(-10000000,-20000000),randf_range(-10000000,-20000000)) # Stacking them on the same position causes lag for some reason.
 	for group in id.get_groups():
 		id.remove_from_group(group)
 	instances_to_erase.append(id)

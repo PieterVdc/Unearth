@@ -1,6 +1,6 @@
 extends Node
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 
 var animation_database_texture = preload("res://Shaders/textureanimationdatabase.png")
@@ -15,7 +15,7 @@ func generate_animation_database(file_path):
 	var img = Image.new()
 	# Width = 8 frames, Height = number of animations (456)
 	img.create(8, 456, false, Image.FORMAT_RGB8)
-	img.lock()
+	false # img.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	# Parse file line by line
 	var current_texture_index = -1
@@ -24,7 +24,7 @@ func generate_animation_database(file_path):
 		var line = file.get_line().strip_edges()
 		
 		# Skip empty lines and comments
-		if line.empty() or line.begins_with("#"):
+		if line.is_empty() or line.begins_with("#"):
 			continue
 			
 		# Check for texture definition
@@ -56,12 +56,12 @@ func generate_animation_database(file_path):
 					# For unused frames, set to black (0)
 					img.set_pixel(frame, anim_index, Color8(0, 0, 0))
 	
-	img.unlock()
+	false # img.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	file.close()
 	
 	# Create ImageTexture from the image
 	animation_database_texture = ImageTexture.new()
-	animation_database_texture.create_from_image(img, 0)
+	animation_database_texture.create_from_image(img) #,0
 	
 	# Optionally save the image to disk
 #	var err = img.save_png("res://animationDatabase.png")

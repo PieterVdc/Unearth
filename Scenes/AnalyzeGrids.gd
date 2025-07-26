@@ -1,23 +1,23 @@
 extends Node2D
 
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oGridDataCheckBox1 = Nodelist.list["oGridDataCheckBox1"]
-onready var oGridDataCheckBox2 = Nodelist.list["oGridDataCheckBox2"]
-onready var oGridDataCheckBox3 = Nodelist.list["oGridDataCheckBox3"]
-onready var oGridDataCheckBox4 = Nodelist.list["oGridDataCheckBox4"]
-onready var oGridDataCheckBox5 = Nodelist.list["oGridDataCheckBox5"]
-onready var oGridDataCheckBox6 = Nodelist.list["oGridDataCheckBox6"]
-onready var oGridDataCheckBox7 = Nodelist.list["oGridDataCheckBox7"]
-onready var oGridDataWindow = Nodelist.list["oGridDataWindow"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oGridDataCheckBox1 = Nodelist.list["oGridDataCheckBox1"]
+@onready var oGridDataCheckBox2 = Nodelist.list["oGridDataCheckBox2"]
+@onready var oGridDataCheckBox3 = Nodelist.list["oGridDataCheckBox3"]
+@onready var oGridDataCheckBox4 = Nodelist.list["oGridDataCheckBox4"]
+@onready var oGridDataCheckBox5 = Nodelist.list["oGridDataCheckBox5"]
+@onready var oGridDataCheckBox6 = Nodelist.list["oGridDataCheckBox6"]
+@onready var oGridDataCheckBox7 = Nodelist.list["oGridDataCheckBox7"]
+@onready var oGridDataWindow = Nodelist.list["oGridDataWindow"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
 
-onready var tilemap_data = {
+@onready var tilemap_data = {
 	"Wibble":           {"extension": ".wib", "grid_type": "SUBTILE", "node": oDataWibble},
 	"Liquid":           {"extension": ".wlb", "grid_type": "TILE",    "node": oDataLiquid},
 	"Slab":             {"extension": ".slb", "grid_type": "TILE",    "node": oDataSlab},
@@ -29,25 +29,25 @@ onready var tilemap_data = {
 
 var currentlySelected = ""
 
-var dynamic_font = DynamicFont.new()  # Initialize DynamicFont
+var dynamic_font = FontFile.new()  # Initialize FontFile
 
 func _ready():
 	set_process(false)
 	dynamic_font.font_data = preload("res://Theme/ClassicConsole.ttf")
 	dynamic_font.size = 36
 	
-	oGridDataCheckBox1.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox1,"Slab"])
-	oGridDataCheckBox2.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox2,"Ownership"])
-	oGridDataCheckBox3.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox3,"Column Positions"])
-	oGridDataCheckBox4.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox4,"Wibble"])
-	oGridDataCheckBox5.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox5,"Liquid"])
-	oGridDataCheckBox6.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox6,"Style"])
-	oGridDataCheckBox7.connect("pressed", self, "_on_checkbox", [oGridDataCheckBox7,"Fake Slabs"])
+	oGridDataCheckBox1.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox1,"Slab"))
+	oGridDataCheckBox2.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox2,"Ownership"))
+	oGridDataCheckBox3.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox3,"Column Positions"))
+	oGridDataCheckBox4.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox4,"Wibble"))
+	oGridDataCheckBox5.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox5,"Liquid"))
+	oGridDataCheckBox6.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox6,"Style"))
+	oGridDataCheckBox7.connect("pressed", Callable(self, "_on_checkbox").bind(oGridDataCheckBox7,"Fake Slabs"))
 
 func _on_checkbox(checkboxNodeThatWasPressed, pressedString):
 	for i in [oGridDataCheckBox1, oGridDataCheckBox2, oGridDataCheckBox3, oGridDataCheckBox4, oGridDataCheckBox5, oGridDataCheckBox6, oGridDataCheckBox7]:
-		i.add_color_override("font_color", Color("40ffffff"))
-	checkboxNodeThatWasPressed.add_color_override("font_color", Color("40ffffff"))
+		i.add_theme_color_override("font_color", Color("#ffffff40"))
+	checkboxNodeThatWasPressed.add_theme_color_override("font_color", Color("#ffffff40"))
 	
 	currentlySelected = pressedString
 
@@ -56,8 +56,8 @@ func _on_GridDataWindow_visibility_changed():
 	if is_instance_valid(oGridDataWindow) == false: return
 	if oGridDataWindow.visible == true:
 		set_process(true)
-		yield(get_tree(),'idle_frame')
-		oGridDataWindow.rect_position.x = 0
+		await get_tree().idle_frame
+		oGridDataWindow.position.x = 0
 	else:
 		update()
 		set_process(false)
@@ -90,7 +90,7 @@ func _draw():
 		dynamic_font.size = 36
 	
 	var half_tileDrawDist = tileDrawDist * 0.5
-	if currentlySelected == "Style": oDataSlx.slxImgData.lock()
+	if currentlySelected == "Style": false # oDataSlx.slxImgData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	var offsetTilePos = Vector2(half_tileDrawDist, half_tileDrawDist)
 	if currentlySelected == "Wibble":
@@ -113,4 +113,4 @@ func _draw():
 			pos += Vector2(-stringSize.x * 0.5, stringSize.y * 0.25) # Center string
 			draw_string(dynamic_font, pos, string, Color(1, 1, 1, 1))
 	
-	if currentlySelected == "Style": oDataSlx.slxImgData.unlock()
+	if currentlySelected == "Style": false # oDataSlx.slxImgData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed

@@ -1,13 +1,13 @@
 extends Node
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oRayCastBlockMap = Nodelist.list["oRayCastBlockMap"]
-onready var oSaveMap = Nodelist.list["oSaveMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCmdLineConsole = Nodelist.list["oCmdLineConsole"]
-onready var oCmdLineConsoleArg = Nodelist.list["oCmdLineConsoleArg"]
-onready var oCmdLineExecute = Nodelist.list["oCmdLineExecute"]
-onready var oKeeperFXDetection = Nodelist.list["oKeeperFXDetection"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oRayCastBlockMap = Nodelist.list["oRayCastBlockMap"]
+@onready var oSaveMap = Nodelist.list["oSaveMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCmdLineConsole = Nodelist.list["oCmdLineConsole"]
+@onready var oCmdLineConsoleArg = Nodelist.list["oCmdLineConsoleArg"]
+@onready var oCmdLineExecute = Nodelist.list["oCmdLineExecute"]
+@onready var oKeeperFXDetection = Nodelist.list["oKeeperFXDetection"]
 
 var EXECUTABLE_PATH = ""
 var GAME_DIRECTORY = ""
@@ -60,11 +60,11 @@ func set_paths(path):
 	
 	if keeperfx_is_installed() == true:
 		oKeeperFXDetection.text = "KeeperFX detected. " + "(Version " + KEEPERFX_VERSION_STRING + ")"
-		oKeeperFXDetection.set("custom_colors/font_color", Color(0.5,1.0,0.5,1))
+		oKeeperFXDetection.set("theme_override_colors/font_color", Color(0.5,1.0,0.5,1))
 		oKeeperFXDetection.visible = true
 	else:
 		oKeeperFXDetection.text = "KeeperFX not detected"
-		oKeeperFXDetection.set("custom_colors/font_color", Color(1.0,0.5,0.5,1))
+		oKeeperFXDetection.set("theme_override_colors/font_color", Color(1.0,0.5,0.5,1))
 		oKeeperFXDetection.visible = true
 	reconstruct_command_line()
 
@@ -143,9 +143,9 @@ func menu_play_clicked():
 
 func get_main_subdirectories(path):
 	var array = []
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.open(path) == OK:
-		dir.list_dir_begin(true, false)
+		dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var fileName = dir.get_next()
 		while fileName != "":
 			if dir.current_is_dir() == true:
@@ -163,7 +163,7 @@ func test_write_permissions():
 		file.store_string("Testing write permissions.")
 	file.close()
 	
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.file_exists(testPath) == true: # Ensure any files being removed are definitely files and never directories
 		dir.remove(testPath)
 	

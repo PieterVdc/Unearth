@@ -1,8 +1,8 @@
 extends Node
 
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
-onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
+@onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
 
 const ExportFilelist = preload("res://Scenes/exportfilelist.gd")
 
@@ -34,7 +34,7 @@ func handle_tmap_export(sourceRgbImage: Image, folderNameString: String):
 	if check_directories_exist(uniqueDirectories):
 		var fullPackPath = outputDir.plus_file(packFolderName).plus_file("")
 		var message = "The folder of .PNGs already exists, they will be overwritten: \n" + fullPackPath + "\n\n If overwriting the files here causes you data loss then Cancel and go backup the folder."
-		var userConfirmed = yield(oTextureEditingWindow.show_confirmation_dialog(message), "completed")
+		var userConfirmed = await oTextureEditingWindow.show_confirmation_dialog(message).completed
 		if userConfirmed == false:
 			oMessage.quick("Cancelled")
 			return
@@ -47,7 +47,7 @@ func handle_tmap_export(sourceRgbImage: Image, folderNameString: String):
 func build_image_dictionary(flContent: String) -> Dictionary:
 	var imageDictionary = {}
 	var rawLines = Array(flContent.split('\n', false))
-	if rawLines.empty() == false: rawLines.pop_front()
+	if rawLines.is_empty() == false: rawLines.pop_front()
 	for iIdx in rawLines.size():
 		var lineDataArray = Array(rawLines[iIdx].split('\t', false))
 		var localPath = lineDataArray[0]
@@ -67,11 +67,11 @@ func build_image_dictionary(flContent: String) -> Dictionary:
 
 
 func create_images_from_dictionary(imageDictionary: Dictionary, sourceRgbImage: Image):
-	sourceRgbImage.lock()
+	false # sourceRgbImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for localPath in imageDictionary:
 		var imgData = imageDictionary[localPath]
 		var currentPngImage:Image = imgData["image_obj"]
-		currentPngImage.lock()
+		false # currentPngImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 		for tileEntry in imgData["tiles_info"]:
 			var lineDataArray = tileEntry["line_data"]
 			var sourceTileFlatIndex = tileEntry["source_flat_index"]
@@ -80,8 +80,8 @@ func create_images_from_dictionary(imageDictionary: Dictionary, sourceRgbImage: 
 			var destXInPng = int(lineDataArray[1])
 			var destYInPng = int(lineDataArray[2])
 			currentPngImage.blit_rect(sourceRgbImage, Rect2(sourceTileX*32, sourceTileY*32, 32,32), Vector2(destXInPng, destYInPng))
-		currentPngImage.unlock()
-	sourceRgbImage.unlock()
+		false # currentPngImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # sourceRgbImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
 func get_unique_directories(imageDictionary: Dictionary, outputDir: String) -> Dictionary:
@@ -93,14 +93,14 @@ func get_unique_directories(imageDictionary: Dictionary, outputDir: String) -> D
 
 
 func check_directories_exist(uniqueDirectories: Dictionary) -> bool:
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	for packFolderPath in uniqueDirectories:
 		if dir.dir_exists(packFolderPath): return true
 	return false
 
 
 func create_directories(uniqueDirectories: Dictionary):
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	for packFolderPath in uniqueDirectories:
 		dir.make_dir_recursive(packFolderPath)
 
@@ -136,8 +136,8 @@ func open_texture_folder():
 		oMessage.big("Error", "No texture pack loaded. Please load a tileset first using 'Create Filelist'.")
 		return
 	var folderToOpen = openFolder if openFolder != "" else packFolder
-	if not Directory.new().dir_exists(folderToOpen):
-		oMessage.big("Error", "Texture folder does not exist: " + folderToOpen)
+	if not DirAccess.new().dir_exists(folderToOpen):
+		oMessage.big("Error", "Texture2D folder does not exist: " + folderToOpen)
 		return
 	var finalPath = folderToOpen.replace("/", "\\") if OS.get_name() == "Windows" else folderToOpen
 	OS.shell_open(finalPath)

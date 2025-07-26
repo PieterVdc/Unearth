@@ -17,7 +17,7 @@ func initialize(w, h, fillValue, setPerEntryBytes):
 	buffer_size = width * height * bytes_per_entry
 	
 	# Clearing a buffer is troublesome, in order to do so I need to set the buffer to an equal-sized blank PoolByteArray. (this takes 0ms)
-	var blankByteArray = PoolByteArray([])
+	var blankByteArray = PackedByteArray([])
 	blankByteArray.resize(buffer_size)
 	blankByteArray.fill(fillValue)
 	buffer.data_array = blankByteArray
@@ -51,7 +51,7 @@ func get_cellv(pos):
 func resize(new_width, new_height, fillValue):
 	var new_buffer_size = new_width * new_height * bytes_per_entry
 	var new_buffer = StreamPeerBuffer.new()
-	var new_data_array = PoolByteArray([])
+	var new_data_array = PackedByteArray([])
 	new_data_array.resize(new_buffer_size)
 	new_data_array.fill(fillValue)
 	new_buffer.data_array = new_data_array

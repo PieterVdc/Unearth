@@ -1,10 +1,10 @@
 extends HBoxContainer
 
-export var label_setting:String setget set_label_setting, get_label_setting
-export var min_value:float setget set_min_value, get_min_value
-export var max_value:float setget set_max_value, get_max_value
-export var step:float setget set_step, get_step
-export var value:float setget set_value, get_value
+@export var label_setting:String: get = get_label_setting, set = set_label_setting
+@export var min_value:float: get = get_min_value, set = set_min_value
+@export var max_value:float: get = get_max_value, set = set_max_value
+@export var step:float: get = get_step, set = set_step
+@export var value:float: get = get_value, set = set_value
 
 signal sliderChanged
 

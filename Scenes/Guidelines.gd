@@ -1,8 +1,8 @@
 extends Node2D
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
 
 const TILE_SIZE = 96
-var LINE_ALPHA:float = 0.03 setget set_line_alpha
+var LINE_ALPHA:float = 0.03: set = set_line_alpha
 
 func set_line_alpha(setVal):
 	LINE_ALPHA = setVal
@@ -10,7 +10,7 @@ func set_line_alpha(setVal):
 
 func _draw():
 	if LINE_ALPHA == 0: return
-	if oMirrorPlacementCheckBox.pressed == false: return
+	if oMirrorPlacementCheckBox.button_pressed == false: return
 	for i in range(2):
 		var size1 = M.xSize if i == 0 else M.ySize
 		var size2 = M.ySize if i == 0 else M.xSize

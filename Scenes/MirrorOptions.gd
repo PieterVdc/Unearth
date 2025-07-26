@@ -1,17 +1,17 @@
 extends HBoxContainer
-onready var oOwnershipGridContainer = Nodelist.list["oOwnershipGridContainer"]
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
-onready var oMirrorSplitTextureRect = Nodelist.list["oMirrorSplitTextureRect"]
-onready var splitNS = preload('res://Art/SplitNS.png')
-onready var splitEW = preload('res://Art/SplitEW.png')
-onready var splitAll = preload('res://Art/SplitAll.png')
-onready var oMirrorColorContainer = Nodelist.list["oMirrorColorContainer"]
-onready var oMirrorColor0 = Nodelist.list["oMirrorColor0"]
-onready var oMirrorColor1 = Nodelist.list["oMirrorColor1"]
-onready var oMirrorColor2 = Nodelist.list["oMirrorColor2"]
-onready var oMirrorColor3 = Nodelist.list["oMirrorColor3"]
-onready var oMirrorFlipCheckBox = Nodelist.list["oMirrorFlipCheckBox"]
-onready var oGuidelines = Nodelist.list["oGuidelines"]
+@onready var oOwnershipGridContainer = Nodelist.list["oOwnershipGridContainer"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oMirrorSplitTextureRect = Nodelist.list["oMirrorSplitTextureRect"]
+@onready var splitNS = preload('res://Art/SplitNS.png')
+@onready var splitEW = preload('res://Art/SplitEW.png')
+@onready var splitAll = preload('res://Art/SplitAll.png')
+@onready var oMirrorColorContainer = Nodelist.list["oMirrorColorContainer"]
+@onready var oMirrorColor0 = Nodelist.list["oMirrorColor0"]
+@onready var oMirrorColor1 = Nodelist.list["oMirrorColor1"]
+@onready var oMirrorColor2 = Nodelist.list["oMirrorColor2"]
+@onready var oMirrorColor3 = Nodelist.list["oMirrorColor3"]
+@onready var oMirrorFlipCheckBox = Nodelist.list["oMirrorFlipCheckBox"]
+@onready var oGuidelines = Nodelist.list["oGuidelines"]
 
 var splitType = 2
 var ownerValue = [0,1,2,3]
@@ -23,14 +23,14 @@ func _ready():
 	oMirrorColor3.color = Constants.ownerRoomCol[ownerValue[3]]
 	establish_type()
 	_on_MirrorPlacementCheckBox_pressed()
-	oMirrorColor0.connect("mouse_entered", self, "mouse_entered_color_node", [oMirrorColor0])
-	oMirrorColor1.connect("mouse_entered", self, "mouse_entered_color_node", [oMirrorColor1])
-	oMirrorColor2.connect("mouse_entered", self, "mouse_entered_color_node", [oMirrorColor2])
-	oMirrorColor3.connect("mouse_entered", self, "mouse_entered_color_node", [oMirrorColor3])
-	oMirrorColor0.connect("mouse_exited", self, "mouse_exited_color_node", [oMirrorColor0])
-	oMirrorColor1.connect("mouse_exited", self, "mouse_exited_color_node", [oMirrorColor1])
-	oMirrorColor2.connect("mouse_exited", self, "mouse_exited_color_node", [oMirrorColor2])
-	oMirrorColor3.connect("mouse_exited", self, "mouse_exited_color_node", [oMirrorColor3])
+	oMirrorColor0.connect("mouse_entered", Callable(self, "mouse_entered_color_node").bind(oMirrorColor0))
+	oMirrorColor1.connect("mouse_entered", Callable(self, "mouse_entered_color_node").bind(oMirrorColor1))
+	oMirrorColor2.connect("mouse_entered", Callable(self, "mouse_entered_color_node").bind(oMirrorColor2))
+	oMirrorColor3.connect("mouse_entered", Callable(self, "mouse_entered_color_node").bind(oMirrorColor3))
+	oMirrorColor0.connect("mouse_exited", Callable(self, "mouse_exited_color_node").bind(oMirrorColor0))
+	oMirrorColor1.connect("mouse_exited", Callable(self, "mouse_exited_color_node").bind(oMirrorColor1))
+	oMirrorColor2.connect("mouse_exited", Callable(self, "mouse_exited_color_node").bind(oMirrorColor2))
+	oMirrorColor3.connect("mouse_exited", Callable(self, "mouse_exited_color_node").bind(oMirrorColor3))
 
 var flashNode
 var flashTimer = 0
@@ -93,16 +93,16 @@ func _on_MirrorColor3_gui_input(event):
 
 func gui_input_on_color_fields(event, buttonIndex, buttonNode):
 	if event is InputEventMouseButton and event.is_pressed():
-		if event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:
+		if event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT:
 			var colorIndex = Constants.ownerRoomCol.find(buttonNode.color)
 			if colorIndex != -1:
 				var newIdx
 				match event.button_index:
-					BUTTON_LEFT:
+					MOUSE_BUTTON_LEFT:
 						newIdx = colorIndex+1
 						if newIdx >= Constants.ownerRoomCol.size():
 							newIdx = 0
-					BUTTON_RIGHT:
+					MOUSE_BUTTON_RIGHT:
 						newIdx = colorIndex-1
 						if newIdx < 0:
 							newIdx = Constants.ownerRoomCol.size()-1

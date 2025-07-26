@@ -1,22 +1,22 @@
 extends Node
 
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDataLiquid = Nodelist.list["oDataLiquid"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDataLiquid = Nodelist.list["oDataLiquid"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
 
-onready var oWriteData = Nodelist.list["oWriteData"]
-onready var oReadData = Nodelist.list["oReadData"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oWriteData = Nodelist.list["oWriteData"]
+@onready var oReadData = Nodelist.list["oReadData"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 const FILE_TYPES = [
 	"LOF", # This must be read first so that MAPSIZE can be used in relation to the rest of the files
@@ -68,10 +68,10 @@ func read(filePath, EXT):
 		return
 
 	print("Attempting to read : " + filePath)
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var buffer = file_path_to_buffer(filePath)
 	read_buffer_for_extension(buffer, EXT)
-	print('.' + EXT + ' read success in ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('.' + EXT + ' read success in ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func read_buffer_for_extension(buffer, EXT):
 	buffer.seek(0) # Important!
@@ -100,17 +100,17 @@ func file_path_to_buffer(filePath):
 	var buffer = StreamPeerBuffer.new()
 	var file = File.new()
 	if file.open(filePath, File.READ) == OK:
-		buffer.data_array = file.get_buffer(file.get_len())
+		buffer.data_array = file.get_buffer(file.get_length())
 		file.close()
 	return buffer
 
 func write(filePath, EXT):
 	print("Saving : " + filePath)
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var buffer = get_buffer_for_extension(EXT, filePath)
 	var err = write_buffer_to_file(filePath, buffer, EXT, CODETIME_START)
 	if err == OK:
-		print('.' + EXT + ' wrote in ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+		print('.' + EXT + ' wrote in ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	return err
 
 func write_buffer_to_file(filePath, buffer, EXT, CODETIME_START):

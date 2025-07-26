@@ -1,8 +1,8 @@
 extends Node
 
-onready var oExportTmapDatDialog = Nodelist.list["oExportTmapDatDialog"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
+@onready var oExportTmapDatDialog = Nodelist.list["oExportTmapDatDialog"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
 
 var originalDatDir = ""
 var originalDatPath = ""

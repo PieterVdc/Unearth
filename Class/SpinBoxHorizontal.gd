@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 func _ready():
-	$LineEdit.connect("focus_exited",self,"focus_exited")
+	$LineEdit.connect("focus_exited", Callable(self, "focus_exited"))
 
 func focus_exited(newText):
 	$LineEdit.text = int(newText)

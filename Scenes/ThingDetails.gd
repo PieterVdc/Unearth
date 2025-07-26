@@ -1,13 +1,13 @@
 extends VBoxContainer
-onready var oThingListData = Nodelist.list["oThingListData"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
-onready var oSelectionStatusButton = Nodelist.list["oSelectionStatusButton"]
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oThingListData = Nodelist.list["oThingListData"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oSelectionStatusButton = Nodelist.list["oSelectionStatusButton"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 
 #var rememberInstance = null
@@ -73,12 +73,12 @@ func light_details(id):
 		match i:
 			0:
 				description = "Type"
-				value = "Light"
+				value = "Light3D"
 			1:
 				description = "Position"
 				value = str(id.locationX)+' '+str(id.locationY)+' '+str(id.locationZ)
 			2:
-				description = "Light range" # 9-10
+				description = "Light3D range" # 9-10
 				value = id.lightRange
 			3:
 				description = "Intensity" # 9-10

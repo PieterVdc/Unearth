@@ -1,6 +1,6 @@
 extends Node2D
-onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 const a = preload("res://Shaders/MaterialInstanceOwnership.tres")
 var materialInstanceOwnership = [
@@ -20,8 +20,8 @@ var currentColorIndex = 0
 
 func _ready():
 	for i in Constants.PLAYERS_COUNT:
-		materialInstanceOwnership[i].set_shader_param("ownerCol", Constants.ownerRoomCol[i])
-		materialInstanceOwnership[i].set_shader_param("alphaFilled", 0.5)
+		materialInstanceOwnership[i].set_shader_parameter("ownerCol", Constants.ownerRoomCol[i])
+		materialInstanceOwnership[i].set_shader_parameter("alphaFilled", 0.5)
 
 func _process(delta):
 	flashTimer += delta
@@ -30,10 +30,10 @@ func _process(delta):
 		flashTimer = 0.0
 		currentColorIndex = (currentColorIndex + 1) % flashIndexes.size()
 		var flashColor = getFlashColor(flashIndexes)
-		materialInstanceOwnership[Constants.PLAYER_NEUTRAL].set_shader_param("ownerCol", flashColor)
+		materialInstanceOwnership[Constants.PLAYER_NEUTRAL].set_shader_parameter("ownerCol", flashColor)
 	
 	for i in Constants.PLAYERS_COUNT:
-		materialInstanceOwnership[i].set_shader_param("fadeAlpha", 1.0 - oOverheadOwnership.alphaFadeColor[i])
+		materialInstanceOwnership[i].set_shader_parameter("fadeAlpha", 1.0 - oOverheadOwnership.alphaFadeColor[i])
 
 func getFlashIndexes():
 	if oCurrentFormat.selected == Constants.KfxFormat:

@@ -1,21 +1,21 @@
 extends Node
 
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oUndoStates = Nodelist.list["oUndoStates"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oUndoStates = Nodelist.list["oUndoStates"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 var semaphore = Semaphore.new()
 var thread = Thread.new()
 
 func _enter_tree():
-	thread.start(self, "run_threaded_undo_save")
+	thread.start(Callable(self, "run_threaded_undo_save"))
 
 func run_threaded_undo_save(_userdata):
 	while true:
 		semaphore.wait()
 		print("Start multi-threaded save undo state")
-		var CODETIME_START = OS.get_ticks_msec()
+		var CODETIME_START = Time.get_ticks_msec()
 		
 		var consistent_state = {}
 		# Repeat the data capture until the captured state is consistent
@@ -33,7 +33,7 @@ func run_threaded_undo_save(_userdata):
 		
 		# The captured state is consistent, save it as the undo state
 		oUndoStates.call_deferred("on_undo_state_saved", consistent_state)
-		print("End multi-threaded save undo state: " + str(OS.get_ticks_msec() - CODETIME_START) + "ms")
+		print("End multi-threaded save undo state: " + str(Time.get_ticks_msec() - CODETIME_START) + "ms")
 
 
 func create_state():

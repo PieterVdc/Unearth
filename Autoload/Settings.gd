@@ -127,7 +127,7 @@ func executable_stuff():
 		else:
 			# Auto-detection failed, show file dialog
 			for i in 3:
-				yield(get_tree(),'idle_frame')
+				await get_tree().idle_frame
 			var oChooseDkExe = $'../Main/Ui/UiSystem/ChooseDkExe'
 			Utils.popup_centered(oChooseDkExe)
 	else:
@@ -165,7 +165,7 @@ func set_setting(string, value):
 
 func read_all():
 	# Read all
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	
 	for i in listOfSettings:
 		if cfg_has_setting(i) == true:
@@ -173,7 +173,7 @@ func read_all():
 			if value != null:
 				game_setting(SET, i, value)
 	
-	print('Read all settings in '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
+	print('Read all settings in '+str(Time.get_ticks_msec()-CODETIME_START)+'ms')
 
 func game_setting(doWhat,string,value):
 	match string:
@@ -190,8 +190,8 @@ func game_setting(doWhat,string,value):
 			if doWhat == SET: oUi.subwindows_status = value
 			if doWhat == GET: return oUi.subwindows_status
 		"vsync":
-			if doWhat == SET: OS.vsync_enabled = value
-			if doWhat == GET: return OS.vsync_enabled
+			if doWhat == SET: DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if (value) else DisplayServer.VSYNC_DISABLED)
+			if doWhat == GET: return (DisplayServer.window_get_vsync_mode() != DisplayServer.VSYNC_DISABLED)
 		"framerate_limit":
 			var oEditor = $'../Main/Editor'
 			if doWhat == SET: oEditor.framerate_limit = value
@@ -310,17 +310,17 @@ func game_setting(doWhat,string,value):
 #			if doWhat == GET: return oOwnerSelection.grid_window_scale
 		
 		"editor_window_position":
-			if doWhat == SET: OS.window_position = value
-			if doWhat == GET: return OS.window_position
+			if doWhat == SET: get_window().position = value
+			if doWhat == GET: return get_window().position
 		"editor_window_size":
-			if doWhat == SET: OS.window_size = value
-			if doWhat == GET: return OS.window_size
+			if doWhat == SET: get_window().size = value
+			if doWhat == GET: return get_window().size
 		"editor_window_maximized_state":
-			if doWhat == SET: OS.window_maximized = value
-			if doWhat == GET: return OS.window_maximized
+			if doWhat == SET: get_window().mode = Window.MODE_MAXIMIZED if (value) else Window.MODE_WINDOWED
+			if doWhat == GET: return (get_window().mode == Window.MODE_MAXIMIZED)
 		"editor_window_fullscreen_state":
-			if doWhat == SET: OS.window_fullscreen = value
-			if doWhat == GET: return OS.window_fullscreen
+			if doWhat == SET: get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (value) else Window.MODE_WINDOWED
+			if doWhat == GET: return ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
 
 #		"display_details_viewer":
 #			var oPropertiesWindow = $'../Main/Ui/UiTools/PropertiesWindow'
@@ -328,55 +328,55 @@ func game_setting(doWhat,string,value):
 #			if doWhat == GET: return oPropertiesWindow.display_details
 		"ownable_natural_terrain":
 			var oOwnableNaturalTerrain = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/OwnableNaturalTerrain'
-			if doWhat == SET: oOwnableNaturalTerrain.pressed = value
+			if doWhat == SET: oOwnableNaturalTerrain.button_pressed = value
 			if doWhat == GET: return oOwnableNaturalTerrain.pressed
 		"editable_borders":
 			var oEditableBordersCheckbox = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/EditableBordersCheckbox'
-			if doWhat == SET: oEditableBordersCheckbox.pressed = value
+			if doWhat == SET: oEditableBordersCheckbox.button_pressed = value
 			if doWhat == GET: return oEditableBordersCheckbox.pressed
 		"bridges_only_on_liquid":
 			var oBridgesOnlyOnLiquidCheckbox = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/BridgesOnlyOnLiquidCheckbox'
-			if doWhat == SET: oBridgesOnlyOnLiquidCheckbox.pressed = value
+			if doWhat == SET: oBridgesOnlyOnLiquidCheckbox.button_pressed = value
 			if doWhat == GET: return oBridgesOnlyOnLiquidCheckbox.pressed
 		"round_path_near_liquid":
 			var oRoundPathNearLiquid = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundPathNearLiquid'
-			if doWhat == SET: oRoundPathNearLiquid.pressed = value
+			if doWhat == SET: oRoundPathNearLiquid.button_pressed = value
 			if doWhat == GET: return oRoundPathNearLiquid.pressed
 		"round_earth_near_path":
 			var oRoundEarthNearPath = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundEarthNearPath'
-			if doWhat == SET: oRoundEarthNearPath.pressed = value
+			if doWhat == SET: oRoundEarthNearPath.button_pressed = value
 			if doWhat == GET: return oRoundEarthNearPath.pressed
 		"round_earth_near_liquid":
 			var oRoundEarthNearLiquid = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundEarthNearLiquid'
-			if doWhat == SET: oRoundEarthNearLiquid.pressed = value
+			if doWhat == SET: oRoundEarthNearLiquid.button_pressed = value
 			if doWhat == GET: return oRoundEarthNearLiquid.pressed
 		"round_rock_near_path":
 			var oRoundRockNearPath = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundRockNearPath'
-			if doWhat == SET: oRoundRockNearPath.pressed = value
+			if doWhat == SET: oRoundRockNearPath.button_pressed = value
 			if doWhat == GET: return oRoundRockNearPath.pressed
 		"round_rock_near_liquid":
 			var oRoundRockNearLiquid = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundRockNearLiquid'
-			if doWhat == SET: oRoundRockNearLiquid.pressed = value
+			if doWhat == SET: oRoundRockNearLiquid.button_pressed = value
 			if doWhat == GET: return oRoundRockNearLiquid.pressed
 		"round_gold_near_path":
 			var oRoundGoldNearPath = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundGoldNearPath'
-			if doWhat == SET: oRoundGoldNearPath.pressed = value
+			if doWhat == SET: oRoundGoldNearPath.button_pressed = value
 			if doWhat == GET: return oRoundGoldNearPath.pressed
 		"round_gold_near_liquid":
 			var oRoundGoldNearLiquid = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundGoldNearLiquid'
-			if doWhat == SET: oRoundGoldNearLiquid.pressed = value
+			if doWhat == SET: oRoundGoldNearLiquid.button_pressed = value
 			if doWhat == GET: return oRoundGoldNearLiquid.pressed
 		"round_water_near_lava":
 			var oRoundWaterNearLava = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/RoundWaterNearLava'
-			if doWhat == SET: oRoundWaterNearLava.pressed = value
+			if doWhat == SET: oRoundWaterNearLava.button_pressed = value
 			if doWhat == GET: return oRoundWaterNearLava.pressed
 		"place_things_anywhere":
 			var oPlaceThingsAnywhere = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/PlaceThingsAnywhere'
-			if doWhat == SET: oPlaceThingsAnywhere.pressed = value
+			if doWhat == SET: oPlaceThingsAnywhere.button_pressed = value
 			if doWhat == GET: return oPlaceThingsAnywhere.pressed
 		"automatic_torch_slabs":
 			var oAutomaticTorchSlabsCheckbox = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/AutomaticTorchSlabsCheckbox'
-			if doWhat == SET: oAutomaticTorchSlabsCheckbox.pressed = value
+			if doWhat == SET: oAutomaticTorchSlabsCheckbox.button_pressed = value
 			if doWhat == GET: return oAutomaticTorchSlabsCheckbox.pressed
 		"wallauto_art":
 			var oAutoWallArtButton = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabPlacements/MarginContainer/VBoxContainer/GridContainer/AutoWallArtButton'
@@ -416,22 +416,22 @@ func game_setting(doWhat,string,value):
 			if doWhat == GET: return oPathStonePercent.value
 		"auto_open_map_settings":
 			var oCheckBoxNewMapAutoOpensMapSettings = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabUI/VBoxContainer/CheckBoxNewMapAutoOpensMapSettings'
-			if doWhat == SET: oCheckBoxNewMapAutoOpensMapSettings.pressed = value
+			if doWhat == SET: oCheckBoxNewMapAutoOpensMapSettings.button_pressed = value
 			if doWhat == GET: return oCheckBoxNewMapAutoOpensMapSettings.pressed
 		"fortify":
 			var oFortifyCheckBox = $"../Main/Ui/UiTools/PropertiesWindow/VBoxContainer/PropertiesTabs/PlacingSettings/FortifyCheckBox"
-			if doWhat == SET: oFortifyCheckBox.pressed = value
+			if doWhat == SET: oFortifyCheckBox.button_pressed = value
 			if doWhat == GET: return oFortifyCheckBox.pressed
 		"last_changelog_displayed":
 			if doWhat == SET: write_cfg("last_changelog_displayed", value)
 			if doWhat == GET: return read_cfg("last_changelog_displayed")
 		"show_clm_data_tab":
 			var oShowCLMDataTabCheckbox = $'../Main/Ui/UiSystem/PreferencesWindow/VBoxContainer/TabSettings/TabUI/VBoxContainer/ShowCLMDataTabCheckbox'
-			if doWhat == SET: oShowCLMDataTabCheckbox.pressed = value
+			if doWhat == SET: oShowCLMDataTabCheckbox.button_pressed = value
 			if doWhat == GET: return oShowCLMDataTabCheckbox.pressed
 
 func delete_settings():
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.file_exists(settings_file_path) == true:
 		dir.remove(settings_file_path)
 

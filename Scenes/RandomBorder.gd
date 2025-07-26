@@ -1,19 +1,19 @@
 extends Node
 
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oNoiseOctaves = Nodelist.list["oNoiseOctaves"]
-onready var oNoisePeriod = Nodelist.list["oNoisePeriod"]
-onready var oNoisePersistence = Nodelist.list["oNoisePersistence"]
-onready var oNoiseLacunarity = Nodelist.list["oNoiseLacunarity"]
-onready var oXSizeLine = Nodelist.list["oXSizeLine"]
-onready var oYSizeLine = Nodelist.list["oYSizeLine"]
-onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
-onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oNoiseOctaves = Nodelist.list["oNoiseOctaves"]
+@onready var oNoisePeriod = Nodelist.list["oNoisePeriod"]
+@onready var oNoisePersistence = Nodelist.list["oNoisePersistence"]
+@onready var oNoiseLacunarity = Nodelist.list["oNoiseLacunarity"]
+@onready var oXSizeLine = Nodelist.list["oXSizeLine"]
+@onready var oYSizeLine = Nodelist.list["oYSizeLine"]
+@onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
+@onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
 
-var noise = OpenSimplexNoise.new()
+var noise = FastNoiseLite.new()
 var algorithmType = 1
 
 const earthColour = Color(36.0/255.0, 24.0/255.0, 0.0/255.0, 1.0)
@@ -32,7 +32,7 @@ func fill_entire_map_with_earth():
 
 
 func convert_pixels_to_slabs(imageData):
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	for y in range(1, M.ySize-1):
 		for x in range(1, M.xSize-1):
@@ -57,16 +57,16 @@ func convert_pixels_to_slabs(imageData):
 				match pixelColor:
 					impenetrableColour: oDataSlab.set_cell(x, y, Slabs.ROCK)
 					earthColour: oDataSlab.set_cell(x, y, Slabs.EARTH)
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
 func update_border_image_with_noise(imageData, textureData):
-	var NOISECODETIME = OS.get_ticks_msec()
+	var NOISECODETIME = Time.get_ticks_msec()
 	var borderDist = oNoiseDistance.value
 	noise.period = (oNoisePeriod.max_value - oNoisePeriod.value) + (0.01)
 	noise.persistence = (oNoisePersistence.max_value - oNoisePersistence.value)
 	noise.lacunarity = oNoiseLacunarity.value
-	noise.octaves = oNoiseOctaves.value
+	noise.fractal_octaves = oNoiseOctaves.value
 	
 	var fullMapSize = Vector2(oXSizeLine.text.to_int()-1, oYSizeLine.text.to_int()-1)
 	var halfMapSize = Vector2(fullMapSize.x * 0.5, fullMapSize.y * 0.5)
@@ -103,7 +103,7 @@ func update_border_image_with_noise(imageData, textureData):
 	var coordsToCheck = [Vector2(halfMapSize.x,halfMapSize.y)]
 	
 	imageData.fill(impenetrableColour)
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	while coordsToCheck.size() > 0:
 		var coord = coordsToCheck.pop_back()
@@ -115,14 +115,14 @@ func update_border_image_with_noise(imageData, textureData):
 			coordsToCheck.append(coord + Vector2(1,0))
 			coordsToCheck.append(coord + Vector2(-1,0))
 	
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
-	print('Border image time: ' + str(OS.get_ticks_msec() - NOISECODETIME) + 'ms')
+	print('Border image time: ' + str(Time.get_ticks_msec() - NOISECODETIME) + 'ms')
 
 
 func update_border_image_with_blank(imageData, textureData):
 	imageData.fill(earthColour)
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	var fullMapSize = Vector2(oXSizeLine.text.to_int(), oYSizeLine.text.to_int())
 	
@@ -130,7 +130,7 @@ func update_border_image_with_blank(imageData, textureData):
 		for y in fullMapSize.y:
 			if x == 0 or x == fullMapSize.x-1 or y == 0 or y == fullMapSize.y-1:
 				imageData.set_pixel(x,y, impenetrableColour)
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
 func remove_isolated_earth_slabs(imageData):
@@ -142,7 +142,7 @@ func remove_isolated_earth_slabs(imageData):
 	var potentialPlayerColour = Color(1.0, 0.0, 1.0, 1.0)
 	var coordsToCheck = []
 	var magentaPositions = []
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for y in range(h):
 		for x in range(w):
 			if imageData.get_pixel(x, y) == potentialPlayerColour:
@@ -178,7 +178,7 @@ func remove_isolated_earth_slabs(imageData):
 				imageData.set_pixel(x, y, earthColour)
 	for magentaPos in magentaPositions:
 		imageData.set_pixel(magentaPos.x, magentaPos.y, potentialPlayerColour)
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
  

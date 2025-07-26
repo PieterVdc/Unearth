@@ -1,23 +1,23 @@
 extends PanelContainer
 
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oConfirmScriptDeletion = Nodelist.list["oConfirmScriptDeletion"]
-onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
-onready var header_vbox = get_node("%HeaderVBoxContainer")
-onready var path_link_node = get_node("%PathLinkButton")
-onready var path_separator_node = get_node("%PathHSeparator")
-onready var hbox_create_node = get_node("%HBoxCreate")
-onready var hbox_generate_node = get_node("%HBoxGenerate")
-onready var hbox_delete_node = get_node("%HBoxDelete")
-onready var header_label_node = get_node("%HeaderLabel")
-onready var create_label_node = get_node("%CreateLabel")
-onready var delete_label_node = get_node("%DeleteLabel")
-onready var oScriptGeneratorWindow = Nodelist.list["oScriptGeneratorWindow"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oConfirmScriptDeletion = Nodelist.list["oConfirmScriptDeletion"]
+@onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
+@onready var header_vbox = get_node("%HeaderVBoxContainer")
+@onready var path_link_node = get_node("%PathLinkButton")
+@onready var path_separator_node = get_node("%PathHSeparator")
+@onready var hbox_create_node = get_node("%HBoxCreate")
+@onready var hbox_generate_node = get_node("%HBoxGenerate")
+@onready var hbox_delete_node = get_node("%HBoxDelete")
+@onready var header_label_node = get_node("%HeaderLabel")
+@onready var create_label_node = get_node("%CreateLabel")
+@onready var delete_label_node = get_node("%DeleteLabel")
+@onready var oScriptGeneratorWindow = Nodelist.list["oScriptGeneratorWindow"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
 
 var script_file_extension: String = ""
 
@@ -129,7 +129,7 @@ func show_script_interface(displayText: String, tooltipText: String, keyExtensio
 
 	path_link_node.visible = true
 	path_link_node.text = displayText
-	path_link_node.hint_tooltip = tooltipText
+	path_link_node.tooltip_text = tooltipText
 		
 	if keyExtensionUppercase == "TXT":
 		hbox_generate_node.visible = true
@@ -349,7 +349,7 @@ func _on_CreateButton_pressed():
 func _on_DeleteButton_pressed():
 	oConfirmScriptDeletion.set_meta("requesting_script_section_id", get_instance_id())
 	Utils.popup_centered(oConfirmScriptDeletion)
-	yield(oConfirmScriptDeletion, "confirmed")
+	await oConfirmScriptDeletion.confirmed
 	var hasRequestingMeta = oConfirmScriptDeletion.has_meta("requesting_script_section_id")
 	var metaMatchesInstanceId = false
 	if hasRequestingMeta:
@@ -388,12 +388,12 @@ func _on_PathLinkButton_pressed():
 		"DKScriptFileSection":
 			Utils.popup_centered(oScriptEditorWindow)
 		"LuaScriptFileSection":
-			if path_link_node.hint_tooltip == "":
+			if path_link_node.tooltip_text == "":
 				oMessage.quick("Cannot open script: path is not available.")
 				return
-			var err = OS.shell_open(path_link_node.hint_tooltip)
+			var err = OS.shell_open(path_link_node.tooltip_text)
 			if err != OK:
-				oMessage.quick("Could not open: " + path_link_node.hint_tooltip)
+				oMessage.quick("Could not open: " + path_link_node.tooltip_text)
 
 func get_script_flag(keyExtensionUppercase: String) -> bool:
 	if keyExtensionUppercase == "TXT":

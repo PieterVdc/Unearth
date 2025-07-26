@@ -1,11 +1,11 @@
 extends Label
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oSelection = Nodelist.list["oSelection"]
 
 var display_id_name = false
 
 func _ready():
-	connect("gui_input", self, "_on_gui_input")
+	connect("gui_input", Callable(self, "_on_gui_input"))
 
 
 func update_text_with_id(slabID, forceUpdate):
@@ -26,6 +26,6 @@ func update_text_with_id(slabID, forceUpdate):
 
 func _on_gui_input(event):
 	if event is InputEventMouseButton and event.is_pressed():
-		if event.button_index == BUTTON_LEFT:
+		if event.button_index == MOUSE_BUTTON_LEFT:
 			display_id_name = !display_id_name
 			update_text_with_id(oSelection.cursorOverSlab, true)

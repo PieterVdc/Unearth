@@ -1,16 +1,16 @@
 extends Tree
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oSourceMapTree = Nodelist.list["oSourceMapTree"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oLineEditFilter = Nodelist.list["oLineEditFilter"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oSourceMapTree = Nodelist.list["oSourceMapTree"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oLineEditFilter = Nodelist.list["oLineEditFilter"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
 
 var searchResultTreeItemDirs = [] # Just used for killing items with no children
 
 
 func _ready():
 	set_column_expand(0,false)
-	set_column_min_width(0,180)
+	set_column_custom_minimum_width(0,180)
 
 
 func update_dynamic_tree():
@@ -24,7 +24,7 @@ func update_dynamic_tree():
 
 
 func search_tree(searchText, collapseResults):
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	
 	clear()
 	searchResultTreeItemDirs.clear()
@@ -34,7 +34,7 @@ func search_tree(searchText, collapseResults):
 	get_tree_items_recursively(oSourceMapTree.get_root(), get_root(), searchText, collapseResults)
 	oSourceMapTree.kill_childless_tree_items(searchResultTreeItemDirs)
 	
-	print('Tree searched in: '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
+	print('Tree searched in: '+str(Time.get_ticks_msec()-CODETIME_START)+'ms')
 	
 	highlight_current_map()
 
@@ -90,12 +90,12 @@ func _on_DynamicMapTree_item_selected():
 	if item == get_root(): return
 
 	# Selected item signal is firing when changing "collapsed"
-	disconnect('item_selected',self,"_on_DynamicMapTree_item_selected")
-	disconnect('item_selected',oMapBrowser,"_on_DynamicMapTree_item_selected")
+	disconnect('item_selected', Callable(self, "_on_DynamicMapTree_item_selected"))
+	disconnect('item_selected', Callable(oMapBrowser, "_on_DynamicMapTree_item_selected"))
 	
 	item.collapsed = !item.collapsed
-	connect('item_selected',self,"_on_DynamicMapTree_item_selected")
-	connect('item_selected',oMapBrowser,"_on_DynamicMapTree_item_selected")
+	connect('item_selected', Callable(self, "_on_DynamicMapTree_item_selected"))
+	connect('item_selected', Callable(oMapBrowser, "_on_DynamicMapTree_item_selected"))
 
 
 func highlight_current_map():
@@ -112,7 +112,7 @@ func highlight_current_map():
 	
 	if get_root() == null: return #fixes a weird crash
 	
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	get_root().call_recursive("clear_custom_bg_color",0)
 	get_root().call_recursive("clear_custom_bg_color",1)
 	get_root().call_recursive("clear_custom_color",0)
@@ -120,7 +120,7 @@ func highlight_current_map():
 	
 	recursive_highlight(get_root(),currentSlbPath)
 	
-	print('Map highlighted in: '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
+	print('Map highlighted in: '+str(Time.get_ticks_msec()-CODETIME_START)+'ms')
 
 
 func recursive_highlight(item,currentSlbPath):

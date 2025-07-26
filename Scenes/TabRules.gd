@@ -1,11 +1,11 @@
 extends VBoxContainer
-onready var oCfgEditor = Nodelist.list["oCfgEditor"]
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oCfgEditor = Nodelist.list["oCfgEditor"]
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
 
 func create_standard_config_control(parent: VBoxContainer, key: String, value, section_name: String, itemIndex: int, revert_button_scene, editor_context):
 	var item_panel = PanelContainer.new()
 	item_panel.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	item_panel.add_stylebox_override("panel", oCfgEditor.create_darker_border_stylebox())
+	item_panel.add_theme_stylebox_override("panel", oCfgEditor.create_darker_border_stylebox())
 	item_panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	parent.add_child(item_panel)
@@ -36,12 +36,12 @@ func create_standard_config_control(parent: VBoxContainer, key: String, value, s
 		control_container.add_child(fallback_label)
 		control_node = fallback_label
 	
-	var revert_button = revert_button_scene.instance()
-	revert_button.connect("pressed", editor_context, "_on_revert_pressed", [section_name, key])
+	var revert_button = revert_button_scene.instantiate()
+	revert_button.connect("pressed", Callable(editor_context, "_on_revert_pressed").bind(section_name, key))
 	control_container.add_child(revert_button)
 	
-	item_panel.connect("mouse_entered", editor_context, "_on_control_mouse_entered", [key_label, control_node, section_name, key])
-	item_panel.connect("mouse_exited", editor_context, "_on_control_mouse_exited", [key_label, control_node, section_name, key])
+	item_panel.connect("mouse_entered", Callable(editor_context, "_on_control_mouse_entered").bind(key_label, control_node, section_name, key))
+	item_panel.connect("mouse_exited", Callable(editor_context, "_on_control_mouse_exited").bind(key_label, control_node, section_name, key))
 	
 	if not editor_context.item_panels.has(section_name):
 		editor_context.item_panels[section_name] = {}
@@ -65,13 +65,13 @@ func create_spinbox_control(parent: HBoxContainer, key: String, value, section_n
 		 limit = 9999999999.0
 	spinbox.min_value = -limit
 	spinbox.max_value = limit
-	spinbox.rect_min_size.x = 100
+	spinbox.custom_minimum_size.x = 100
 	spinbox.value = value
-	spinbox.get_line_edit().add_constant_override("minimum_spaces", 0)
+	spinbox.get_line_edit().add_theme_constant_override("minimum_spaces", 0)
 	editor_context.setup_script_editor_font(spinbox)
-	spinbox.connect("value_changed", editor_context, "_on_value_changed", [section_name, key])
-	spinbox.get_line_edit().connect("focus_entered", editor_context, "_on_spinbox_focus_entered", [spinbox])
-	spinbox.get_line_edit().connect("focus_exited", editor_context, "_on_spinbox_focus_exited", [spinbox, section_name, key])
+	spinbox.connect("value_changed", Callable(editor_context, "_on_value_changed").bind(section_name, key))
+	spinbox.get_line_edit().connect("focus_entered", Callable(editor_context, "_on_spinbox_focus_entered").bind(spinbox))
+	spinbox.get_line_edit().connect("focus_exited", Callable(editor_context, "_on_spinbox_focus_exited").bind(spinbox, section_name, key))
 	parent.add_child(spinbox)
 	return spinbox
 
@@ -80,7 +80,7 @@ func create_line_edit_control(parent: HBoxContainer, key: String, value: String,
 	line_edit.text = value
 	line_edit.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	editor_context.setup_script_editor_font(line_edit)
-	line_edit.connect("text_changed", editor_context, "_on_text_changed", [section_name, key])
+	line_edit.connect("text_changed", Callable(editor_context, "_on_text_changed").bind(section_name, key))
 	parent.add_child(line_edit)
 	return line_edit
 
@@ -89,33 +89,33 @@ func create_array_control(parent: HBoxContainer, key: String, value: Array, sect
 	line_edit.text = str(value)
 	line_edit.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	editor_context.setup_script_editor_font(line_edit)
-	line_edit.connect("text_changed", editor_context, "_on_array_text_changed", [section_name, key])
+	line_edit.connect("text_changed", Callable(editor_context, "_on_array_text_changed").bind(section_name, key))
 	parent.add_child(line_edit)
 	return line_edit
 
 
 func create_popup_selection(title: String, items: Array, callback: FuncRef, editor_context):
-	var popup_selection = WindowDialog.new()
+	var popup_selection = Window.new()
 	popup_selection.window_title = title
-	popup_selection.rect_size = Vector2(700, 400)
-	popup_selection.popup_exclusive = true
+	popup_selection.size = Vector2(700, 400)
+	popup_selection.exclusive = true
 	
 	var container = VBoxContainer.new()
 	container.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 	container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	container.set_anchors_and_margins_preset(Control.PRESET_WIDE)
-	container.add_constant_override("separation", 5)
-	container.add_constant_override("margin_left", 10)
-	container.add_constant_override("margin_right", 10)
-	container.add_constant_override("margin_top", 10)
-	container.add_constant_override("margin_bottom", 10)
+	container.set_anchors_and_offsets_preset(Control.PRESET_WIDE)
+	container.add_theme_constant_override("separation", 5)
+	container.add_theme_constant_override("offset_left", 10)
+	container.add_theme_constant_override("offset_right", 10)
+	container.add_theme_constant_override("offset_top", 10)
+	container.add_theme_constant_override("offset_bottom", 10)
 	popup_selection.add_child(container)
 	
 	var scroll_container = ScrollContainer.new()
 	scroll_container.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 	scroll_container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	scroll_container.set_anchors_and_margins_preset(Control.PRESET_WIDE)
-	scroll_container.rect_min_size.y = 0
+	scroll_container.set_anchors_and_offsets_preset(Control.PRESET_WIDE)
+	scroll_container.custom_minimum_size.y = 0
 	container.add_child(scroll_container)
 	
 	var center_container = CenterContainer.new()
@@ -125,8 +125,8 @@ func create_popup_selection(title: String, items: Array, callback: FuncRef, edit
 	
 	var item_container = GridContainer.new()
 	item_container.columns = 3
-	item_container.add_constant_override("hseparation", 20)
-	item_container.add_constant_override("vseparation", 2)
+	item_container.add_theme_constant_override("h_separation", 20)
+	item_container.add_theme_constant_override("v_separation", 2)
 	center_container.add_child(item_container)
 	
 	editor_context.current_selection_callback = callback
@@ -134,12 +134,12 @@ func create_popup_selection(title: String, items: Array, callback: FuncRef, edit
 	for item in items:
 		var link_button = LinkButton.new()
 		link_button.text = item
-		link_button.rect_min_size.x = 0
+		link_button.custom_minimum_size.x = 0
 		editor_context.setup_script_editor_font(link_button)
-		link_button.connect("pressed", editor_context, "_on_selection_item_pressed", [item])
+		link_button.connect("pressed", Callable(editor_context, "_on_selection_item_pressed").bind(item))
 		item_container.add_child(link_button)
 	
-	popup_selection.connect("popup_hide", editor_context, "_on_popup_selection_closed")
+	popup_selection.connect("popup_hide", Callable(editor_context, "_on_popup_selection_closed"))
 	editor_context.add_child(popup_selection)
 	editor_context.popup_selection = popup_selection
 	popup_selection.popup_centered()
@@ -175,7 +175,7 @@ func perform_item_revert(section_name: String, array_index: int) -> bool:
 
 
 func handle_label_mouse_entered(label: Label, tooltip_text: String = ""):
-	label.add_color_override("font_color", oCfgEditor.UI_TEXT_HOVER)
+	label.add_theme_color_override("font_color", oCfgEditor.UI_TEXT_HOVER)
 	if tooltip_text != "" and oCustomTooltip:
 		oCustomTooltip.set_text(tooltip_text)
 
@@ -189,9 +189,9 @@ func handle_label_mouse_exited(label: Label, array_index: int, section_name: Str
 func update_label_color(array_index: int, label: Label, section_name: String):
 	var is_different = check_item_difference(section_name, array_index)
 	if is_different:
-		label.add_color_override("font_color", oCfgEditor.UI_TEXT_MODIFIED)
+		label.add_theme_color_override("font_color", oCfgEditor.UI_TEXT_MODIFIED)
 	else:
-		label.add_color_override("font_color", oCfgEditor.UI_TEXT_NORMAL)
+		label.add_theme_color_override("font_color", oCfgEditor.UI_TEXT_NORMAL)
 
 
 func create_selection_popup(title: String, items: Array, callback: FuncRef, array_index: int):

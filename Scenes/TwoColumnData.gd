@@ -4,16 +4,16 @@ const scnSpinBoxPropertiesValue = preload("res://Scenes/SpinBoxPropertiesValue.t
 const scnLevelChanger = preload("res://Scenes/LevelChanger.tscn")
 
 const thinLineEditTheme = preload("res://Theme/ThinLineEdit.tres")
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
 
 
 const columnLeftSize = 120
@@ -28,7 +28,7 @@ func add_item(leftString, rightString):
 	nameDesc.align = HALIGN_LEFT
 	nameDesc.text = leftString
 	nameDesc.autowrap = true
-	nameDesc.rect_min_size.x = columnLeftSize # minimum text width based on the word: "Floor texture"
+	nameDesc.custom_minimum_size.x = columnLeftSize # minimum text width based on the word: "Floor texture"
 	nameDesc.valign = VALIGN_TOP
 	nameDesc.size_flags_vertical = Control.SIZE_FILL # To handle the other side's autowrap text
 	
@@ -41,9 +41,9 @@ func add_item(leftString, rightString):
 			nodeRightColumn = CheckBox.new()
 			nodeRightColumn.size_flags_horizontal = Control.SIZE_EXPAND
 			match int(rightString):
-				0: nodeRightColumn.pressed = false
-				1: nodeRightColumn.pressed = true
-			nodeRightColumn.connect("toggled",self,"_on_optionbutton_item_selected", [leftString])
+				0: nodeRightColumn.button_pressed = false
+				1: nodeRightColumn.button_pressed = true
+			nodeRightColumn.connect("toggled", Callable(self, "_on_optionbutton_item_selected").bind(leftString))
 		"Ownership":
 			nodeRightColumn = OptionButton.new()
 			nodeRightColumn.focus_mode = 0 # Fixes clicking on the menu
@@ -61,25 +61,25 @@ func add_item(leftString, rightString):
 			
 #			print(nodeRightColumn.get_popup().mouse_filter)
 			
-			nodeRightColumn.connect("item_selected",self,"_on_optionbutton_item_selected", [leftString])
-			nodeRightColumn.connect("toggled",self,"_on_optionbutton_toggled", [nodeRightColumn])
+			nodeRightColumn.connect("item_selected", Callable(self, "_on_optionbutton_item_selected").bind(leftString))
+			nodeRightColumn.connect("toggled", Callable(self, "_on_optionbutton_toggled").bind(nodeRightColumn))
 			# Select the correct option
 			for i in nodeRightColumn.get_item_count():
 				if nodeRightColumn.get_item_text(nodeRightColumn.get_item_index(i)) == rightString:
 					nodeRightColumn.selected = i
 		"Level":
-			nodeRightColumn = scnLevelChanger.instance()
+			nodeRightColumn = scnLevelChanger.instantiate()
 			#nodeRightColumn.expand_to_text_length = true
 			nodeRightColumn.theme = thinLineEditTheme #!!!!!!!!!!!!!
-			nodeRightColumn.connect("value_changed", self, "_on_property_value_changed", [nodeRightColumn, leftString])
-			nodeRightColumn.get_line_edit().connect("text_changed", self, "_on_property_value_typed_in_manually", [nodeRightColumn, leftString])
+			nodeRightColumn.connect("value_changed", Callable(self, "_on_property_value_changed").bind(nodeRightColumn, leftString))
+			nodeRightColumn.get_line_edit().connect("text_changed", Callable(self, "_on_property_value_typed_in_manually").bind(nodeRightColumn, leftString))
 			nodeRightColumn.value = float(rightString)
-		"Effect range","Light range","Intensity","Gate #","Point range","Point #","Custom box","Unknown 9","Unknown 10","Unknown 11-12","Unknown 13","Unknown 14","Unknown 15","Unknown 16","Unknown 17","Unknown 18","Unknown 19","Unknown 20","Gold held","Health %","Gold value":
-			nodeRightColumn = scnSpinBoxPropertiesValue.instance()
+		"Effect range","Light3D range","Intensity","Gate #","Point range","Point #","Custom box","Unknown 9","Unknown 10","Unknown 11-12","Unknown 13","Unknown 14","Unknown 15","Unknown 16","Unknown 17","Unknown 18","Unknown 19","Unknown 20","Gold held","Health %","Gold value":
+			nodeRightColumn = scnSpinBoxPropertiesValue.instantiate()
 			#nodeRightColumn.expand_to_text_length = true
 			nodeRightColumn.theme = thinLineEditTheme #!!!!!!!!!!!!!
-			nodeRightColumn.connect("value_changed", self, "_on_property_value_changed", [nodeRightColumn, leftString])
-			nodeRightColumn.get_line_edit().connect("text_changed", self, "_on_property_value_typed_in_manually", [nodeRightColumn, leftString])
+			nodeRightColumn.connect("value_changed", Callable(self, "_on_property_value_changed").bind(nodeRightColumn, leftString))
+			nodeRightColumn.get_line_edit().connect("text_changed", Callable(self, "_on_property_value_typed_in_manually").bind(nodeRightColumn, leftString))
 			
 			match leftString:
 				"Gold held","Gold value":
@@ -96,11 +96,11 @@ func add_item(leftString, rightString):
 			nodeRightColumn.value = int(rightString)
 		"Position":
 			var scn = preload('res://Scenes/PositionEditor.tscn')
-			nodeRightColumn = scn.instance()
+			nodeRightColumn = scn.instantiate()
 			nodeRightColumn.set_txt(rightString.split(' '))
-			nodeRightColumn.connect("position_editor_text_entered", self, "_on_property_value_entered", [nodeRightColumn])
-			nodeRightColumn.connect("position_editor_text_changed", self, "_on_property_value_typed_in_manually", [nodeRightColumn, leftString])
-			nodeRightColumn.connect("position_editor_focus_exited", self, "_on_property_value_focus_exited", [nodeRightColumn,leftString])
+			nodeRightColumn.connect("position_editor_text_entered", Callable(self, "_on_property_value_entered").bind(nodeRightColumn))
+			nodeRightColumn.connect("position_editor_text_changed", Callable(self, "_on_property_value_typed_in_manually").bind(nodeRightColumn, leftString))
+			nodeRightColumn.connect("position_editor_focus_exited", Callable(self, "_on_property_value_focus_exited").bind(nodeRightColumn,leftString))
 			
 			nodeRightColumn.text = rightString
 			nodeRightColumn.size_flags_vertical = Control.SIZE_EXPAND# + Control.SIZE_SHRINK_END # To handle the other side's autowrap text
@@ -120,8 +120,8 @@ func add_item(leftString, rightString):
 			nodeRightColumn.add_item("West")
 			nodeRightColumn.add_item("NorthWest")
 			
-			nodeRightColumn.connect("item_selected",self,"_on_optionbutton_item_selected", [leftString])
-			nodeRightColumn.connect("toggled",self,"_on_optionbutton_toggled", [nodeRightColumn])
+			nodeRightColumn.connect("item_selected", Callable(self, "_on_optionbutton_item_selected").bind(leftString))
+			nodeRightColumn.connect("toggled", Callable(self, "_on_optionbutton_toggled").bind(nodeRightColumn))
 			# Select the correct option
 			var orientIndex = Constants.listOrientations.find(int(rightString))
 			if orientIndex != -1:
@@ -131,12 +131,12 @@ func add_item(leftString, rightString):
 			nodeRightColumn.placeholder_text = "Default"
 			nodeRightColumn.placeholder_alpha = 0.33
 			nodeRightColumn.text = rightString #Utils.strip_special_chars_from_string(rightString)
-			nodeRightColumn.connect("text_changed", self, "_on_property_value_changed", [nodeRightColumn, leftString])
+			nodeRightColumn.connect("text_changed", Callable(self, "_on_property_value_changed").bind(nodeRightColumn, leftString))
 			#nodeRightColumn.add_font_override("font", preload("res://Theme/StokeSmaller.tres"))
 		_:
 			nodeRightColumn = Label.new()
 			nodeRightColumn.autowrap = true
-			nodeRightColumn.rect_min_size.x = columnRightSize
+			nodeRightColumn.custom_minimum_size.x = columnRightSize
 			
 			nodeRightColumn.text = rightString
 			nodeRightColumn.size_flags_vertical = Control.SIZE_EXPAND# + Control.SIZE_SHRINK_END # To handle the other side's autowrap text
@@ -144,9 +144,9 @@ func add_item(leftString, rightString):
 			
 			var largest_word_width = get_largest_word_width(nodeRightColumn.text, nodeRightColumn.get_font("font", "Label"))
 			if largest_word_width >= 198: # EFFECTGENERATOR_ENTRANCE_ is slightly too large
-				nodeRightColumn.add_font_override("font", preload("res://Theme/StokeTiny.tres"))
+				nodeRightColumn.add_theme_font_override("font", preload("res://Theme/StokeTiny.tres"))
 			elif largest_word_width >= 101: # "DARK_MISTRESS" is slightly too large
-				nodeRightColumn.add_font_override("font", preload("res://Theme/StokeSmaller.tres"))
+				nodeRightColumn.add_theme_font_override("font", preload("res://Theme/StokeSmaller.tres"))
 	
 	add_child(nodeRightColumn)
 
@@ -225,7 +225,7 @@ func update_property_value(callingNode, leftString):
 		"Effect range":
 			property_name = "effectRange"
 			value = clamp(float(value), 0, 255)
-		"Light range":
+		"Light3D range":
 			property_name = "lightRange"
 			value = clamp(float(value), 0, 255)
 		"Point range":
@@ -283,7 +283,7 @@ func update_property_value(callingNode, leftString):
 	# Adjust SpinBox if applicable
 	if callingNode is SpinBox:
 		callingNode.value = float(value)
-		callingNode.get_line_edit().caret_position = callingNode.get_line_edit().text.length()
+		callingNode.get_line_edit().caret_column = callingNode.get_line_edit().text.length()
 	
 	# Determine whether if we're adjusting an inspected instance (ThingListData) or the Placing Settings (PlacingListData)
 	match name:

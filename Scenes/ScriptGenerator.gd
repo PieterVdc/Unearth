@@ -1,39 +1,39 @@
 extends VBoxContainer
-onready var oWarlockLevelSpinBox = Nodelist.list["oWarlockLevelSpinBox"]
-onready var oWarlockAmountSpinBox = Nodelist.list["oWarlockAmountSpinBox"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oScriptTextEdit = Nodelist.list["oScriptTextEdit"]
-onready var oRoomsAvailable = Nodelist.list["oRoomsAvailable"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oBlueAICheckBox = Nodelist.list["oBlueAICheckBox"]
-onready var oGreenAICheckBox = Nodelist.list["oGreenAICheckBox"]
-onready var oYellowAICheckBox = Nodelist.list["oYellowAICheckBox"]
-onready var oPortalRateField = Nodelist.list["oPortalRateField"]
-onready var oGoldField = Nodelist.list["oGoldField"]
-onready var oMaxCreaturesField = Nodelist.list["oMaxCreaturesField"]
-onready var oPortalRateInSeconds = Nodelist.list["oPortalRateInSeconds"]
-onready var oWinConditionCheckBox = Nodelist.list["oWinConditionCheckBox"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCreaturePool = Nodelist.list["oCreaturePool"]
-onready var oHeroPool = Nodelist.list["oHeroPool"]
-onready var oTrapsAvailable = Nodelist.list["oTrapsAvailable"]
-onready var oMagicAvailable = Nodelist.list["oMagicAvailable"]
-onready var oDoorsAvailable = Nodelist.list["oDoorsAvailable"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oGeneratorContainer = Nodelist.list["oGeneratorContainer"]
-onready var oScriptEditor = Nodelist.list["oScriptEditor"]
-onready var oConfirmGenerateScript = Nodelist.list["oConfirmGenerateScript"]
-onready var oKeeperFXScriptCheckBox = Nodelist.list["oKeeperFXScriptCheckBox"]
-onready var oResearchables = Nodelist.list["oResearchables"]
-onready var oResearchOrderCategory = Nodelist.list["oResearchOrderCategory"]
-onready var oAdjustResearchCheckBox = Nodelist.list["oAdjustResearchCheckBox"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oPurpleAICheckBox = Nodelist.list["oPurpleAICheckBox"]
-onready var oBlackAICheckBox = Nodelist.list["oBlackAICheckBox"]
-onready var oOrangeAICheckBox = Nodelist.list["oOrangeAICheckBox"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
-onready var oScriptGeneratorWindow = Nodelist.list["oScriptGeneratorWindow"]
+@onready var oWarlockLevelSpinBox = Nodelist.list["oWarlockLevelSpinBox"]
+@onready var oWarlockAmountSpinBox = Nodelist.list["oWarlockAmountSpinBox"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oScriptTextEdit = Nodelist.list["oScriptTextEdit"]
+@onready var oRoomsAvailable = Nodelist.list["oRoomsAvailable"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oBlueAICheckBox = Nodelist.list["oBlueAICheckBox"]
+@onready var oGreenAICheckBox = Nodelist.list["oGreenAICheckBox"]
+@onready var oYellowAICheckBox = Nodelist.list["oYellowAICheckBox"]
+@onready var oPortalRateField = Nodelist.list["oPortalRateField"]
+@onready var oGoldField = Nodelist.list["oGoldField"]
+@onready var oMaxCreaturesField = Nodelist.list["oMaxCreaturesField"]
+@onready var oPortalRateInSeconds = Nodelist.list["oPortalRateInSeconds"]
+@onready var oWinConditionCheckBox = Nodelist.list["oWinConditionCheckBox"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCreaturePool = Nodelist.list["oCreaturePool"]
+@onready var oHeroPool = Nodelist.list["oHeroPool"]
+@onready var oTrapsAvailable = Nodelist.list["oTrapsAvailable"]
+@onready var oMagicAvailable = Nodelist.list["oMagicAvailable"]
+@onready var oDoorsAvailable = Nodelist.list["oDoorsAvailable"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oGeneratorContainer = Nodelist.list["oGeneratorContainer"]
+@onready var oScriptEditor = Nodelist.list["oScriptEditor"]
+@onready var oConfirmGenerateScript = Nodelist.list["oConfirmGenerateScript"]
+@onready var oKeeperFXScriptCheckBox = Nodelist.list["oKeeperFXScriptCheckBox"]
+@onready var oResearchables = Nodelist.list["oResearchables"]
+@onready var oResearchOrderCategory = Nodelist.list["oResearchOrderCategory"]
+@onready var oAdjustResearchCheckBox = Nodelist.list["oAdjustResearchCheckBox"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oPurpleAICheckBox = Nodelist.list["oPurpleAICheckBox"]
+@onready var oBlackAICheckBox = Nodelist.list["oBlackAICheckBox"]
+@onready var oOrangeAICheckBox = Nodelist.list["oOrangeAICheckBox"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
+@onready var oScriptGeneratorWindow = Nodelist.list["oScriptGeneratorWindow"]
 
 var scnAvailableButton = preload('res://Scenes/AvailableButton.tscn')
 
@@ -197,14 +197,14 @@ func initialize_researchables():
 		var cost = i[2]
 		
 		var scene = preload('res://Scenes/ResearchableItem.tscn')
-		var idItem = scene.instance()
+		var idItem = scene.instantiate()
 		
 		if what == IS_MAGIC:
 			for checkAll in listMagic:
 				if checkAll[0] == subtype:
 					if Things.DATA_OBJECT.has(subtype):
 						var getName = Things.fetch_name(Things.TYPE.OBJECT, subtype)
-						idItem.hint_tooltip = getName + ' availability'
+						idItem.tooltip_text = getName + ' availability'
 						idItem.set_meta("variable",checkAll[1]) # function text
 						idItem.set_meta("ID", subtype)
 						idItem.type = idItem.MAGIC
@@ -213,7 +213,7 @@ func initialize_researchables():
 		elif what == IS_ROOM:
 			for checkAll in listRoom:
 				if checkAll[0] == subtype:
-					idItem.hint_tooltip = Slabs.data[subtype][Slabs.NAME]
+					idItem.tooltip_text = Slabs.data[subtype][Slabs.NAME]
 					idItem.set_meta("variable",checkAll[1]) # function text
 					idItem.set_meta("ID", subtype)
 					idItem.type = idItem.ROOM
@@ -234,8 +234,8 @@ func initialize_rooms_available():
 		
 		var slabName = Slabs.fetch_idname(slabID)
 		if Slabs.icons.has(slabName):
-			var id = scnAvailableButton.instance()
-			id.hint_tooltip = Slabs.data[slabID][Slabs.NAME] + ' availability'
+			var id = scnAvailableButton.instantiate()
+			id.tooltip_text = Slabs.data[slabID][Slabs.NAME] + ' availability'
 			id.get_node("IconTextureRect").texture = Slabs.icons.get(slabName, null)
 			id.set_meta("variable", functionVariable)
 			id.set_meta("ID", slabID)
@@ -253,12 +253,12 @@ func initialize_creatures_available(): # oCreaturePool
 		var subtype = i[0]
 		var functionVariable = i[1]
 		var defaultAvailability = i[2]
-		var id = scnAvailableButton.instance()
+		var id = scnAvailableButton.instantiate()
 		id.set_meta("variable", functionVariable)
 		var getName = Things.fetch_name(Things.TYPE.CREATURE, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.CREATURE, subtype)
-		id.get_node("%TextEditableLabel").hint_tooltip = getName + ' in pool'
+		id.get_node("%TextEditableLabel").tooltip_text = getName + ' in pool'
 		id.get_node("%TextEditableLabel").text = str(defaultAvailability)
 		id.get_node("%TextEditableLabel").editable = true
 		id.get_node("%TextEditableLabel").mouse_filter = Control.MOUSE_FILTER_PASS
@@ -279,9 +279,9 @@ func initialize_traps_available(): # oTrapsAvailable
 		var subtype = i[0]
 		var functionVariable = i[1]
 		var defaultAvailability = i[2]
-		var id = scnAvailableButton.instance()
+		var id = scnAvailableButton.instantiate()
 		var getName = Things.fetch_name(Things.TYPE.TRAP, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.TRAP, subtype)
 		id.set_meta("variable", functionVariable)
 		id.get_node("%TextEditableLabel").editable = false
@@ -298,9 +298,9 @@ func initialize_magic_available(): # oMagicAvailable
 		var subtype = i[0]
 		var functionVariable = i[1]
 		var defaultAvailability = i[2]
-		var id = scnAvailableButton.instance()
+		var id = scnAvailableButton.instantiate()
 		var getName = Things.fetch_name(Things.TYPE.OBJECT, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.OBJECT, subtype)
 		id.set_meta("variable", functionVariable)
 		id.set_meta("ID", subtype)
@@ -318,9 +318,9 @@ func initialize_doors_available(): # oDoorsAvailable
 		var subtype = i[0]
 		var functionVariable = i[1]
 		var defaultAvailability = i[2]
-		var id = scnAvailableButton.instance()
+		var id = scnAvailableButton.instantiate()
 		var getName = Things.fetch_name(Things.TYPE.DOOR, subtype)
-		id.hint_tooltip = getName + ' availability'
+		id.tooltip_text = getName + ' availability'
 		id.get_node("%IconTextureRect").texture = Things.fetch_sprite(Things.TYPE.DOOR, subtype)
 		id.set_meta("variable", functionVariable)
 		id.get_node("%TextEditableLabel").editable = false
@@ -385,7 +385,7 @@ func execute_gen():
 	
 	var argumentForCreatureAvailable = ",1,1)"
 	
-	if oKeeperFXScriptCheckBox.pressed == true:
+	if oKeeperFXScriptCheckBox.button_pressed == true:
 		generateString += "LEVEL_VERSION(1)" + '\n'
 		argumentForCreatureAvailable = ",1,0)"
 	
@@ -395,17 +395,17 @@ func execute_gen():
 	
 	generateString = add_one_extra_line(generateString)
 	
-	if oBlueAICheckBox.pressed == true and oBlueAICheckBox.visible == true:
+	if oBlueAICheckBox.button_pressed == true and oBlueAICheckBox.visible == true:
 		generateString += "COMPUTER_PLAYER(PLAYER1,0)" + '\n'
-	if oGreenAICheckBox.pressed == true and oGreenAICheckBox.visible == true:
+	if oGreenAICheckBox.button_pressed == true and oGreenAICheckBox.visible == true:
 		generateString += "COMPUTER_PLAYER(PLAYER2,0)" + '\n'
-	if oYellowAICheckBox.pressed == true and oYellowAICheckBox.visible == true:
+	if oYellowAICheckBox.button_pressed == true and oYellowAICheckBox.visible == true:
 		generateString += "COMPUTER_PLAYER(PLAYER3,0)" + '\n'
-	if oPurpleAICheckBox.pressed == true and oPurpleAICheckBox.visible == true:
+	if oPurpleAICheckBox.button_pressed == true and oPurpleAICheckBox.visible == true:
 		generateString += "COMPUTER_PLAYER(PLAYER4,0)" + '\n'
-	if oBlackAICheckBox.pressed == true and oBlackAICheckBox.visible == true:
+	if oBlackAICheckBox.button_pressed == true and oBlackAICheckBox.visible == true:
 		generateString += "COMPUTER_PLAYER(PLAYER5,0)" + '\n'
-	if oOrangeAICheckBox.pressed == true and oOrangeAICheckBox.visible == true:
+	if oOrangeAICheckBox.button_pressed == true and oOrangeAICheckBox.visible == true:
 		generateString += "COMPUTER_PLAYER(PLAYER6,0)" + '\n'
 
 	generateString = add_one_extra_line(generateString)
@@ -463,7 +463,7 @@ func execute_gen():
 	
 	generateString = add_one_extra_line(generateString)
 	
-	if oAdjustResearchCheckBox.pressed == true:
+	if oAdjustResearchCheckBox.button_pressed == true:
 		for i in oResearchables.get_children():
 			if i.visible == false:
 				continue
@@ -474,14 +474,14 @@ func execute_gen():
 				typeName = "MAGIC"
 			
 			var researchFunction = "RESEARCH"
-			if oKeeperFXScriptCheckBox.pressed == true:
+			if oKeeperFXScriptCheckBox.button_pressed == true:
 				researchFunction = "RESEARCH_ORDER"
 			
 			generateString += researchFunction + "(ALL_PLAYERS," + typeName + "," + variableName + ',' + costName + ')' + '\n'
 		
 		generateString = add_one_extra_line(generateString)
 	
-	if oWinConditionCheckBox.pressed == true:
+	if oWinConditionCheckBox.button_pressed == true:
 		generateString += "IF(PLAYER0,ALL_DUNGEONS_DESTROYED == 1)" + '\n'
 		generateString += "	WIN_GAME" + '\n'
 		generateString += "ENDIF" + '\n'
@@ -532,8 +532,8 @@ func adjust_estimated_time():
 
 func _on_AdjustResearchCheckBox_toggled(button_pressed):
 	oResearchOrderCategory.visible = button_pressed
-	yield(get_tree(),'idle_frame')
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
+	await get_tree().idle_frame
 	if oResearchOrderCategory.visible == true:
 		oGeneratorContainer.scroll_vertical += 200
 

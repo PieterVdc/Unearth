@@ -1,7 +1,7 @@
 extends Node
 
 func load_extra_images_from_harddrive():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var custom_images_dir = Settings.unearthdata.plus_file("custom-object-images")
 	var image_paths = Utils.get_filetype_in_directory(custom_images_dir, "png")
 	for image_path in image_paths:
@@ -11,7 +11,7 @@ func load_extra_images_from_harddrive():
 			sprite_id[image_name] = texture
 		else:
 			print("Failed to load texture: ", image_path)
-	print('Loaded extra images from HDD: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Loaded extra images from HDD: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 # The keys can be integers or strings (as read from objects.cfg's AnimationID field)
 # When they're a String, they can be either read the 'Name' field or the 'AnimationID' field, whichever one is prioritized

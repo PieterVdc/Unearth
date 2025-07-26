@@ -1,15 +1,15 @@
 extends Node2D
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oSelectionStatus = Nodelist.list["oSelectionStatus"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oActionPointList = Nodelist.list["oActionPointList"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelectionStatus = Nodelist.list["oSelectionStatus"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oActionPointList = Nodelist.list["oActionPointList"]
 
-onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
+@onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
 
-var inspectingInstance = null setget set_inspector_instance
-var inspectorSubtile = null setget set_inspector_subtile
+var inspectingInstance = null: set = set_inspector_instance
+var inspectorSubtile = null: set = set_inspector_subtile
 
 func _ready():
 	set_inspector_subtile(Vector2(-1000000,-1000000))
@@ -33,7 +33,7 @@ func set_inspector_instance(setval):
 		if setval.is_in_group("ActionPoint") or setval.is_in_group("HeroGate"):
 			pass
 		else:
-			oActionPointList.unselect_all()
+			oActionPointList.deselect_all()
 	
 	oThingDetails.update_details()
 
@@ -49,10 +49,10 @@ func inspect_something(id):
 func deselect():
 	if is_instance_valid(oThingDetails) == false: return # (initial mode select)
 	
-	oActionPointList.unselect_all()
+	oActionPointList.deselect_all()
 	
 	set_inspector_instance(null)
 	set_inspector_subtile(Vector2(-1000000,-1000000))
 	oSelectionStatus.visible = false
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	oThingDetails.update_details()

@@ -1,14 +1,14 @@
-extends WindowDialog
-onready var oChangelogMainVBox = Nodelist.list["oChangelogMainVBox"]
-onready var scene = preload("res://Scenes/ChangelogSection.tscn")
-onready var oGame = Nodelist.list["oGame"]
+extends Window
+@onready var oChangelogMainVBox = Nodelist.list["oChangelogMainVBox"]
+@onready var scene = preload("res://Scenes/ChangelogSection.tscn")
+@onready var oGame = Nodelist.list["oGame"]
 
 const txt = preload("res://changelog.gd").string
 
 func _ready():
 	# Wait for settings.gd to finish reading
 	for i in 50:
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 	
 	var sections = parse_changelog_file()
 	if sections.size() > 0:
@@ -16,12 +16,12 @@ func _ready():
 
 
 func parse_changelog_file():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var sections = []
 	var text = txt
 	var current_version = ""
 	var current_date = ""
-	var current_body = PoolStringArray()
+	var current_body = PackedStringArray()
 	var pos = 0
 	var text_length = text.length()
 	var line_start = 0
@@ -36,9 +36,9 @@ func parse_changelog_file():
 				sections.append({
 					"version": current_version,
 					"date": current_date,
-					"body": current_body.join("\n")
+					"body": "\n".join(current_body)
 				})
-				current_body = PoolStringArray()
+				current_body = PackedStringArray()
 			var dash_pos = line.find(" - ")
 			current_version = line.substr(0, dash_pos)
 			current_date = line.substr(dash_pos + 3)
@@ -50,9 +50,9 @@ func parse_changelog_file():
 		sections.append({
 			"version": current_version,
 			"date": current_date,
-			"body": current_body.join("\n")
+			"body": "\n".join(current_body)
 		})
-	print('Parse changelog: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Parse changelog: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	return sections
 
 
@@ -81,15 +81,15 @@ func _on_CloseButton_pressed():
 
 
 func _on_ChangelogWindow_about_to_show():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	for child in oChangelogMainVBox.get_children():
 		child.queue_free()
 	
 	var sections = parse_changelog_file()
 	for section in sections:
-		var section_node = scene.instance()
+		var section_node = scene.instantiate()
 		oChangelogMainVBox.add_child(section_node)
 		section_node.set_name_text(section.version)
 		section_node.set_date_text(section.date)
 		section_node.set_body_text(section.body)
-	print('Created changelog window: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Created changelog window: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')

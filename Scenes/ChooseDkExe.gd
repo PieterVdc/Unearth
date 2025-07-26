@@ -1,9 +1,9 @@
 extends FileDialog
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oKeeperFXDetection = Nodelist.list["oKeeperFXDetection"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oKeeperFXDetection = Nodelist.list["oKeeperFXDetection"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
 
 func _on_ChooseDkExe_file_selected(path):
 	Settings.set_setting("executable_path", path) # Do this first so keeperfx_is_installed() works

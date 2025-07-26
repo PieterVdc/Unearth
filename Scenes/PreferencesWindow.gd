@@ -1,40 +1,40 @@
-extends WindowDialog
-onready var oGame = Nodelist.list["oGame"]
-onready var oSetDirPath = Nodelist.list["oSetDirPath"]
-onready var oCheckBoxVsync = Nodelist.list["oCheckBoxVsync"]
-onready var oMSAA = Nodelist.list["oMSAA"]
-onready var oCheckBoxAlwaysDecompress = Nodelist.list["oCheckBoxAlwaysDecompress"]
-onready var oChooseDkExe = Nodelist.list["oChooseDkExe"]
-onready var oCmdLineDkCommands = Nodelist.list["oCmdLineDkCommands"]
-onready var oCheckBoxMouseEdgePanning = Nodelist.list["oCheckBoxMouseEdgePanning"]
-onready var oCheckBoxSmoothPan = Nodelist.list["oCheckBoxSmoothPan"]
-onready var oCheckBoxDisplayFPS = Nodelist.list["oCheckBoxDisplayFPS"]
-onready var oZoomStep = Nodelist.list["oZoomStep"]
-onready var oSmoothingRate = Nodelist.list["oSmoothingRate"]
-onready var oDirectionalPanSpeed = Nodelist.list["oDirectionalPanSpeed"]
-onready var oMouseSensitivity = Nodelist.list["oMouseSensitivity"]
-onready var oFieldOfView = Nodelist.list["oFieldOfView"]
-onready var oCheckBoxDisplay3dInfo = Nodelist.list["oCheckBoxDisplay3dInfo"]
-onready var oSlabWindowScale = Nodelist.list["oSlabWindowScale"]
-onready var oThingWindowScale = Nodelist.list["oThingWindowScale"]
-onready var oTabSettings = Nodelist.list["oTabSettings"]
-onready var oCreatureLevelFontSizeScale = Nodelist.list["oCreatureLevelFontSizeScale"]
-onready var oCreatureLevelFontSizeMaxZoom = Nodelist.list["oCreatureLevelFontSizeMaxZoom"]
-onready var oSciptIconScale = Nodelist.list["oSciptIconScale"]
-onready var oSciptIconMaxZoom = Nodelist.list["oSciptIconMaxZoom"]
-onready var oFacingArrowScale = Nodelist.list["oFacingArrowScale"]
-onready var oFacingArrowMaxZoom = Nodelist.list["oFacingArrowMaxZoom"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oUiScale = Nodelist.list["oUiScale"]
-onready var oFramerateLimit = Nodelist.list["oFramerateLimit"]
-onready var oSSAA = Nodelist.list["oSSAA"]
-onready var oOwnerAlpha = Nodelist.list["oOwnerAlpha"]
-onready var oScriptEditorFontSize = Nodelist.list["oScriptEditorFontSize"]
-onready var oEditorFontSize = Nodelist.list["oEditorFontSize"]
-onready var oCheckBoxNewMapAutoOpensMapSettings = Nodelist.list["oCheckBoxNewMapAutoOpensMapSettings"]
-onready var oShowCLMDataTabCheckbox = Nodelist.list["oShowCLMDataTabCheckbox"]
-onready var oSymmetryGuidelinesSetting = Nodelist.list["oSymmetryGuidelinesSetting"]
+extends Window
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oSetDirPath = Nodelist.list["oSetDirPath"]
+@onready var oCheckBoxVsync = Nodelist.list["oCheckBoxVsync"]
+@onready var oMSAA = Nodelist.list["oMSAA"]
+@onready var oCheckBoxAlwaysDecompress = Nodelist.list["oCheckBoxAlwaysDecompress"]
+@onready var oChooseDkExe = Nodelist.list["oChooseDkExe"]
+@onready var oCmdLineDkCommands = Nodelist.list["oCmdLineDkCommands"]
+@onready var oCheckBoxMouseEdgePanning = Nodelist.list["oCheckBoxMouseEdgePanning"]
+@onready var oCheckBoxSmoothPan = Nodelist.list["oCheckBoxSmoothPan"]
+@onready var oCheckBoxDisplayFPS = Nodelist.list["oCheckBoxDisplayFPS"]
+@onready var oZoomStep = Nodelist.list["oZoomStep"]
+@onready var oSmoothingRate = Nodelist.list["oSmoothingRate"]
+@onready var oDirectionalPanSpeed = Nodelist.list["oDirectionalPanSpeed"]
+@onready var oMouseSensitivity = Nodelist.list["oMouseSensitivity"]
+@onready var oFieldOfView = Nodelist.list["oFieldOfView"]
+@onready var oCheckBoxDisplay3dInfo = Nodelist.list["oCheckBoxDisplay3dInfo"]
+@onready var oSlabWindowScale = Nodelist.list["oSlabWindowScale"]
+@onready var oThingWindowScale = Nodelist.list["oThingWindowScale"]
+@onready var oTabSettings = Nodelist.list["oTabSettings"]
+@onready var oCreatureLevelFontSizeScale = Nodelist.list["oCreatureLevelFontSizeScale"]
+@onready var oCreatureLevelFontSizeMaxZoom = Nodelist.list["oCreatureLevelFontSizeMaxZoom"]
+@onready var oSciptIconScale = Nodelist.list["oSciptIconScale"]
+@onready var oSciptIconMaxZoom = Nodelist.list["oSciptIconMaxZoom"]
+@onready var oFacingArrowScale = Nodelist.list["oFacingArrowScale"]
+@onready var oFacingArrowMaxZoom = Nodelist.list["oFacingArrowMaxZoom"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oUiScale = Nodelist.list["oUiScale"]
+@onready var oFramerateLimit = Nodelist.list["oFramerateLimit"]
+@onready var oSSAA = Nodelist.list["oSSAA"]
+@onready var oOwnerAlpha = Nodelist.list["oOwnerAlpha"]
+@onready var oScriptEditorFontSize = Nodelist.list["oScriptEditorFontSize"]
+@onready var oEditorFontSize = Nodelist.list["oEditorFontSize"]
+@onready var oCheckBoxNewMapAutoOpensMapSettings = Nodelist.list["oCheckBoxNewMapAutoOpensMapSettings"]
+@onready var oShowCLMDataTabCheckbox = Nodelist.list["oShowCLMDataTabCheckbox"]
+@onready var oSymmetryGuidelinesSetting = Nodelist.list["oSymmetryGuidelinesSetting"]
 
 #onready var oTabEditor = Nodelist.list["oTabEditor"]
 #onready var oTabGraphics = Nodelist.list["oTabGraphics"]
@@ -46,7 +46,7 @@ func _ready():
 	oTabSettings.set_tab_title(0,"Files")
 	oTabSettings.set_tab_title(1,"Placements")
 	oTabSettings.set_tab_title(2,"UI")
-	oTabSettings.set_tab_title(3,"Camera")
+	oTabSettings.set_tab_title(3,"Camera3D")
 	oTabSettings.set_tab_title(4,"Graphics")
 
 func _on_ButtonSettings_pressed():
@@ -61,16 +61,16 @@ func _on_ButtonSettings_pressed():
 
 func _on_SettingsWindow_about_to_show():
 	oSetDirPath.text = Settings.get_setting("executable_path")
-	oCheckBoxVsync.pressed = Settings.get_setting("vsync")
+	oCheckBoxVsync.button_pressed = Settings.get_setting("vsync")
 	var msaa_enum = Settings.get_setting("msaa")
 	var msaa_slider_value = msaa_enum_to_slider_value(msaa_enum)
 	oMSAA.update_appearance(msaa_slider_value)
-	oCheckBoxAlwaysDecompress.pressed = Settings.get_setting("always_decompress")
+	oCheckBoxAlwaysDecompress.button_pressed = Settings.get_setting("always_decompress")
 	oCmdLineDkCommands.text = Settings.get_setting("dk_commands")
 	
-	oCheckBoxMouseEdgePanning.pressed = Settings.get_setting("mouse_edge_panning")
-	oCheckBoxSmoothPan.pressed = Settings.get_setting("smooth_pan_enabled")
-	oCheckBoxDisplayFPS.pressed = Settings.get_setting("display_fps")
+	oCheckBoxMouseEdgePanning.button_pressed = Settings.get_setting("mouse_edge_panning")
+	oCheckBoxSmoothPan.button_pressed = Settings.get_setting("smooth_pan_enabled")
+	oCheckBoxDisplayFPS.button_pressed = Settings.get_setting("display_fps")
 	oDirectionalPanSpeed.update_appearance(Settings.get_setting("pan_speed"))
 	oZoomStep.update_appearance(Settings.get_setting("zoom_step"))
 	oSmoothingRate.update_appearance(Settings.get_setting("smoothing_rate"))
@@ -78,7 +78,7 @@ func _on_SettingsWindow_about_to_show():
 	oFieldOfView.update_appearance(Settings.get_setting("fov"))
 	oFramerateLimit.update_appearance(Settings.get_setting("framerate_limit"))
 	oSSAA.update_appearance(Settings.get_setting("ssaa"))
-	oCheckBoxDisplay3dInfo.pressed = Settings.get_setting("display_3d_info")
+	oCheckBoxDisplay3dInfo.button_pressed = Settings.get_setting("display_3d_info")
 	oUiScale.update_appearance(Settings.get_setting("ui_scale"))
 	oSlabWindowScale.update_appearance(Settings.get_setting("slab_window_scale"))
 	oThingWindowScale.update_appearance(Settings.get_setting("thing_window_scale"))
@@ -92,8 +92,8 @@ func _on_SettingsWindow_about_to_show():
 	oFacingArrowMaxZoom.update_appearance(Settings.get_setting("facing_arrow_max"))
 	oEditorFontSize.update_appearance(Settings.get_setting("editor_font_size"))
 	oScriptEditorFontSize.update_appearance(Settings.get_setting("script_editor_font_size"))
-	oCheckBoxNewMapAutoOpensMapSettings.pressed = Settings.get_setting("auto_open_map_settings")
-	oShowCLMDataTabCheckbox.pressed = Settings.get_setting("show_clm_data_tab")
+	oCheckBoxNewMapAutoOpensMapSettings.button_pressed = Settings.get_setting("auto_open_map_settings")
+	oShowCLMDataTabCheckbox.button_pressed = Settings.get_setting("show_clm_data_tab")
 
 func _on_CheckBoxVsync_toggled(button_pressed):
 	Settings.set_setting("vsync", button_pressed)
@@ -150,10 +150,10 @@ func edited_UiScale(new_text):
 	Settings.set_setting("ui_scale", float(new_text))
 	
 	# Fix to Slab/Thing window position going off screen when changing UI scale
-	oPickSlabWindow.rect_position.x -= 1 # This will trigger the signal that keeps the window on screen
-	oPickThingWindow.rect_position.x -= 1
+	oPickSlabWindow.position.x -= 1 # This will trigger the signal that keeps the window on screen
+	oPickThingWindow.position.x -= 1
 	
-	rect_position.x -= 1 # Settings window too
+	position.x -= 1 # Settings window too
 
 func edited_SlabWindowScale(new_text):
 	Settings.set_setting("slab_window_scale", float(new_text))

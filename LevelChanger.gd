@@ -1,10 +1,10 @@
 extends SpinBoxPropertiesValue
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
 
 func _ready():
@@ -13,9 +13,9 @@ func _ready():
 
 func _input(event):
 	if visible == false: return
-	if event is InputEventKey and event.pressed == true:
+	if event is InputEventKey and event.button_pressed == true:
 		
-		if get_focus_owner() is LineEdit and get_focus_owner() != self:
+		if get_viewport().gui_get_focus_owner() is LineEdit and get_viewport().gui_get_focus_owner() != self:
 			return
 		if oMapSettingsWindow.visible == true: return
 		if oMapBrowser.visible == true: return
@@ -27,16 +27,16 @@ func _input(event):
 		var allowKeyShortcuts = false
 		match get_parent().name:
 			"PlacingListData": # Placing
-				if get_focus_owner() == null or get_focus_owner().get_parent() == self:
+				if get_viewport().gui_get_focus_owner() == null or get_viewport().gui_get_focus_owner().get_parent() == self:
 					allowKeyShortcuts = true
 			"ThingListData": # Hover
 				if oInspector.inspectingInstance != null:
 					allowKeyShortcuts = true
 		
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		if allowKeyShortcuts == true:
 			var setVal
-			match event.scancode:
+			match event.keycode:
 				KEY_1, KEY_KP_1: setVal = 1
 				KEY_2, KEY_KP_2: setVal = 2
 				KEY_3, KEY_KP_3: setVal = 3
@@ -54,5 +54,5 @@ func _input(event):
 				value = setVal
 				get_line_edit().modulate = Color(2,2,2,1)
 				for i in 10:
-					yield(get_tree(),'idle_frame')
+					await get_tree().idle_frame
 				get_line_edit().modulate = Color(1,1,1,1)

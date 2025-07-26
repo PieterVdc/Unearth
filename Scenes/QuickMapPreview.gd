@@ -1,10 +1,10 @@
 extends ColorRect
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oRNC = Nodelist.list["oRNC"]
-onready var oReadData = Nodelist.list["oReadData"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oMapBrowserTabContainer = Nodelist.list["oMapBrowserTabContainer"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oRNC = Nodelist.list["oRNC"]
+@onready var oReadData = Nodelist.list["oReadData"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oMapBrowserTabContainer = Nodelist.list["oMapBrowserTabContainer"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var img = Image.new()
 var tex = ImageTexture.new()
@@ -25,7 +25,7 @@ var tex = ImageTexture.new()
 #end;
 
 const colourDict = {
-	0: Color.black,
+	0: Color.BLACK,
 	2 : Color("241800"),
 	3 : Color("241800"),
 	50 : Color("241800"),
@@ -73,7 +73,7 @@ const colourDict = {
 	
 	
 	52 : Color("D890BF"),
-	54 : Color.purple, #Color.fuchsia
+	54 : Color.PURPLE, #Color.FUCHSIA
 }
 const spoilerColor = Color8(20,16,0) #Color(0.125, 0.125, 0.175, 1.0)
 var spoiledSlabs = {
@@ -85,7 +85,7 @@ var spoiledSlabs = {
 func _ready():
 	visible = false
 	img.create(M.xSize, M.ySize, false, Image.FORMAT_RGB8)
-	tex.create_from_image(img, 0)
+	tex.create_from_image(img) #,0
 
 
 func update_img(slbFilePath):
@@ -132,7 +132,7 @@ func update_img(slbFilePath):
 	var ownership = 5
 	
 	img.create(xy.x, xy.y, false, Image.FORMAT_RGB8)
-	img.lock()
+	false # img.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for y in xy.y:
 		for x in xy.x:
 			slabID = slbBuffer.get_u8()
@@ -178,19 +178,19 @@ func update_img(slbFilePath):
 
 
 	#if ownership < 5:
-	img.unlock()
+	false # img.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	tex.set_data(img)
 	$QuickMapPreviewDisplay.texture = tex
-	$QuickMapPreviewDisplay.rect_size = Vector2(xy.x*96, xy.y*96)
+	$QuickMapPreviewDisplay.size = Vector2(xy.x*96, xy.y*96)
 	#$QuickMapPreviewDisplay.rect_position = Vector2(xy.x*96*0.5, xy.y*96*0.5)
 	
-	$QuickMapBorder.rect_position = Vector2(-96,-96)
-	$QuickMapBorder.rect_size = Vector2((xy.x*96) + (96*2), (xy.y*96) + (96*2))
+	$QuickMapBorder.position = Vector2(-96,-96)
+	$QuickMapBorder.size = Vector2((xy.x*96) + (96*2), (xy.y*96) + (96*2))
 	
 	oCamera2D.reset_camera(xy.x, xy.y)
 	#xy.x, xy.y
-	rect_size = Vector2(M.xSize*96, M.ySize*96) # Cover current map in darkness
+	size = Vector2(M.xSize*96, M.ySize*96) # Cover current map in darkness
 	
 	#print('Codetime: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
 	return OK

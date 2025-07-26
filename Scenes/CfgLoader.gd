@@ -1,12 +1,12 @@
 extends Node
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oConfigFilesListWindow = Nodelist.list["oConfigFilesListWindow"]
-onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
-onready var oTextureAnimation = Nodelist.list["oTextureAnimation"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oReadCfg = Nodelist.list["oReadCfg"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oConfigFilesListWindow = Nodelist.list["oConfigFilesListWindow"]
+@onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
+@onready var oTextureAnimation = Nodelist.list["oTextureAnimation"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oReadCfg = Nodelist.list["oReadCfg"]
 
 # These are dictionaries containing dictionaries.
 # objects_cfg["section_name"]["key"] will return the "value"
@@ -21,7 +21,7 @@ onready var oReadCfg = Nodelist.list["oReadCfg"]
 var file_exists_checker = File.new()
 
 func start(mapPath):
-	var CODETIME_LOADCFG_START = OS.get_ticks_msec()
+	var CODETIME_LOADCFG_START = Time.get_ticks_msec()
 	Things.clear_dynamic_lists()
 	Things.reset_thing_data_to_default()
 	Slabs.reset_slab_data_to_default()
@@ -39,7 +39,7 @@ func start(mapPath):
 	
 	load_cfgs(mapPath)
 	
-	print('Loaded all .cfg and .toml files: ' + str(OS.get_ticks_msec() - CODETIME_LOADCFG_START) + 'ms')
+	print('Loaded all super.cfg and super.toml files: ' + str(Time.get_ticks_msec() - CODETIME_LOADCFG_START) + 'ms')
 	if oConfigFilesListWindow.visible:
 		Utils.popup_centered(oConfigFilesListWindow)
 	oCustomSlabSystem.load_unearth_custom_slabs_file()
@@ -80,10 +80,10 @@ func load_cfgs(mapPath):
 					var result = oReadCfg.read_dkcfg_file(actual_filepath)
 					combined_cfg_data = super_merge(combined_cfg_data, result["config"])
 					
-					if load_cfg_type == oConfigFileManager.LOAD_CFG_FXDATA and not result["comments"].empty():
+					if load_cfg_type == oConfigFileManager.LOAD_CFG_FXDATA and not result["comments"].is_empty():
 						oConfigFileManager.FXDATA_COMMENTS[file_name_from_list] = result["comments"]
 		# Load it
-		if combined_cfg_data.empty() == false:
+		if combined_cfg_data.is_empty() == false:
 			match file_name_from_list:
 				"objects.cfg": load_objects_data(combined_cfg_data)
 				"creature.cfg": load_creatures_data(combined_cfg_data)

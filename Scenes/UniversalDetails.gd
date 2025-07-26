@@ -1,9 +1,9 @@
 extends PanelContainer
-onready var oUniversalListData = Nodelist.list["oUniversalListData"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oUniversalListData = Nodelist.list["oUniversalListData"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
 
 
 var clmEntryCount = 0

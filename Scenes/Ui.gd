@@ -1,31 +1,31 @@
 extends CanvasLayer
-onready var oUiTools = Nodelist.list["oUiTools"]
-onready var windowStyleBoxFlat = oUiTools.theme.get('WindowDialog/styles/panel')
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oImageAsMapDialog = Nodelist.list["oImageAsMapDialog"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oEditingMode = Nodelist.list["oEditingMode"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oUi3D = Nodelist.list["oUi3D"]
-onready var oModeSwitchButton = Nodelist.list["oModeSwitchButton"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
-onready var oCamera3D = Nodelist.list["oCamera3D"]
-onready var oPlayer = Nodelist.list["oPlayer"]
-onready var o3DCameraInfo = Nodelist.list["o3DCameraInfo"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oUiTools = Nodelist.list["oUiTools"]
+@onready var windowStyleBoxFlat = oUiTools.theme.get('Window/styles/panel')
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oImageAsMapDialog = Nodelist.list["oImageAsMapDialog"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oEditingMode = Nodelist.list["oEditingMode"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oUi3D = Nodelist.list["oUi3D"]
+@onready var oModeSwitchButton = Nodelist.list["oModeSwitchButton"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oCamera3D = Nodelist.list["oCamera3D"]
+@onready var oPlayer = Nodelist.list["oPlayer"]
+@onready var o3DCameraInfo = Nodelist.list["o3DCameraInfo"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
 var tabKeyInputEvent = InputEventKey.new()
 
-var FONT_SIZE_CR_LVL_BASE := 1.00 setget set_FONT_SIZE_CR_LVL_BASE
-var FONT_SIZE_CR_LVL_MAX := 8.00 setget set_FONT_SIZE_CR_LVL_MAX
-var FACING_ARROW_SIZE_MAX := 1.00 setget set_FACING_ARROW_SIZE_MAX
-var FACING_ARROW_SIZE_BASE := 1.00 setget set_FACING_ARROW_SIZE_BASE
+var FONT_SIZE_CR_LVL_BASE := 1.00: set = set_FONT_SIZE_CR_LVL_BASE
+var FONT_SIZE_CR_LVL_MAX := 8.00: set = set_FONT_SIZE_CR_LVL_MAX
+var FACING_ARROW_SIZE_MAX := 1.00: set = set_FACING_ARROW_SIZE_MAX
+var FACING_ARROW_SIZE_BASE := 1.00: set = set_FACING_ARROW_SIZE_BASE
 
 var subwindows_status = {}
 
@@ -65,39 +65,39 @@ func initialize_window_desired_values():
 		if not subwindows_status.has(windowName):
 			subwindows_status[windowName] = {}
 		if not subwindows_status[windowName].has("desired_position"):
-			subwindows_status[windowName]["desired_position"] = window.rect_position
+			subwindows_status[windowName]["desired_position"] = window.position
 		if not subwindows_status[windowName].has("desired_size") and window.resizable:
-			subwindows_status[windowName]["desired_size"] = window.rect_size
+			subwindows_status[windowName]["desired_size"] = window.size
 		
 		var desiredPos = subwindows_status[windowName]["desired_position"]
 		if desiredPos.y < topMargin:
 			desiredPos.y = topMargin
-		window.rect_position = desiredPos
+		window.position = desiredPos
 		if window.resizable and subwindows_status[windowName].has("desired_size"):
-			window.rect_size = subwindows_status[windowName]["desired_size"]
+			window.size = subwindows_status[windowName]["desired_size"]
 	on_startup_put_windows_in_correct_positions()
 
 func on_startup_put_windows_in_correct_positions():
-	yield(get_tree(), 'idle_frame')
-	yield(get_tree(), 'idle_frame')
+	await get_tree().idle_frame
+	await get_tree().idle_frame
 	_on_viewport_size_changed()
 
 func _ready():
-	tabKeyInputEvent.scancode = KEY_TAB
+	tabKeyInputEvent.keycode = KEY_TAB
 	setup_focus_key()
 	find_window_dialogs()
 	wait_until_windows_are_positioned()
-	get_viewport().connect("gui_focus_changed", self, "_on_gui_focus_changed")
+	get_viewport().connect("gui_focus_changed", Callable(self, "_on_gui_focus_changed"))
 
 func wait_until_windows_are_positioned():
 	for i in 10:
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 	for window in listOfWindowDialogs:
-		window.connect("item_rect_changed",self,"_on_any_window_was_modified",[window])
-		window.connect("visibility_changed", self, "_on_window_dialog_became_visible", [window])
-		window.connect("resized", self, "_on_window_dialog_became_visible", [window])
-		window.connect("gui_input", self, "_on_window_gui_input", [window])
-	get_viewport().connect("size_changed", self, "_on_viewport_size_changed")
+		window.connect("item_rect_changed", Callable(self, "_on_any_window_was_modified").bind(window))
+		window.connect("visibility_changed", Callable(self, "_on_window_dialog_became_visible").bind(window))
+		window.connect("resized", Callable(self, "_on_window_dialog_became_visible").bind(window))
+		window.connect("gui_input", Callable(self, "_on_window_gui_input").bind(window))
+	get_viewport().connect("size_changed", Callable(self, "_on_viewport_size_changed"))
 
 func setup_focus_key():
 	InputMap.action_add_event("ui_focus_next", tabKeyInputEvent)
@@ -105,12 +105,12 @@ func setup_focus_key():
 func find_window_dialogs():
 	for mainCategories in get_children():
 		for potentialWindow in mainCategories.get_children():
-			if potentialWindow is WindowDialog:
+			if potentialWindow is Window:
 				listOfWindowDialogs.append(potentialWindow)
 
 func _on_window_gui_input(event, callingNode):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT:
+		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				_is_user_dragging = true
 			else:
@@ -126,15 +126,15 @@ func _on_any_window_was_modified(callingNode):
 		_is_handling_drag = true
 		var viewSize = get_viewport().size / Settings.UI_SCALE
 		
-		set_desired_window_position(callingNode.name, callingNode.rect_position)
+		set_desired_window_position(callingNode.name, callingNode.position)
 		if callingNode.resizable:
-			set_desired_window_size(callingNode.name, callingNode.rect_size)
+			set_desired_window_size(callingNode.name, callingNode.size)
 		
 		_clamp_window_position(callingNode, viewSize)
 		_is_handling_drag = false
 
 func _on_viewport_size_changed():
-	if OS.window_size.x < 720 or OS.window_size.y < 720:
+	if get_window().size.x < 720 or get_window().size.y < 720:
 		return
 	var currentViewSize = get_viewport().size / Settings.UI_SCALE
 	for windowNode in listOfWindowDialogs:
@@ -147,36 +147,36 @@ func _on_viewport_size_changed():
 		var desiredSize = get_desired_window_size(windowNode.name)
 		
 		if desiredPosition != Vector2.ZERO:
-			windowNode.rect_position = desiredPosition
+			windowNode.position = desiredPosition
 		if desiredSize != Vector2.ZERO and windowNode.resizable:
-			windowNode.rect_size = desiredSize
+			windowNode.size = desiredSize
 		
 		_adjust_window_size_to_viewport(windowNode, currentViewSize)
 		_is_handling_drag = false
 
 func _on_window_dialog_became_visible(dialogNode):
 	if dialogNode.visible == true:
-		if OS.window_size.x < 720 or OS.window_size.y < 720:
+		if get_window().size.x < 720 or get_window().size.y < 720:
 			return
 		var currentViewSize = get_viewport().size / Settings.UI_SCALE
 		_adjust_window_size_to_viewport(dialogNode, currentViewSize)
 
 func _adjust_window_size_to_viewport(windowNode, currentViewSize):
-	if OS.window_size.x < 720 or OS.window_size.y < 720:
+	if get_window().size.x < 720 or get_window().size.y < 720:
 		return
-	windowNode.rect_size.x = clamp(windowNode.rect_size.x, 0, currentViewSize.x)
-	windowNode.rect_size.y = clamp(windowNode.rect_size.y, 0, currentViewSize.y - topMargin)
+	windowNode.size.x = clamp(windowNode.size.x, 0, currentViewSize.x)
+	windowNode.size.y = clamp(windowNode.size.y, 0, currentViewSize.y - topMargin)
 	_clamp_window_position(windowNode, currentViewSize)
 
 func _clamp_window_position(theWindow, currentViewSize):
-	if theWindow.rect_position.x > currentViewSize.x - theWindow.rect_size.x:
-		theWindow.rect_position.x = currentViewSize.x - theWindow.rect_size.x
-	if theWindow.rect_position.y > currentViewSize.y - theWindow.rect_size.y:
-		theWindow.rect_position.y = currentViewSize.y - theWindow.rect_size.y
-	if theWindow.rect_position.x < 0:
-		theWindow.rect_position.x = 0
-	if theWindow.rect_position.y < topMargin:
-		theWindow.rect_position.y = topMargin
+	if theWindow.position.x > currentViewSize.x - theWindow.size.x:
+		theWindow.position.x = currentViewSize.x - theWindow.size.x
+	if theWindow.position.y > currentViewSize.y - theWindow.size.y:
+		theWindow.position.y = currentViewSize.y - theWindow.size.y
+	if theWindow.position.x < 0:
+		theWindow.position.x = 0
+	if theWindow.position.y < topMargin:
+		theWindow.position.y = topMargin
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -268,7 +268,7 @@ func _on_gui_focus_changed(newlyFocusedControl):
 
 	var focusIsInsideProperties = false
 	if newlyFocusedControl != null:
-		if newlyFocusedControl == oPropertiesWindow or oPropertiesWindow.is_a_parent_of(newlyFocusedControl):
+		if newlyFocusedControl == oPropertiesWindow or oPropertiesWindow.is_ancestor_of(newlyFocusedControl):
 			focusIsInsideProperties = true
 	
 	if focusIsInsideProperties == true:

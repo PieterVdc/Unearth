@@ -1,35 +1,35 @@
-extends WindowDialog
-onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
-onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
-onready var oCustomSlabVoxelView = Nodelist.list["oCustomSlabVoxelView"]
-onready var oGridContainerCustomColumns3x3 = Nodelist.list["oGridContainerCustomColumns3x3"]
-onready var oCustomSlabID = Nodelist.list["oCustomSlabID"]
-onready var oCustomSlabNameLabel = Nodelist.list["oCustomSlabNameLabel"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
-onready var oNewSlabName = Nodelist.list["oNewSlabName"]
-onready var oSlabTabs = Nodelist.list["oSlabTabs"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oSlabWibbleOptionButton = Nodelist.list["oSlabWibbleOptionButton"]
-onready var oSlabLiquidOptionButton = Nodelist.list["oSlabLiquidOptionButton"]
-onready var oWibbleEdgesCheckBox = Nodelist.list["oWibbleEdgesCheckBox"]
-onready var oWibbleEdgesSpacing = Nodelist.list["oWibbleEdgesSpacing"]
-onready var oClmEditorControls = Nodelist.list["oClmEditorControls"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oFakeCustomColumnsPanelContainer = Nodelist.list["oFakeCustomColumnsPanelContainer"]
-onready var oSlabBitmaskOptionButton = Nodelist.list["oSlabBitmaskOptionButton"]
-onready var oSlabIsSolidOptionButton = Nodelist.list["oSlabIsSolidOptionButton"]
-onready var oSlabOwnableOptionButton = Nodelist.list["oSlabOwnableOptionButton"]
-onready var oPassageLabel = Nodelist.list["oPassageLabel"]
-onready var oSlabsetTabs = Nodelist.list["oSlabsetTabs"]
+extends Window
+@onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
+@onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
+@onready var oCustomSlabVoxelView = Nodelist.list["oCustomSlabVoxelView"]
+@onready var oGridContainerCustomColumns3x3 = Nodelist.list["oGridContainerCustomColumns3x3"]
+@onready var oCustomSlabID = Nodelist.list["oCustomSlabID"]
+@onready var oCustomSlabNameLabel = Nodelist.list["oCustomSlabNameLabel"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oCustomSlabSystem = Nodelist.list["oCustomSlabSystem"]
+@onready var oNewSlabName = Nodelist.list["oNewSlabName"]
+@onready var oSlabTabs = Nodelist.list["oSlabTabs"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oSlabWibbleOptionButton = Nodelist.list["oSlabWibbleOptionButton"]
+@onready var oSlabLiquidOptionButton = Nodelist.list["oSlabLiquidOptionButton"]
+@onready var oWibbleEdgesCheckBox = Nodelist.list["oWibbleEdgesCheckBox"]
+@onready var oWibbleEdgesSpacing = Nodelist.list["oWibbleEdgesSpacing"]
+@onready var oClmEditorControls = Nodelist.list["oClmEditorControls"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oFakeCustomColumnsPanelContainer = Nodelist.list["oFakeCustomColumnsPanelContainer"]
+@onready var oSlabBitmaskOptionButton = Nodelist.list["oSlabBitmaskOptionButton"]
+@onready var oSlabIsSolidOptionButton = Nodelist.list["oSlabIsSolidOptionButton"]
+@onready var oSlabOwnableOptionButton = Nodelist.list["oSlabOwnableOptionButton"]
+@onready var oPassageLabel = Nodelist.list["oPassageLabel"]
+@onready var oSlabsetTabs = Nodelist.list["oSlabsetTabs"]
 
-onready var oCustomDoorThingLabel = Nodelist.list["oCustomDoorThingLabel"]
-onready var oCustomDoorThing = Nodelist.list["oCustomDoorThing"]
-onready var oCustomDoorThingEmptySpace = Nodelist.list["oCustomDoorThingEmptySpace"]
-onready var oCustomDoorThingIDNameLabel = Nodelist.list["oCustomDoorThingIDNameLabel"]
+@onready var oCustomDoorThingLabel = Nodelist.list["oCustomDoorThingLabel"]
+@onready var oCustomDoorThing = Nodelist.list["oCustomDoorThing"]
+@onready var oCustomDoorThingEmptySpace = Nodelist.list["oCustomDoorThingEmptySpace"]
+@onready var oCustomDoorThingIDNameLabel = Nodelist.list["oCustomDoorThingIDNameLabel"]
 
 var scnColumnSetter = preload('res://Scenes/ColumnSetter.tscn')
 var customSlabArrayOfSpinbox = []
@@ -37,14 +37,14 @@ var customSlabArrayOfSpinbox = []
 
 func _ready():
 	for number in 9:
-		var id = scnColumnSetter.instance()
+		var id = scnColumnSetter.instantiate()
 		var spinbox = id.get_node("CustomSpinBox")
 		var shortcut = id.get_node("ButtonShortcut")
-		shortcut.connect("pressed",self,"shortcut_pressed",[id])
+		shortcut.connect("pressed", Callable(self, "shortcut_pressed").bind(id))
 		spinbox.min_value = 1
 		spinbox.max_value = oDataClm.column_count-1
 		spinbox.value = 1
-		spinbox.connect("value_changed",oCustomSlabVoxelView,"_on_CustomSlabSpinBox_value_changed")
+		spinbox.connect("value_changed", Callable(oCustomSlabVoxelView, "_on_CustomSlabSpinBox_value_changed"))
 		customSlabArrayOfSpinbox.append(spinbox)
 		id.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		oGridContainerCustomColumns3x3.add_child(id)
@@ -58,13 +58,13 @@ func _on_AddCustomSlabWindow_visibility_changed():
 		oCustomSlabVoxelView.initialize()
 		
 		# Due to a strange bug I don't understand, the oCustomSlabVoxelView is skewed until I resize the window. This fixes that.
-		rect_size += Vector2(1,1)
-		yield(get_tree(),'idle_frame')
-		rect_size -= Vector2(1,1)
+		size += Vector2(1,1)
+		await get_tree().idle_frame
+		size -= Vector2(1,1)
 		
 
 func shortcut_pressed(id):
-	if oSlabsetTabs.get_tab_hidden(2) == false:
+	if oSlabsetTabs.is_tab_hidden(2) == false:
 		oSlabsetWindow.popup_on_right_side()
 		oSlabsetTabs.current_tab = 2
 		var spinbox = id.get_node("CustomSpinBox")

@@ -15,26 +15,26 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 90.0
-margin_bottom = 31.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 90.0
+offset_bottom = 31.0
 mouse_filter = 2
 
 [node name="Spacing2" type="Control" parent="HBoxContainer"]
 modulate = Color( 1, 1, 1, 0 )
 self_modulate = Color( 1, 1, 1, 0 )
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 24, 24 )
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Label" type="Label" parent="HBoxContainer"]
-margin_left = 28.0
-margin_right = 55.0
-margin_bottom = 24.0
+offset_left = 28.0
+offset_right = 55.0
+offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -49,10 +49,10 @@ __meta__ = {
 [node name="Spacing" type="Control" parent="HBoxContainer"]
 modulate = Color( 1, 1, 1, 0 )
 self_modulate = Color( 1, 1, 1, 0 )
-margin_left = 59.0
-margin_right = 83.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_left = 59.0
+offset_right = 83.0
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 24, 24 )
 mouse_filter = 2
 
 [node name="Timer" type="Timer" parent="."]

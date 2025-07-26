@@ -1,12 +1,12 @@
-extends WindowDialog
+extends Window
 #onready var oUnearthVerLabel = Nodelist.list["oUnearthVerLabel"]
-onready var oMain = Nodelist.list["oMain"]
-onready var oAboutGridContainer = Nodelist.list["oAboutGridContainer"]
+@onready var oMain = Nodelist.list["oMain"]
+@onready var oAboutGridContainer = Nodelist.list["oAboutGridContainer"]
 
 func _ready():
 	for i in oAboutGridContainer.get_children():
 		if i is LinkButton:
-			i.connect("pressed",self,"on_link_clicked",[i])
+			i.connect("pressed", Callable(self, "on_link_clicked").bind(i))
 
 func on_link_clicked(id):
 	OS.shell_open(id.text)

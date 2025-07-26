@@ -1,10 +1,10 @@
 extends HBoxContainer
 tool # So that label text changes in editor
-export var settingText = "SettingName" setget set_label
-export var slider_step : float = 0.01
-export var minimum_value : float = 0.0
-export var maximum_value : float = 1.0
-onready var lineEdit = $'%LineEdit'
+@export var settingText = "SettingName": set = set_label
+@export var slider_step : float = 0.01
+@export var minimum_value : float = 0.0
+@export var maximum_value : float = 1.0
+@onready var lineEdit = $'%LineEdit'
 
 func _enter_tree():
 	$Slider.min_value = minimum_value

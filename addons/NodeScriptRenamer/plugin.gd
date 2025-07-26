@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var scene_change_timer
@@ -7,7 +7,7 @@ var node_tracker = {}
 func _enter_tree():
 	scene_change_timer = Timer.new()
 	scene_change_timer.wait_time = 0.1
-	scene_change_timer.connect("timeout", self, "_check_node_changes")
+	scene_change_timer.connect("timeout", Callable(self, "_check_node_changes"))
 	add_child(scene_change_timer)
 	scene_change_timer.start()
 
@@ -42,7 +42,7 @@ func _handle_node_rename(node, old_name, new_name):
 		return
 	
 	var script_path = script.resource_path
-	if script_path.empty():
+	if script_path.is_empty():
 		return
 	
 	var script_filename = script_path.get_file().get_basename()
@@ -57,13 +57,13 @@ func _show_rename_dialog(node, script_path, old_name, new_name):
 	if _is_script_open(script_path):
 		script_open_warning = "\n\nNote: Please close the script tab before confirming."
 	dialog.dialog_text = "Node '%s' was renamed to '%s'.\n\nDo you want to rename the script file from '%s.gd' to '%s.gd'?%s" % [old_name, new_name, old_name, new_name, script_open_warning]
-	dialog.popup_exclusive = true
+	dialog.exclusive = true
 	
 	get_editor_interface().get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(450, 180))
 	
-	dialog.connect("confirmed", self, "_on_rename_confirmed", [node, script_path, new_name], CONNECT_ONESHOT)
-	dialog.connect("popup_hide", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT)
+	dialog.connect("confirmed", Callable(self, "_on_rename_confirmed").bind(node, script_path, new_name), CONNECT_ONE_SHOT)
+	dialog.connect("popup_hide", Callable(self, "_on_dialog_closed").bind(dialog), CONNECT_ONE_SHOT)
 
 func _on_rename_confirmed(node, old_script_path, new_name):
 	_rename_script_file(node, old_script_path, new_name)
@@ -91,7 +91,7 @@ func _rename_script_file(node, old_script_path, new_name):
 		_show_error_dialog("File '%s' already exists!" % new_script_path)
 		return
 	
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	var error = dir.copy(old_script_path, new_script_path)
 	
 	if error != OK:
@@ -119,7 +119,7 @@ func _rename_script_file(node, old_script_path, new_name):
 
 func _update_scene_references(old_path, new_path):
 	var current_scene_path = get_editor_interface().get_edited_scene_root().filename
-	if current_scene_path.empty():
+	if current_scene_path.is_empty():
 		return
 	
 	var file = File.new()
@@ -182,4 +182,4 @@ func _show_error_dialog(message):
 	
 	get_editor_interface().get_base_control().add_child(dialog)
 	dialog.popup_centered(Vector2(400, 120))
-	dialog.connect("popup_hide", self, "_on_dialog_closed", [dialog], CONNECT_ONESHOT) 
+	dialog.connect("popup_hide", Callable(self, "_on_dialog_closed").bind(dialog), CONNECT_ONE_SHOT) 

@@ -1,5 +1,5 @@
 extends Node
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var MAP_FORMAT_VERSION = ""
 var NAME_TEXT = ""

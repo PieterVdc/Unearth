@@ -1,14 +1,14 @@
 extends PanelContainer
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oTMapNames = Nodelist.list["oTMapNames"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oTMapNames = Nodelist.list["oTMapNames"]
 
 var scnSlabStyleButton = preload("res://Scenes/SlabStyleButton.tscn")
-var paintSlabStyle = 0 setget set_paintSlabStyle
-onready var oSelectedRect = get_node("../../../../Clippy/SelectedRect")
+var paintSlabStyle = 0: set = set_paintSlabStyle
+@onready var oSelectedRect = get_node("../../../../Clippy/SelectedRect")
 
 func initialize_grid_items():
 	if is_instance_valid(oDisplaySlxNumbers):
@@ -16,11 +16,11 @@ func initialize_grid_items():
 	var oGridContainer = current_grid_container()
 #	# Add children
 	for i in oTMapLoader.cachedTextures.size()+1: # +1 is for "Default"
-		var btnId = scnSlabStyleButton.instance()
-		btnId.connect("pressed", self, "_on_SlabStyleButtonPressed", [btnId,i])
+		var btnId = scnSlabStyleButton.instantiate()
+		btnId.connect("pressed", Callable(self, "_on_SlabStyleButtonPressed").bind(btnId,i))
 		
-		btnId.connect("mouse_entered", oPickSlabWindow, "_on_hovered_over_item", [btnId])
-		btnId.connect("mouse_exited", oPickSlabWindow, "_on_hovered_none")
+		btnId.connect("mouse_entered", Callable(oPickSlabWindow, "_on_hovered_over_item").bind(btnId))
+		btnId.connect("mouse_exited", Callable(oPickSlabWindow, "_on_hovered_none"))
 		
 		
 		if i == 0:
@@ -35,7 +35,7 @@ func initialize_grid_items():
 				btnId.set_meta("grid_item_text", "")
 		
 		if i == paintSlabStyle:
-			btnId.pressed = true
+			btnId.button_pressed = true
 		
 		oGridContainer.add_child(btnId)
 #aaa.text = Constants.TEXTURE_MAP_NAMES[i]
@@ -54,11 +54,11 @@ func update_paint_for_slab_style(tile):
 	for id in current_grid_container().get_children():
 		if id is Button:
 			if id.text == str(paintSlabStyle-1):
-				id.pressed = true
+				id.button_pressed = true
 				oSelectedRect.boundToItem = id
 				oSelectedRect.visible = true
 			elif id.text == '~' and paintSlabStyle == 0:
-				id.pressed = true
+				id.button_pressed = true
 				oSelectedRect.boundToItem = id
 				oSelectedRect.visible = true
 

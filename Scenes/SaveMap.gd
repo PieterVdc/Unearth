@@ -1,20 +1,20 @@
 extends Node
 
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oDataLua = Nodelist.list["oDataLua"]
-onready var oScriptEditor = Nodelist.list["oScriptEditor"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oMenuButtonFile = Nodelist.list["oMenuButtonFile"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oDataLua = Nodelist.list["oDataLua"]
+@onready var oScriptEditor = Nodelist.list["oScriptEditor"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oMenuButtonFile = Nodelist.list["oMenuButtonFile"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
 
 var queueExit = false
 
@@ -26,7 +26,7 @@ func save_map(filePath):
 	var map_basename_with_ext = filePath.get_file()
 	var map_filename_no_ext = map_basename_with_ext.get_basename()
 	var map_base_dir = filePath.get_base_dir()
-	var SAVETIME_START = OS.get_ticks_msec()
+	var SAVETIME_START = Time.get_ticks_msec()
 	delete_existing_files(filePath)
 	
 	var script_definitions = [
@@ -66,7 +66,7 @@ func save_map(filePath):
 	save_toml_file("slabset.toml", "oCurrentlyOpenSlabset", map_filename_no_ext, map_base_dir)
 	save_toml_file("columnset.toml", "oCurrentlyOpenColumnset", map_filename_no_ext, map_base_dir)
 
-	print('Total time to save: ' + str(OS.get_ticks_msec() - SAVETIME_START) + 'ms')
+	print('Total time to save: ' + str(Time.get_ticks_msec() - SAVETIME_START) + 'ms')
 	if oDataScript.data == "" and oDataLua.data == "":
 		oMessage.big("Warning", "Your map has no script. In Map Settings, create a script then click 'Script Generator' to add basic functionality.")
 	oMessage.quick('Saved map')
@@ -112,14 +112,14 @@ func delete_existing_files(map_file_path):
 		fileTypesToDelete = ["TNGFX", "APTFX", "LGTFX"]
 	elif oCurrentFormat.selected == Constants.KfxFormat:
 		fileTypesToDelete = ["LIF", "TNG", "APT", "LGT"]
-	if fileTypesToDelete.empty():
+	if fileTypesToDelete.is_empty():
 		return
 
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.open(baseDirectory) != OK:
 		print("An error occurred when trying to access " + baseDirectory)
 		return
-	dir.list_dir_begin(true, false)
+	dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	var fileName = dir.get_next()
 	while fileName != "":
 		if MAP_NAME_NO_EXT in fileName.to_upper() and fileTypesToDelete.has(fileName.get_extension().to_upper()):
@@ -139,7 +139,7 @@ func save_toml_file(file_type, ui_label_name, map_filename_no_ext, map_base_dir)
 	
 	# Check if there's an existing file from the UI tooltip
 	var ui_label = Nodelist.list[ui_label_name]
-	var existing_file_path = ui_label.hint_tooltip
+	var existing_file_path = ui_label.tooltip_text
 	
 	if existing_file_path != "" and existing_file_path != "No saved file":
 		# Use the existing file path (campaign or local)

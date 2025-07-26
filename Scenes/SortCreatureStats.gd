@@ -1,9 +1,9 @@
-extends WindowDialog
-onready var oGame = Nodelist.list["oGame"]
-onready var oSortCreaStatsGrid = Nodelist.list["oSortCreaStatsGrid"]
-onready var oStatsOptionButton = Nodelist.list["oStatsOptionButton"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oReadCfg = Nodelist.list["oReadCfg"]
+extends Window
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oSortCreaStatsGrid = Nodelist.list["oSortCreaStatsGrid"]
+@onready var oStatsOptionButton = Nodelist.list["oStatsOptionButton"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oReadCfg = Nodelist.list["oReadCfg"]
 
 var name_type = 0
 
@@ -46,7 +46,7 @@ func update_list(optionButtonIndex):
 				var getValue = all_creature_data[file][section].get(optionButtonMeta[1])
 				list_data.append([getName, getValue])
 	
-	list_data.sort_custom(self, "sort_list")
+	list_data.sort_custom(Callable(self, "sort_list"))
 	for i in list_data:
 		var col = Color(0.5,0.5,0.5)
 		var label_text = str(i[0])  # Create a single string with a separator
@@ -98,52 +98,52 @@ func add_entry(string1, value, fontColor):
 	var addLabel1 = Label.new()
 	addLabel1.text = str(string1)
 	oSortCreaStatsGrid.add_child(addLabel1)
-	addLabel1.set("custom_colors/font_color", fontColor)
+	addLabel1.set("theme_override_colors/font_color", fontColor)
 	addLabel1.mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	var addLabel2 = Label.new()
 	addLabel2.text = str(value)
 	oSortCreaStatsGrid.add_child(addLabel2)
-	addLabel2.set("custom_colors/font_color", fontColor)
+	addLabel2.set("theme_override_colors/font_color", fontColor)
 	addLabel2.mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	addLabel1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	addLabel2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
-	addLabel1.connect("mouse_entered", self, "_on_label_mouse_entered", [addLabel1, addLabel2])
-	addLabel2.connect("mouse_entered", self, "_on_label_mouse_entered", [addLabel1, addLabel2])
+	addLabel1.connect("mouse_entered", Callable(self, "_on_label_mouse_entered").bind(addLabel1, addLabel2))
+	addLabel2.connect("mouse_entered", Callable(self, "_on_label_mouse_entered").bind(addLabel1, addLabel2))
 	
-	addLabel1.connect("mouse_exited", self, "_on_label_mouse_exited", [addLabel1, addLabel2])
-	addLabel2.connect("mouse_exited", self, "_on_label_mouse_exited", [addLabel1, addLabel2])
+	addLabel1.connect("mouse_exited", Callable(self, "_on_label_mouse_exited").bind(addLabel1, addLabel2))
+	addLabel2.connect("mouse_exited", Callable(self, "_on_label_mouse_exited").bind(addLabel1, addLabel2))
 	
-	addLabel1.connect("gui_input", self, "_on_label_gui_input", [addLabel1, addLabel2])
-	addLabel2.connect("gui_input", self, "_on_label_gui_input", [addLabel1, addLabel2])
+	addLabel1.connect("gui_input", Callable(self, "_on_label_gui_input").bind(addLabel1, addLabel2))
+	addLabel2.connect("gui_input", Callable(self, "_on_label_gui_input").bind(addLabel1, addLabel2))
 
 func _on_label_mouse_entered(l1,l2):
 	if l1.text in selected_labels:
 		pass
 	else:
-		l1.set("custom_colors/font_color", Color(1,1,1))
-		l2.set("custom_colors/font_color", Color(1,1,1))
+		l1.set("theme_override_colors/font_color", Color(1,1,1))
+		l2.set("theme_override_colors/font_color", Color(1,1,1))
 
 func _on_label_mouse_exited(l1,l2):
 	if l1.text in selected_labels:
 		pass
 	else:
-		l1.set("custom_colors/font_color", Color(0.5,0.5,0.5))
-		l2.set("custom_colors/font_color", Color(0.5,0.5,0.5))
+		l1.set("theme_override_colors/font_color", Color(0.5,0.5,0.5))
+		l2.set("theme_override_colors/font_color", Color(0.5,0.5,0.5))
 
 func _on_label_gui_input(event, l1, l2):
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var label_text = l1.text
 		if label_text in selected_labels:
 			selected_labels.erase(label_text)
-			l1.set("custom_colors/font_color", Color(0.5,0.5,0.5))
-			l2.set("custom_colors/font_color", Color(0.5,0.5,0.5))
+			l1.set("theme_override_colors/font_color", Color(0.5,0.5,0.5))
+			l2.set("theme_override_colors/font_color", Color(0.5,0.5,0.5))
 		else:
 			selected_labels.append(label_text)
-			l1.set("custom_colors/font_color", Color(1, 1, 1))
-			l2.set("custom_colors/font_color", Color(1, 1, 1))
+			l1.set("theme_override_colors/font_color", Color(1, 1, 1))
+			l2.set("theme_override_colors/font_color", Color(1, 1, 1))
 
 func _on_NameStatsButton_pressed():
 	selected_labels.clear()

@@ -1,14 +1,14 @@
-extends WindowDialog
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oThingTabs = Nodelist.list["oThingTabs"]
-onready var oActionPointOptions = Nodelist.list["oActionPointOptions"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oGridFunctions = Nodelist.list["oGridFunctions"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oUi = Nodelist.list["oUi"]
+extends Window
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oThingTabs = Nodelist.list["oThingTabs"]
+@onready var oActionPointOptions = Nodelist.list["oActionPointOptions"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oGridFunctions = Nodelist.list["oGridFunctions"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oUi = Nodelist.list["oUi"]
 
 enum {
 	GRIDCON_PATH
@@ -30,7 +30,7 @@ enum { # I only used the official DK keeperfx categories as a guide rather than 
 	TAB_MISC
 }
 
-onready var tabs = {
+@onready var tabs = {
 	TAB_CREATURE: [oThingTabs.get_node("TabFolder/Creature"),"res://edited_images/icon_creature.png"],
 	TAB_SPELL: [oThingTabs.get_node("TabFolder/Spell"),"res://edited_images/icon_book.png"],
 	TAB_TRAP: [oThingTabs.get_node("TabFolder/Trap"),"res://dk_images/traps_doors/anim0845/r1frame04.png"],
@@ -45,10 +45,10 @@ onready var tabs = {
 	TAB_MISC: [oThingTabs.get_node("TabFolder/Misc"),"res://dk_images/rpanel_64/tab_crtr_wandr_std.png"],
 }
 
-export var grid_item_size : Vector2
-export var grid_window_scale : float setget update_scale
-onready var oSelectedRect = $Clippy/SelectedRect
-onready var oCenteredLabel = $Clippy/CenteredLabel
+@export var grid_item_size : Vector2
+@export var grid_window_scale : float: set = update_scale
+@onready var oSelectedRect = $Clippy/SelectedRect
+@onready var oCenteredLabel = $Clippy/CenteredLabel
 var scnGridItem = preload("res://Scenes/GenericGridItem.tscn")
 var rectChangedTimer = Timer.new()
 ## The purpose of "Clippy" is to hide the blue cursor if you scroll it off the window.
@@ -56,27 +56,27 @@ var rectChangedTimer = Timer.new()
 func _ready():
 	get_close_button().expand = true
 	get_close_button().hide()
-	connect("resized",oGridFunctions,"_on_GridWindow_resized", [self])
-	connect("visibility_changed",oGridFunctions,"_on_GridWindow_visibility_changed",[self])
-	connect("gui_input",oGridFunctions,"_on_GridWindow_gui_input",[self])
-	connect("item_rect_changed",self,"rect_changed_start_timer")
-	rectChangedTimer.connect("timeout", oUi, "_on_any_window_was_modified", [self])
+	connect("resized", Callable(oGridFunctions, "_on_GridWindow_resized").bind(self))
+	connect("visibility_changed", Callable(oGridFunctions, "_on_GridWindow_visibility_changed").bind(self))
+	connect("gui_input", Callable(oGridFunctions, "_on_GridWindow_gui_input").bind(self))
+	connect("item_rect_changed", Callable(self, "rect_changed_start_timer"))
+	rectChangedTimer.connect("timeout", Callable(oUi, "_on_any_window_was_modified").bind(self))
 	rectChangedTimer.one_shot = true
 	add_child(rectChangedTimer)
 	
-	oThingTabs.tabSystem.connect("tab_changed",oGridFunctions,"_on_tab_changed",[self])
+	oThingTabs.tabSystem.connect("tab_changed", Callable(oGridFunctions, "_on_tab_changed").bind(self))
 	
 	grid_window_scale = 0.55
 	grid_item_size = Vector2(96, 96)
 	
 	# Window's minimum size
-	rect_min_size = Vector2(80,80)#Vector2((grid_item_size.x*grid_window_scale)+11, (grid_item_size.y*grid_window_scale)+11)
+	custom_minimum_size = Vector2(80,80)#Vector2((grid_item_size.x*grid_window_scale)+11, (grid_item_size.y*grid_window_scale)+11)
 	
 	oThingTabs.initialize([])
 
 func initialize_thing_grid_items():
-	yield(get_tree(),'idle_frame') # Needed for loading animation IDs from call_deferred in Things singleton
-	var CODETIME_START = OS.get_ticks_msec()
+	await get_tree().idle_frame # Needed for loading animation IDs from call_deferred in Things singleton
+	var CODETIME_START = Time.get_ticks_msec()
 	remove_all_grid_items()
 	
 	for thingCategory in [Things.TYPE.OBJECT, Things.TYPE.CREATURE, Things.TYPE.TRAP, Things.TYPE.DOOR, Things.TYPE.EFFECTGEN, Things.TYPE.EXTRA]:
@@ -133,10 +133,10 @@ func initialize_thing_grid_items():
 						var putIntoTab
 						match subtype:
 							1: putIntoTab = TAB_ACTION # Action Point
-							2: putIntoTab = TAB_EFFECTGEN # Light
+							2: putIntoTab = TAB_EFFECTGEN # Light3D
 						add_to_category(tabs[putIntoTab][GRIDCON_PATH], Things.DATA_EXTRA, thingCategory, subtype)
 	
-	print('Initialized Things window: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Initialized Things window: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 # Hardcoded recategorization for tabs
 var recategorization = {
@@ -166,9 +166,9 @@ func add_to_category(tabNode, thingsData, thingtype, subtype):
 	
 	var gridcontainer = get_grid_container_node(tabNode)
 	
-	var id = scnGridItem.instance()
+	var id = scnGridItem.instantiate()
 	id.img_margin = 3
-	id.connect('mouse_entered',oThingDetails,"_on_thing_portrait_mouse_entered",[id])
+	id.connect('mouse_entered', Callable(oThingDetails, "_on_thing_portrait_mouse_entered").bind(id))
 	id.set_meta("thingSubtype", subtype)
 	id.set_meta("thingType", thingtype)
 	
@@ -187,7 +187,7 @@ func add_to_category(tabNode, thingsData, thingtype, subtype):
 	
 	# Needed for when adding custom objects
 	for i in 3:
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		oGridFunctions._on_GridWindow_resized(self)
 
 
@@ -197,8 +197,8 @@ func _process(delta): # It's necessary to use _process to update selection, beca
 
 func update_selection_position():
 	if is_instance_valid(oSelectedRect.boundToItem) == true:
-		oSelectedRect.rect_global_position = oSelectedRect.boundToItem.rect_global_position
-		oSelectedRect.rect_size = oSelectedRect.boundToItem.rect_size
+		oSelectedRect.global_position = oSelectedRect.boundToItem.global_position
+		oSelectedRect.size = oSelectedRect.boundToItem.size
 
 enum {
 	CHANGE_TO_PORTRAIT,
@@ -211,8 +211,8 @@ func _on_hovered_none(id):
 
 
 func _on_hovered_over_item(id):
-	var offset = Vector2(id.rect_size.x * 0.5, id.rect_size.y * 0.5)
-	oCenteredLabel.rect_global_position = id.rect_global_position + offset
+	var offset = Vector2(id.size.x * 0.5, id.size.y * 0.5)
+	oCenteredLabel.global_position = id.global_position + offset
 	oCenteredLabel.get_node("Label").text = id.get_meta("grid_item_text")
 	change_portrait_on_hover(id, CHANGE_TO_SPRITE)
 
@@ -246,10 +246,10 @@ func add_item_to_grid(tabID, id, set_text):
 	
 	
 	id.set_meta("grid_item_text", set_text)
-	id.connect("mouse_entered", self, "_on_hovered_over_item", [id])
-	id.connect("mouse_exited", self, "_on_hovered_none", [id])
-	id.connect("pressed",self,"pressed",[id])
-	id.rect_min_size = Vector2(grid_item_size.x * grid_window_scale, grid_item_size.y * grid_window_scale)
+	id.connect("mouse_entered", Callable(self, "_on_hovered_over_item").bind(id))
+	id.connect("mouse_exited", Callable(self, "_on_hovered_none").bind(id))
+	id.connect("pressed", Callable(self, "pressed").bind(id))
+	id.custom_minimum_size = Vector2(grid_item_size.x * grid_window_scale, grid_item_size.y * grid_window_scale)
 	
 	if is_instance_valid(id) == true:
 		add_workshop_item_sprite_overlay(id, id.get_meta("thingSubtype"))
@@ -278,7 +278,7 @@ func add_workshop_item_sprite_overlay(textureParent, subtype):
 				workshopItemInTheBox.anchor_right = 0.85
 				workshopItemInTheBox.anchor_bottom = 0.85
 
-			workshopItemInTheBox.rect_position = Vector2(2, -1)
+			workshopItemInTheBox.position = Vector2(2, -1)
 			workshopItemInTheBox.modulate = Color(1, 1, 1, 0.5)
 			workshopItemInTheBox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -331,7 +331,7 @@ func update_scale(setvalue):
 	var oGridContainer = current_grid_container()
 	if oGridContainer == null: return
 	for id in oGridContainer.get_children():
-		id.rect_min_size = Vector2(grid_item_size.x * setvalue, grid_item_size.y * setvalue)
+		id.custom_minimum_size = Vector2(grid_item_size.x * setvalue, grid_item_size.y * setvalue)
 	grid_window_scale = setvalue
 	oGridFunctions._on_GridWindow_resized(self)
 

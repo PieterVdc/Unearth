@@ -1,9 +1,9 @@
 extends VBoxContainer
-onready var oToolPencil = Nodelist.list["oToolPencil"]
-onready var oBrushSizeContainer = Nodelist.list["oBrushSizeContainer"]
-onready var oBrushPreview = Nodelist.list["oBrushPreview"]
-onready var oFillUseDisplay = Nodelist.list["oFillUseDisplay"]
-onready var oFortifyCheckBox = Nodelist.list["oFortifyCheckBox"]
+@onready var oToolPencil = Nodelist.list["oToolPencil"]
+@onready var oBrushSizeContainer = Nodelist.list["oBrushSizeContainer"]
+@onready var oBrushPreview = Nodelist.list["oBrushPreview"]
+@onready var oFillUseDisplay = Nodelist.list["oFillUseDisplay"]
+@onready var oFortifyCheckBox = Nodelist.list["oFortifyCheckBox"]
 
 var BRUSH_SIZE = 1
 
@@ -49,12 +49,12 @@ func switched_to_slab_mode():
 		oFortifyCheckBox.visible = true
 
 func switched_to_thing_mode():
-	oToolPencil.pressed = true
+	oToolPencil.button_pressed = true
 	visible = false
 	oFillUseDisplay.visible = false
 	oFortifyCheckBox.visible = false
 
 func _on_EditBrushSizeValue_value_changed(value):
 	BRUSH_SIZE = value
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	oBrushPreview.update_img()

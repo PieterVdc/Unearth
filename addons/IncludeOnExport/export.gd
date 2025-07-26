@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorExportPlugin
 
  # You could make these into project settings
@@ -44,13 +44,13 @@ func _export_file_our_way(path):
 
 	var rfile = File.new()
 	rfile.open(path, File.READ)
-	var buffer = rfile.get_buffer(rfile.get_len())
+	var buffer = rfile.get_buffer(rfile.get_length())
 	rfile.close()
 
 	var output_path = output_root_dir.plus_file(path.trim_prefix("res://"))
 	var output_dir = output_path.get_base_dir()
 
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if not dir.dir_exists(output_dir):
 		dir.make_dir_recursive(output_dir)
 
@@ -62,9 +62,9 @@ func _export_file_our_way(path):
 
 func dir_contents(path):
 	var array = []
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.open(path) == OK:
-		dir.list_dir_begin()
+		dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = dir.get_next()
 		while file_name != "":
 			if dir.current_is_dir():

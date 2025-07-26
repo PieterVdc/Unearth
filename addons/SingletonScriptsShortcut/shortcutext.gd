@@ -1,16 +1,16 @@
+@tool
 extends Button
-tool
 
-onready var scriptIconTexture = get_icon("Script", "EditorIcons")
-onready var popup := $Popup
-onready var checkbutton := $Popup/VBoxContainer/HBoxContainer/CheckButton
-onready var itemlist := $Popup/VBoxContainer/ItemList
+@onready var scriptIconTexture = get_icon("Script", "EditorIcons")
+@onready var popup := $Popup
+@onready var checkbutton := $Popup/VBoxContainer/HBoxContainer/CheckButton
+@onready var itemlist := $Popup/VBoxContainer/ItemList
 
 signal request_items(itemlist, sorted)
 
 func _ready():
-	connect("pressed", self, "show_popup")
-	checkbutton.connect("toggled", self, "change_sort")
+	connect("pressed", Callable(self, "show_popup"))
+	checkbutton.connect("toggled", Callable(self, "change_sort"))
 
 func show_popup():
 	emit_signal("request_items", itemlist, checkbutton.pressed)

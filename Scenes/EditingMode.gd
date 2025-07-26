@@ -1,21 +1,21 @@
 extends Control
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oModeSwitchButton = Nodelist.list["oModeSwitchButton"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oBrushPreview = Nodelist.list["oBrushPreview"]
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oModeSwitchButton = Nodelist.list["oModeSwitchButton"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oBrushPreview = Nodelist.list["oBrushPreview"]
 
 func _ready():
-	get_viewport().connect("size_changed",self, "_on_viewport_size_changed")
-	yield(get_tree(),'idle_frame')
+	get_viewport().connect("size_changed", Callable(self, "_on_viewport_size_changed"))
+	await get_tree().idle_frame
 	_on_viewport_size_changed()
 
 func _on_viewport_size_changed():
-	rect_position.x = get_viewport_rect().size.x/2
-	rect_position.x = clamp(rect_position.x, 570, get_viewport_rect().size.x)
+	position.x = get_viewport_rect().size.x/2
+	position.x = clamp(position.x, 570, get_viewport_rect().size.x)
 
 func _unhandled_input(event):
 	if visible == false: return

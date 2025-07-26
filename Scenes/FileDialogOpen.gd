@@ -1,7 +1,7 @@
 extends FileDialog
-onready var oGame = Nodelist.list["oGame"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oUi = Nodelist.list["oUi"]
 
 func _on_FileDialogOpen_about_to_show():
 	var path = oGame.EXECUTABLE_PATH

@@ -1,6 +1,6 @@
 extends 'res://Class/ClmClass.gd'
-onready var oGame = Nodelist.list["oGame"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var column_count = 8192
 var reserved_columnset = 4096
@@ -157,7 +157,7 @@ func is_column_different(index):
 
 
 func update_list_of_columns_that_contain_rng_cubes():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	columnsContainingRngCubes.clear()
 	
 	var reverseRngCubeLookup = {}
@@ -176,15 +176,15 @@ func update_list_of_columns_that_contain_rng_cubes():
 		if rngCubeTypesInColumn:
 			columnsContainingRngCubes[clmIndex] = rngCubeTypesInColumn.keys()
 	
-	print('update_list_of_columns_that_contain_rng_cubes: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('update_list_of_columns_that_contain_rng_cubes: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func clear_all_column_data():
-	.clear_all_column_data()
+	super.clear_all_column_data()
 	highest_columnset_id_from_fxdata = 0
 
 
 func update_list_of_columns_that_contain_owned_cubes():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	columnsContainingOwnedCubes.clear()
 	
 	var reverseOwnedCubeLookup = {}
@@ -203,7 +203,7 @@ func update_list_of_columns_that_contain_owned_cubes():
 		if ownedCubeTypesInColumn:
 			columnsContainingOwnedCubes[clmIndex] = ownedCubeTypesInColumn.keys()
 	
-	print('update_list_of_columns_that_contain_owned_cubes: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('update_list_of_columns_that_contain_owned_cubes: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func is_valid_column_id_for_navigation(columnID):
 	if highest_columnset_id_from_fxdata <= 0:

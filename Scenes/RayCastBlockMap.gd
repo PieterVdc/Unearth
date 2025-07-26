@@ -1,7 +1,7 @@
-extends Spatial
-onready var oPlayer = Nodelist.list["oPlayer"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oGame3D = Nodelist.list["oGame3D"]
+extends Node3D
+@onready var oPlayer = Nodelist.list["oPlayer"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oGame3D = Nodelist.list["oGame3D"]
 
 var reach = 100
 var blockChecks = {}
@@ -34,7 +34,7 @@ func start(startPoint, endPoint):
 		if previousCheck != newCheck:
 			previousCheck = newCheck
 			place_area_check(newCheck)
-		raycastData = oPlayer.get_world().get_direct_space_state().intersect_ray(startPoint, startPoint+raycast, [], 524288, true, true) #This line is cheap, the performance cost comes from placing the areaChecks
+		raycastData = oPlayer.get_world_3d().get_direct_space_state().intersect_ray(startPoint, startPoint+raycast, [], 524288, true, true) #This line is cheap, the performance cost comes from placing the areaChecks
 		if raycastData:
 			break
 		
@@ -47,7 +47,7 @@ func start(startPoint, endPoint):
 	for i in abcKeys.size():
 		var id = blockChecks[abcKeys[i]]
 		if id.markForCulling == true:
-			blockChecks.erase(id.translation)
+			blockChecks.erase(id.position)
 			id.queue_free()
 	
 	#print('countTime: ' + str(countTime) )
@@ -62,8 +62,8 @@ func place_area_check(raypos):
 		if oGenerateTerrain.get_block(superPos) != oGenerateTerrain.EMPTY:
 			if blockChecks.has(superPos) == false:
 				
-				var id = blockCheckerScene.instance()
-				id.translation = superPos
+				var id = blockCheckerScene.instantiate()
+				id.position = superPos
 				oGame3D.add_child(id)
 				
 				blockChecks[superPos] = id #adds an entry to the dictionary

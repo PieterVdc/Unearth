@@ -1,9 +1,9 @@
 extends Panel
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oTreeOfOverlaps = Nodelist.list["oTreeOfOverlaps"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oTreeOfOverlaps = Nodelist.list["oTreeOfOverlaps"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
 var treeRoot
 var timeToDisplay = 0
@@ -31,8 +31,8 @@ func _unhandled_input(event):
 				#oInspector.inspect_something(oSelection.cursorOnInstancesArray[0])
 
 func _process(delta):
-	rect_position = get_global_mouse_position()
-	rect_position.x += 20
+	position = get_global_mouse_position()
+	position.x += 20
 	
 	if oSelection.cursorOnInstancesArray.size() < 2:
 		oTreeOfOverlaps.clear()
@@ -57,12 +57,12 @@ func update_overlap_tree():
 	oTreeOfOverlaps.clear()
 	treeRoot = oTreeOfOverlaps.create_item()
 	#print(oSelection.cursorOnInstancesArray)
-	rect_size.y = 42
+	size.y = 42
 	for i in oSelection.cursorOnInstancesArray:
 		if is_instance_valid(i) and i.is_queued_for_deletion() == false:
 			var item = oTreeOfOverlaps.create_item(treeRoot)
 			item.set_text(0, Things.fetch_name(i.thingType, i.subtype))
-			rect_size.y += 29
+			size.y += 29
 			
 	
 	var highlightItem = oTreeOfOverlaps.get_item_at_position(Vector2(10,10))

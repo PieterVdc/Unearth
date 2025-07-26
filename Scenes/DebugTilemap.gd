@@ -1,9 +1,9 @@
 extends Node2D
-onready var DEBUG_THIS_TILEMAP_NODE = Nodelist.list["oDataWibble"]
+@onready var DEBUG_THIS_TILEMAP_NODE = Nodelist.list["oDataWibble"]
 
 var tileDrawDist = 32
 var draw_grid = false
-var dynamic_font = DynamicFont.new()
+var dynamic_font = FontFile.new()
 
 #oDataSlx.set_cellv(cursorTile, 4)
 
@@ -28,7 +28,7 @@ func _draw():
 				pos.x -= 16
 				pos.y -= 16
 				
-				var color = Color.white
+				var color = Color.WHITE
 #				match value:
 #					0: color = Color.red
 #					1: color = Color.blue

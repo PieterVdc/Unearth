@@ -4,9 +4,9 @@ var align
 signal position_editor_focus_exited
 signal position_editor_text_entered
 signal position_editor_text_changed
-onready var oLineEditX = $"HBoxContainer1/LineEditX"
-onready var oLineEditY = $"HBoxContainer1/LineEditY"
-onready var oLineEditZ = $"HBoxContainer2/LineEditZ"
+@onready var oLineEditX = $"HBoxContainer1/LineEditX"
+@onready var oLineEditY = $"HBoxContainer1/LineEditY"
+@onready var oLineEditZ = $"HBoxContainer2/LineEditZ"
 
 func set_txt(array):
 	if array.size() >= 1:

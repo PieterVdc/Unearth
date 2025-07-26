@@ -1,7 +1,7 @@
 extends Node
-onready var oGame = Nodelist.list["oGame"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 var reserved_slabset = 100
 var highest_slabset_id_from_fxdata = 0
@@ -67,7 +67,7 @@ func import_toml_slabset(filePath):
 			oMessage.quick("Slabset: TOML section first part does not begin with 'slab': " + parts[0])
 			continue
 		var slab_id_str = parts[0].trim_prefix("slab")
-		if not slab_id_str.is_valid_integer():
+		if not slab_id_str.is_valid_int():
 			oMessage.quick("Slabset: TOML section slab ID is not a valid integer: " + slab_id_str)
 			continue
 		var slabID = int(slab_id_str)
@@ -162,7 +162,7 @@ func resize_dat_and_tng_based_on_file(cfg):
 		var parts = section.split(".")
 		if parts.size() >= 1 and parts[0].begins_with("slab"):
 			var slab_id_str = parts[0].trim_prefix("slab")
-			if slab_id_str.is_valid_integer():
+			if slab_id_str.is_valid_int():
 				var slabID_val = int(slab_id_str)
 				var current_size_check = (slabID_val + 1) * 28
 				max_variation_size_needed = max(max_variation_size_needed, current_size_check)
@@ -270,13 +270,13 @@ enum { # BitFlags
 }
 
 func export_toml_slabset(filePath):
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var list_of_modified_slabs = get_all_modified_slabs()
 
-	if list_of_modified_slabs.empty():
+	if list_of_modified_slabs.is_empty():
 		return false
 
-	var lines = PoolStringArray()
+	var lines = PackedStringArray()
 	for slabID in list_of_modified_slabs:
 		lines.append("[slab" + str(slabID) + "]")
 		lines.append("")
@@ -323,7 +323,7 @@ func export_toml_slabset(filePath):
 								value = object_properties[z]
 						if propertyName:
 							lines.append(propertyName + " = " + str(value))
-				if tng[variation].empty():
+				if tng[variation].is_empty():
 					lines.append("Objects = []")
 			else:
 				lines.append("Objects = []")
@@ -341,7 +341,7 @@ func export_toml_slabset(filePath):
 
 	print("Saved: " + filePath)
 	print("Saved Slab IDs: " + str(list_of_modified_slabs).replace("[","").replace("]",""))
-	print('Exported in: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Exported in: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	return true
 
 func get_all_modified_slabs():
@@ -384,9 +384,9 @@ func is_tng_variation_different(variation):
 
 
 func is_dat_column_different(variation, subtile):
-	if variation >= dat.size() or dat[variation].empty():
+	if variation >= dat.size() or dat[variation].is_empty():
 		return false
-	if variation >= default_data["dat"].size() or default_data["dat"][variation].empty():
+	if variation >= default_data["dat"].size() or default_data["dat"][variation].is_empty():
 		return dat[variation][subtile] != 0
 	return dat[variation][subtile] != default_data["dat"][variation][subtile]
 

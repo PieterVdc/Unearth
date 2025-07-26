@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 #
 #onready var oRayCastBlockMap = Nodelist.list["oRayCastBlockMap"]
 #onready var oPlayer = Nodelist.list["oPlayer"]

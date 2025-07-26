@@ -1,15 +1,15 @@
 extends VBoxContainer
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
-onready var oUseSlabOwnerCheckBox = Nodelist.list["oUseSlabOwnerCheckBox"]
-onready var oOwnershipGridContainer = Nodelist.list["oOwnershipGridContainer"]
-onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
-onready var oCollectibleLabel = Nodelist.list["oCollectibleLabel"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var gridItemScene = preload("res://Scenes/GenericGridItem.tscn")
-onready var oSelectedRect = $Control/SelectedRect
-onready var oCenteredLabel = $Control/CenteredLabel
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
+@onready var oUseSlabOwnerCheckBox = Nodelist.list["oUseSlabOwnerCheckBox"]
+@onready var oOwnershipGridContainer = Nodelist.list["oOwnershipGridContainer"]
+@onready var oMirrorOptions = Nodelist.list["oMirrorOptions"]
+@onready var oCollectibleLabel = Nodelist.list["oCollectibleLabel"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var gridItemScene = preload("res://Scenes/GenericGridItem.tscn")
+@onready var oSelectedRect = $Control/SelectedRect
+@onready var oCenteredLabel = $Control/CenteredLabel
+@onready var oSelector = Nodelist.list["oSelector"]
 
 var ownership_available = true
 
@@ -35,7 +35,7 @@ func update_ownership_head_icons():
 		setMargin = 1
 	
 	for i in owner_order:
-		var id = gridItemScene.instance()
+		var id = gridItemScene.instantiate()
 		
 		id.set_meta("grid_value", i)
 		id.img_margin = setMargin
@@ -61,18 +61,18 @@ func add_child_to_grid(id, set_text, icon_size):
 	oOwnershipGridContainer.add_child(id)
 	set_text = set_text.replace(" ","\n") # Use "New lines" wherever there was a space.
 	id.set_meta("grid_item_text", set_text)
-	id.connect("mouse_entered", self, "_on_hovered_over_item", [id])
-	id.connect("mouse_exited", self, "_on_hovered_none")
-	id.connect("pressed",self,"pressed",[id])
-	id.rect_min_size = icon_size
+	id.connect("mouse_entered", Callable(self, "_on_hovered_over_item").bind(id))
+	id.connect("mouse_exited", Callable(self, "_on_hovered_none"))
+	id.connect("pressed", Callable(self, "pressed").bind(id))
+	id.custom_minimum_size = icon_size
 
 
 func pressed(id):
 	var setValue = id.get_meta("grid_value")
 	if oCollectibleLabel.visible == true:
 		return
-	elif oUseSlabOwnerCheckBox.pressed == true and oUseSlabOwnerCheckBox.visible == true:
-		oUseSlabOwnerCheckBox.pressed = false
+	elif oUseSlabOwnerCheckBox.button_pressed == true and oUseSlabOwnerCheckBox.visible == true:
+		oUseSlabOwnerCheckBox.button_pressed = false
 	oSelection.paintOwnership = setValue
 	set_selection(setValue)
 	oOnlyOwnership.select_appropriate_button()
@@ -92,8 +92,8 @@ func update_selection():
 		return
 	
 	oSelectedRect.visible = true
-	oSelectedRect.rect_global_position = oSelectedRect.boundToItem.rect_global_position
-	oSelectedRect.rect_size = oSelectedRect.boundToItem.rect_size
+	oSelectedRect.global_position = oSelectedRect.boundToItem.global_position
+	oSelectedRect.size = oSelectedRect.boundToItem.size
 
 
 func _on_hovered_none():
@@ -101,8 +101,8 @@ func _on_hovered_none():
 
 
 func _on_hovered_over_item(id):
-	var offset = Vector2(id.rect_size.x * 0.5, id.rect_size.y * 0.5)
-	oCenteredLabel.rect_global_position = id.rect_global_position + offset
+	var offset = Vector2(id.size.x * 0.5, id.size.y * 0.5)
+	oCenteredLabel.global_position = id.global_position + offset
 	oCenteredLabel.get_node("Label").text = id.get_meta("grid_item_text")
 
 

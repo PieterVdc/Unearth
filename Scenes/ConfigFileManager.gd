@@ -1,6 +1,6 @@
 extends Node
 
-onready var oCfgLoader = Nodelist.list["oCfgLoader"]
+@onready var oCfgLoader = Nodelist.list["oCfgLoader"]
 
 signal config_file_status_changed()
 
@@ -39,7 +39,7 @@ func clear_paths():
 
 
 func store_default_data():
-	if not DATA_RULES.empty():
+	if not DATA_RULES.is_empty():
 		default_data = DATA_RULES.duplicate(true)
 
 

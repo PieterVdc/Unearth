@@ -1,14 +1,14 @@
 extends Node
 
-onready var oChooseTmapFileDialog = Nodelist.list["oChooseTmapFileDialog"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oTeditSavePNG = Nodelist.list["oTeditSavePNG"]
-onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
-onready var oReadPalette = Nodelist.list["oReadPalette"]
-onready var oTeditSaveDAT = Nodelist.list["oTeditSaveDAT"]
+@onready var oChooseTmapFileDialog = Nodelist.list["oChooseTmapFileDialog"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oTeditSavePNG = Nodelist.list["oTeditSavePNG"]
+@onready var oTextureEditingWindow = Nodelist.list["oTextureEditingWindow"]
+@onready var oReadPalette = Nodelist.list["oReadPalette"]
+@onready var oTeditSaveDAT = Nodelist.list["oTeditSaveDAT"]
 
 
 func start_file_selection():
@@ -93,14 +93,14 @@ func convert_dat_to_rgb_image(datPathArgument: String) -> Image:
 	var rgbFullImage = Image.new()
 	rgbFullImage.create(l8FullImage.get_width(), l8FullImage.get_height(), false, Image.FORMAT_RGB8)
 	var paletteColors: Array = oReadPalette.get_palette_data()
-	if paletteColors.empty(): return null
-	l8FullImage.lock()
-	rgbFullImage.lock()
+	if paletteColors.is_empty(): return null
+	false # l8FullImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # rgbFullImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for yPx in l8FullImage.get_height():
 		for xPx in l8FullImage.get_width():
 			var paletteIndex = int(l8FullImage.get_pixel(xPx, yPx).r * 255.0 + 0.5)
 			var color = paletteColors[paletteIndex] if paletteIndex >= 0 and paletteIndex < paletteColors.size() else Color(1,0,1)
 			rgbFullImage.set_pixel(xPx, yPx, color)
-	l8FullImage.unlock()
-	rgbFullImage.unlock()
+	false # l8FullImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # rgbFullImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	return rgbFullImage 

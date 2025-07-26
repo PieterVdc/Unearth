@@ -1,5 +1,5 @@
 extends Control
-onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelection = Nodelist.list["oSelection"]
 
 var dataImage = Image.new()
 var dataTexture = ImageTexture.new()
@@ -31,9 +31,9 @@ func set_visual(columnArray):
 				$AspectRatioContainer.anchor_right -= 0.02
 	
 	dataImage.create(3, 3, false, Image.FORMAT_RGB8)
-	dataTexture.create_from_image(dataImage, 0)
+	dataTexture.create_from_image(dataImage) #,0
 	
-	dataImage.lock()
+	false # dataImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for y in 3:
 		for x in 3:
 			var cubeFace = 0
@@ -73,21 +73,21 @@ func set_visual(columnArray):
 				var cubeFace = Cube.tex[cubeID][Cube.SIDE_SOUTH]
 				dataImage.set_pixel(x, z, Color8(cubeFace >> 16 & 255, cubeFace >> 8 & 255, cubeFace & 255))
 	
-	dataImage.unlock()
+	false # dataImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	dataTexture.set_data(dataImage)
 	
 	var oTextureAnimation = Nodelist.list["oTextureAnimation"]
 	
-	material.set_shader_param("showOnlySpecificStyle", 0)
-	material.set_shader_param("slxData", preload("res://Shaders/Black3x3.png"))
-	material.set_shader_param("fieldSizeInSubtiles", Vector2(3, 3))
-	material.set_shader_param("animationDatabase", oTextureAnimation.animation_database_texture)
-	material.set_shader_param("viewTextures", dataTexture)
+	material.set_shader_parameter("showOnlySpecificStyle", 0)
+	material.set_shader_parameter("slxData", preload("res://Shaders/Black3x3.png"))
+	material.set_shader_parameter("fieldSizeInSubtiles", Vector2(3, 3))
+	material.set_shader_parameter("animationDatabase", oTextureAnimation.animation_database_texture)
+	material.set_shader_parameter("viewTextures", dataTexture)
 	if slabID == 57:
-		material.set_shader_param("slabIdData", preload("res://Shaders/Bedrock3x3.png"))
+		material.set_shader_parameter("slabIdData", preload("res://Shaders/Bedrock3x3.png"))
 	else:
-		material.set_shader_param("slabIdData", preload("res://Shaders/Black3x3.png"))
+		material.set_shader_parameter("slabIdData", preload("res://Shaders/Black3x3.png"))
 
 #func _process(delta):
 #	print(material.get_shader_param("dkTextureMap_Split_A"))

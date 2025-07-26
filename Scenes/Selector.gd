@@ -1,48 +1,48 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oColumnDetails = Nodelist.list["oColumnDetails"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oUiTools = Nodelist.list["oUiTools"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oUseSlabOwnerCheckBox = Nodelist.list["oUseSlabOwnerCheckBox"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oDataWibble = Nodelist.list["oDataWibble"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oSlabStyle = Nodelist.list["oSlabStyle"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oEditingMode = Nodelist.list["oEditingMode"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oEditingTools = Nodelist.list["oEditingTools"]
-onready var oRectangleSelection = Nodelist.list["oRectangleSelection"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oQuickMapPreview = Nodelist.list["oQuickMapPreview"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oBrushPreview = Nodelist.list["oBrushPreview"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oSlabSideViewer = Nodelist.list["oSlabSideViewer"]
-onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
-onready var oOwnerSelection = Nodelist.list["oOwnerSelection"]
-onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
-onready var oUndoStates = Nodelist.list["oUndoStates"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oColumnDetails = Nodelist.list["oColumnDetails"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oUiTools = Nodelist.list["oUiTools"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oUseSlabOwnerCheckBox = Nodelist.list["oUseSlabOwnerCheckBox"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oDataWibble = Nodelist.list["oDataWibble"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oSlabStyle = Nodelist.list["oSlabStyle"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oEditingMode = Nodelist.list["oEditingMode"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oEditingTools = Nodelist.list["oEditingTools"]
+@onready var oRectangleSelection = Nodelist.list["oRectangleSelection"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oQuickMapPreview = Nodelist.list["oQuickMapPreview"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oBrushPreview = Nodelist.list["oBrushPreview"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oSlabSideViewer = Nodelist.list["oSlabSideViewer"]
+@onready var oAddCustomSlabWindow = Nodelist.list["oAddCustomSlabWindow"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oOwnerSelection = Nodelist.list["oOwnerSelection"]
+@onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
+@onready var oUndoStates = Nodelist.list["oUndoStates"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
 
-onready var TILE_SIZE = Constants.TILE_SIZE
-onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
+@onready var TILE_SIZE = Constants.TILE_SIZE
+@onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
 
 var fadeWallGraphics = 1.0
 
@@ -147,7 +147,7 @@ func mouse_button_on_field():
 						drag_init_relative_pos = thingAtCursor.global_position - get_global_mouse_position()
 					
 					if youClickedOnAnAlreadyInspectedThing == false:
-						if oSelection.cursorOnInstancesArray.empty() == false:
+						if oSelection.cursorOnInstancesArray.is_empty() == false:
 							if is_instance_valid(oSelection.cursorOnInstancesArray[0]) == true:
 								oInspector.inspect_something(oSelection.cursorOnInstancesArray[0])
 						else:
@@ -186,7 +186,7 @@ func mouse_button_on_field():
 	
 	# Release button
 	if Input.is_action_just_released("mouse_left"):
-		OS.move_window_to_foreground() # See if this helps any issues which cause Unearth minimize button to stop working.
+		get_window().grab_focus() # See if this helps any issues which cause Unearth minimize button to stop working.
 		if is_instance_valid(holdClickOnInstance):
 			if draggingInstance == true:
 				draggingInstance = false
@@ -215,7 +215,7 @@ func mouse_button_on_field():
 		if visible == true:
 			var columnDetailsVisible = oPropertiesTabs.current_tab == 2
 			if columnDetailsVisible == false:
-				if oSelection.cursorOnInstancesArray.empty() == false:
+				if oSelection.cursorOnInstancesArray.is_empty() == false:
 					if is_instance_valid(oSelection.cursorOnInstancesArray[0]) == true:
 						change_mode(MODE_SUBTILE)
 				else:
@@ -253,14 +253,14 @@ func mouse_button_on_field():
 					doDelete = true
 				
 				if doDelete == true:
-					if oSelection.cursorOnInstancesArray.empty() == false:
+					if oSelection.cursorOnInstancesArray.is_empty() == false:
 						oSelection.manually_delete_one_instance(oSelection.cursorOnInstancesArray[0])
 						canPlace = true # Allow placing on the tile you just deleted, without needing to move cursor off of it
 			
 			MODE_TILE:
-				var nodesOnSlab = oInstances.get_all_nodes_on_slab(cursorTile.x,cursorTile.y, ["Thing","ActionPoint","Light"])
+				var nodesOnSlab = oInstances.get_all_nodes_on_slab(cursorTile.x,cursorTile.y, ["Thing","ActionPoint","Light3D"])
 				for inst in nodesOnSlab:
-					if oMirrorPlacementCheckBox.pressed == true:
+					if oMirrorPlacementCheckBox.button_pressed == true:
 						oInstances.mirror_deletion_of_instance(inst)
 					oInstances.kill_instance(inst)
 		
@@ -276,7 +276,7 @@ func _input(event):
 			elif inst.thingType == Things.TYPE.EXTRA and inst.subtype == 1:
 				handle_zoom(event, inst, "pointRange", "Action point range: ")
 			if inst.thingType == Things.TYPE.EXTRA and inst.subtype == 2:
-				handle_zoom(event, inst, "lightRange", "Light range: ")
+				handle_zoom(event, inst, "lightRange", "Light3D range: ")
 
 func handle_zoom(event, instance, property_name, message_prefix):
 	if event.is_action_released('zoom_in'):
@@ -289,7 +289,7 @@ func adjust_range(instance, property_name, increment, message_prefix):
 	instance.set(property_name, newRange)
 	oThingDetails.update_details()
 	#oMessage.quick(message_prefix + str(newRange))
-	get_tree().set_input_as_handled()
+	get_viewport().set_input_as_handled()
 	var originalPosition = Vector2(instance.locationX, instance.locationY)
 	oInstances.mirror_adjusted_value(instance, property_name, originalPosition)
 
@@ -407,8 +407,8 @@ func _on_Selector_visibility_changed():
 		canPlace = false
 
 func _notification(what: int):
-	if what == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
 		preventClickWhenFocusing = true
-	if what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
-		yield(get_tree().create_timer(0.25), "timeout")
+	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_IN:
+		await get_tree().create_timer(0.25).timeout
 		preventClickWhenFocusing = false

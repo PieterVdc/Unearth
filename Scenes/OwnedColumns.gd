@@ -1,5 +1,5 @@
 extends Node
-onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
 
 #enum {
 #	COLUMN_FLOOR_MARKER = 0

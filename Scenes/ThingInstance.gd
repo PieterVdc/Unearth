@@ -1,31 +1,31 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInstanceOwnership = Nodelist.list["oInstanceOwnership"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oActionPointList = Nodelist.list["oActionPointList"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInstanceOwnership = Nodelist.list["oInstanceOwnership"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oActionPointList = Nodelist.list["oActionPointList"]
+@onready var oUi = Nodelist.list["oUi"]
 
 #onready var oSelection = $'../../Selector/Selection'
 #onready var oInstanceOwnership = $'../../OverheadOwnership/InstanceOwnership'
 
-var locationX = null setget set_location_x
-var locationY = null setget set_location_y
-var locationZ = null setget set_location_z
+var locationX = null: set = set_location_x
+var locationY = null: set = set_location_y
+var locationZ = null: set = set_location_z
 var thingType = null
 var subtype = null
-var ownership = null setget set_ownership
+var ownership = null: set = set_ownership
 
-var effectRange = null setget set_effectRange
-var parentTile = null setget set_parentTile
-var doorOrientation = null setget set_doorOrientation
-var creatureLevel = null setget set_creatureLevel
-var doorLocked = null setget set_doorLocked
-var herogateNumber = null setget set_herogateNumber
-var boxNumber = null setget set_boxNumber
-var index = null setget set_index
+var effectRange = null: set = set_effectRange
+var parentTile = null: set = set_parentTile
+var doorOrientation = null: set = set_doorOrientation
+var creatureLevel = null: set = set_creatureLevel
+var doorLocked = null: set = set_doorLocked
+var herogateNumber = null: set = set_herogateNumber
+var boxNumber = null: set = set_boxNumber
+var index = null: set = set_index
 
 var data9 = null
 var data10 = null
@@ -43,8 +43,8 @@ var baseZindex = 0
 # FX extended fields. Default initial values, important for when loading an old classic format map then switching it to KFX format in Map Settings.
 var creatureGold = null
 var creatureInitialHealth = null
-var creatureName = null setget set_creatureName
-var orientation = null setget set_orientation
+var creatureName = null: set = set_creatureName
+var orientation = null: set = set_orientation
 var goldValue = null
 
 func _enter_tree():
@@ -57,7 +57,7 @@ func _enter_tree():
 	load_default_kfx_values()
 	
 	var oCamera2D = Nodelist.list["oCamera2D"]
-	oCamera2D.connect("zoom_level_changed",self,"_on_zoom_level_changed")
+	oCamera2D.connect("zoom_level_changed", Callable(self, "_on_zoom_level_changed"))
 	_on_zoom_level_changed(oCamera2D.zoom)
 	
 	match thingType:
@@ -79,7 +79,7 @@ func _enter_tree():
 				add_to_group("Spellbook")
 			if subtype in Things.LIST_OF_HEROGATES:
 				add_to_group("HeroGate")
-				yield(get_tree(),'idle_frame')
+				await get_tree().idle_frame
 				if oActionPointList:
 					oActionPointList.update_ap_list()
 		
@@ -251,19 +251,19 @@ func set_texture_based_on_thingtype():
 			
 			var successOrFailure = Nodelist.list["oPickThingWindow"].add_workshop_item_sprite_overlay($"%ThingTexture", subtype)
 			if successOrFailure == true:
-				$"%ThingTexture".rect_position += Vector2(-1,9)
+				$"%ThingTexture".position += Vector2(-1,9)
 		Things.TYPE.CREATURE:
 			if tex != null:
 				#$"%ThingTexture".rect_position.y -= 12
-				$"%ThingTexture".rect_scale = Vector2(1.5,1.5)
+				$"%ThingTexture".scale = Vector2(1.5,1.5)
 	if tex != null:
 		$"%ThingTexture".texture = tex
 	else:
 		$"%ThingTexture".texture = preload('res://Art/Thing.png')
 		$"%ThingTexture".expand = true
-		$"%ThingTexture".rect_scale = Vector2(0.5,0.5)
+		$"%ThingTexture".scale = Vector2(0.5,0.5)
 		$TextNameLabel.visible = true
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		
 		$TextNameLabel.text = Things.fetch_name(thingType, subtype)
 		

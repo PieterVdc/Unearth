@@ -1,12 +1,12 @@
 extends Camera2D
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oMain = Nodelist.list["oMain"]
-onready var oScriptTextEdit = Nodelist.list["oScriptTextEdit"]
-onready var oMapBrowser = Nodelist.list["oMapBrowser"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oPreferencesWindow = Nodelist.list["oPreferencesWindow"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oMain = Nodelist.list["oMain"]
+@onready var oScriptTextEdit = Nodelist.list["oScriptTextEdit"]
+@onready var oMapBrowser = Nodelist.list["oMapBrowser"]
 
 signal zoom_level_changed
 
@@ -39,8 +39,8 @@ func reset_camera(x, y):
 	desired_offset = offset
 
 	# Determine the zoom levels required to fit the map's width and height within the viewport
-	var zoomForWidth = mapWidthInPixels / max(1, OS.window_size.x)
-	var zoomForHeight = mapHeightInPixels / max(1, OS.window_size.y)
+	var zoomForWidth = mapWidthInPixels / max(1, get_window().size.x)
+	var zoomForHeight = mapHeightInPixels / max(1, get_window().size.y)
 
 	# Set the zoom level to the maximum of the two calculated zoom levels to ensure the entire map fits within the viewport
 	var initialZoom = max(zoomForWidth, zoomForHeight) * Settings.UI_SCALE.y
@@ -48,13 +48,13 @@ func reset_camera(x, y):
 	desired_zoom = zoom
 
 	# Notify other nodes about the zoom level change
-	yield(get_tree(), 'idle_frame')
+	await get_tree().idle_frame
 	for id in get_tree().get_nodes_in_group("Thing"):
 		id._on_zoom_level_changed(zoom)
 
 
 func _process(delta):
-	if OS.is_window_focused() == false: return
+	if get_window().has_focus() == false: return
 	if current == false: return #View is 3D
 	
 	if zoom != desired_zoom:
@@ -73,7 +73,7 @@ func _process(delta):
 	offset = lerp(offset, desired_offset, clamp(SMOOTHING_RATE * delta, 0.0, 1.0))
 	
 	
-	if OS.is_window_focused() == true and mouseInWindow == true:
+	if get_window().has_focus() == true and mouseInWindow == true:
 		if MOUSE_EDGE_PANNING == true and oUi.mouseOnUi == false and middleMousePanning == false: #and mouseIsMoving == true
 			if Input.is_action_pressed("mouse_left") == false:
 				mouse_edge_pan()

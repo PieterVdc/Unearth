@@ -1,31 +1,31 @@
-extends WindowDialog
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oQuickNoisePreview = Nodelist.list["oQuickNoisePreview"]
-onready var oNoiseUpdateTimer = Nodelist.list["oNoiseUpdateTimer"]
-onready var oNewMapNoiseOptions = Nodelist.list["oNewMapNoiseOptions"]
-onready var oXSizeLine = Nodelist.list["oXSizeLine"]
-onready var oYSizeLine = Nodelist.list["oYSizeLine"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oSetNewFormat = Nodelist.list["oSetNewFormat"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCheckBoxNewMapBorder = Nodelist.list["oCheckBoxNewMapBorder"]
-onready var oNewMapSymmetricalBorder = Nodelist.list["oNewMapSymmetricalBorder"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oCheckBoxNewMapAutoOpensMapSettings = Nodelist.list["oCheckBoxNewMapAutoOpensMapSettings"]
-onready var oUndoStates = Nodelist.list["oUndoStates"]
-onready var oNewMapPlayerOptions = Nodelist.list["oNewMapPlayerOptions"]
-onready var oRandomBorder = Nodelist.list["oRandomBorder"]
-onready var oPlayerDistance = Nodelist.list["oPlayerDistance"]
-onready var oPlacePlayersCheckBox = Nodelist.list["oPlacePlayersCheckBox"]
-onready var oPlayerCount = Nodelist.list["oPlayerCount"]
-onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
-onready var oRandomPlayersPizza = Nodelist.list["oRandomPlayersPizza"]
-onready var oLinearDistanceCheckBox = Nodelist.list["oLinearDistanceCheckBox"]
-onready var oPlayerPositioning = Nodelist.list["oPlayerPositioning"]
+extends Window
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oQuickNoisePreview = Nodelist.list["oQuickNoisePreview"]
+@onready var oNoiseUpdateTimer = Nodelist.list["oNoiseUpdateTimer"]
+@onready var oNewMapNoiseOptions = Nodelist.list["oNewMapNoiseOptions"]
+@onready var oXSizeLine = Nodelist.list["oXSizeLine"]
+@onready var oYSizeLine = Nodelist.list["oYSizeLine"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oSetNewFormat = Nodelist.list["oSetNewFormat"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCheckBoxNewMapBorder = Nodelist.list["oCheckBoxNewMapBorder"]
+@onready var oNewMapSymmetricalBorder = Nodelist.list["oNewMapSymmetricalBorder"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oCheckBoxNewMapAutoOpensMapSettings = Nodelist.list["oCheckBoxNewMapAutoOpensMapSettings"]
+@onready var oUndoStates = Nodelist.list["oUndoStates"]
+@onready var oNewMapPlayerOptions = Nodelist.list["oNewMapPlayerOptions"]
+@onready var oRandomBorder = Nodelist.list["oRandomBorder"]
+@onready var oPlayerDistance = Nodelist.list["oPlayerDistance"]
+@onready var oPlacePlayersCheckBox = Nodelist.list["oPlacePlayersCheckBox"]
+@onready var oPlayerCount = Nodelist.list["oPlayerCount"]
+@onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
+@onready var oRandomPlayersPizza = Nodelist.list["oRandomPlayersPizza"]
+@onready var oLinearDistanceCheckBox = Nodelist.list["oLinearDistanceCheckBox"]
+@onready var oPlayerPositioning = Nodelist.list["oPlayerPositioning"]
 
 var currently_creating_new_map = false
 
@@ -63,22 +63,22 @@ func reinit_noise_preview():
 	var sizeX = oXSizeLine.text.to_int()
 	var sizeY = oYSizeLine.text.to_int()
 	imageData.create(sizeX, sizeY, false, Image.FORMAT_RGBA8)
-	textureData.create_from_image(imageData, 0)
+	textureData.create_from_image(imageData) #,0
 	oQuickNoisePreview.texture = textureData
 	
 	
 	var pixelSize = 4
 	var maxSize = Vector2(85*pixelSize,85*pixelSize)
 	
-	oQuickNoisePreview.rect_min_size = Vector2(min(sizeX*pixelSize, maxSize.x), min(sizeY*pixelSize, maxSize.y))
+	oQuickNoisePreview.custom_minimum_size = Vector2(min(sizeX*pixelSize, maxSize.x), min(sizeY*pixelSize, maxSize.y))
 	
 	if sizeX > 85 or sizeY > 85:
 		if sizeX < sizeY:
 			var aspectRatio = float(max(1.0,sizeX)) / float(max(1.0,sizeY))
-			oQuickNoisePreview.rect_min_size.x *= aspectRatio
+			oQuickNoisePreview.custom_minimum_size.x *= aspectRatio
 		else:
 			var aspectRatio = float(max(1.0,sizeY)) / float(max(1.0,sizeX))
-			oQuickNoisePreview.rect_min_size.y *= aspectRatio
+			oQuickNoisePreview.custom_minimum_size.y *= aspectRatio
 	
 	#oQuickNoisePreview.rect_size = oQuickNoisePreview.rect_min_size
 
@@ -93,9 +93,9 @@ func _on_ButtonNewMapOK_pressed():
 	
 	oCurrentMap._on_ButtonNewMap_pressed()
 	
-	yield(oOverheadGraphics, "column_graphics_completed")
+	await oOverheadGraphics.column_graphics_completed
 	
-	if Slabset.dat.empty() == true:
+	if Slabset.dat.is_empty() == true:
 		oMessage.quick("Failed loading slabset, game executable might not be correct. Set in File -> Preferences")
 		return
 	
@@ -120,9 +120,9 @@ func _on_ButtonNewMapOK_pressed():
 	visible = false # Close New Map window after pressing OK button
 	
 	# yield must be used here, because this function has yields inside of it.
-	yield(oSlabPlacement.generate_slabs_based_on_id(shapePositionArray, false), "completed")
+	await oSlabPlacement.generate_slabs_based_on_id(shapePositionArray, false).completed
 	
-	if oCheckBoxNewMapAutoOpensMapSettings.pressed == true:
+	if oCheckBoxNewMapAutoOpensMapSettings.button_pressed == true:
 		Utils.popup_centered(oMapSettingsWindow)
 	
 	currently_creating_new_map = false
@@ -150,13 +150,13 @@ func _on_NoiseAlgTypeCheckBox_toggled(button_pressed):
 func _on_YSizeLine_focus_exited():
 	if oYSizeLine.text.to_int() > 170:
 		oYSizeLine.text = "170"
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		reinit_noise_preview()
 		update_border_image_with_noise()
 func _on_XSizeLine_focus_exited():
 	if oXSizeLine.text.to_int() > 170:
 		oXSizeLine.text = "170"
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		reinit_noise_preview()
 		update_border_image_with_noise()
 
@@ -165,7 +165,7 @@ func _on_NoiseUpdateTimer_timeout():
 	update_border_image_with_noise()
 
 func update_border_image_with_noise():
-	if oCheckBoxNewMapBorder.pressed == false: return
+	if oCheckBoxNewMapBorder.button_pressed == false: return
 	oRandomBorder.update_border_image_with_noise(imageData, textureData)
 	if oNewMapSymmetricalBorder.selected == 6:
 		apply_symmetry()
@@ -201,7 +201,7 @@ func update_border_image_with_blank():
 
 
 func _on_CheckBoxNewMapBorder_pressed():
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		oNewMapNoiseOptions.visible = true
 		update_border_image_with_noise()
 	else:
@@ -216,23 +216,23 @@ func _on_NewMapFormat_item_selected(index):
 		oYSizeLine.text = "85"
 		_on_XSizeLine_focus_exited()
 		_on_YSizeLine_focus_exited()
-		oXSizeLine.hint_tooltip = "Map size can only be changed if KFX format is used."
-		oYSizeLine.hint_tooltip = "Map size can only be changed if KFX format is used."
+		oXSizeLine.tooltip_text = "Map size can only be changed if KFX format is used."
+		oYSizeLine.tooltip_text = "Map size can only be changed if KFX format is used."
 		oPlayerCount.max_value = 4.0
 		if oPlayerCount.value > 4:
 			oPlayerCount.value = 4
 	elif index == Constants.KfxFormat:
 		oXSizeLine.editable = true
 		oYSizeLine.editable = true
-		oXSizeLine.hint_tooltip = ""
-		oYSizeLine.hint_tooltip = ""
+		oXSizeLine.tooltip_text = ""
+		oYSizeLine.tooltip_text = ""
 		oPlayerCount.max_value = 8.0
 	
 
 
 func _on_QuickNoisePreview_gui_input(event):
 	if event is InputEventMouseButton and event.is_pressed():
-		if event.button_index == BUTTON_LEFT:
+		if event.button_index == MOUSE_BUTTON_LEFT:
 			oRandomBorder.noise.seed = randi()
 			update_border_image_with_noise()
 
@@ -319,13 +319,13 @@ func apply_symmetry():
 			imageData.blit_rect(imageTopLeft, Rect2(0, 0, half_w, half_h), Vector2(half_w_ceil, half_h_ceil))
 			
 			if half_w != half_w_ceil or half_h != half_h_ceil:
-				imageData.lock()
+				false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 				imageData.set_pixel(half_w, half_h, oRandomBorder.earthColour)
-				imageData.unlock()
+				false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 		6: # pizza symmetry, insert code here
 			oRandomPlayersPizza.apply_pizza_symmetry(imageData)
 	
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	
 	for y in range(0, h):
 		for x in range(0, w):
@@ -340,11 +340,11 @@ func apply_symmetry():
 				
 				imageData.set_pixel(x, y, oRandomBorder.impenetrableColour)
 	
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
 func _on_PlacePlayersCheckBox_toggled(button_pressed):
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		update_border_image_with_noise()
 	else:
 		update_border_image_with_blank()
@@ -373,32 +373,32 @@ func _on_PlayerCount_sliderChanged():
 		if oPlayerCount.value > 4:
 			oPlayerCount.value = 4
 	
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		update_border_image_with_noise()
 	else:
 		update_border_image_with_blank()
 	
 
 func _on_PlayersZonedCheckBox_toggled(button_pressed):
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		update_border_image_with_noise()
 	else:
 		update_border_image_with_blank()
 
 func _on_PlayerDistance_sliderChanged():
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		update_border_image_with_noise()
 	else:
 		update_border_image_with_blank()
 
 func _on_PlayerPositioning_sliderChanged():
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		update_border_image_with_noise()
 	else:
 		update_border_image_with_blank()
 
 func _on_LinearDistanceCheckBox_toggled(button_pressed):
-	if oCheckBoxNewMapBorder.pressed == true:
+	if oCheckBoxNewMapBorder.button_pressed == true:
 		update_border_image_with_noise()
 	else:
 		update_border_image_with_blank()

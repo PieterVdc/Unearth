@@ -1,6 +1,6 @@
 extends Node
-onready var oSlabStyle = Nodelist.list["oSlabStyle"]
-onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
+@onready var oSlabStyle = Nodelist.list["oSlabStyle"]
+@onready var oDisplaySlxNumbers = Nodelist.list["oDisplaySlxNumbers"]
 
 var slxImgData = Image.new()
 var slxTexData = ImageTexture.new()
@@ -12,17 +12,17 @@ func clear_img():
 
 func set_tileset_shape(shapePositionArray):
 	var value = Color8(oSlabStyle.paintSlabStyle,0,0)
-	slxImgData.lock()
+	false # slxImgData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for pos in shapePositionArray:
 		slxImgData.set_pixelv(pos,value)
-	slxImgData.unlock()
+	false # slxImgData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	slxTexData.set_data(slxImgData)
 	oDisplaySlxNumbers.update_grid()
 
 func get_tileset_value(x,y):
-	slxImgData.lock()
+	false # slxImgData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	var r = slxImgData.get_pixel(x,y).r8
-	slxImgData.unlock()
+	false # slxImgData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	return r
 
 func resize_bottom_right(new_width: int, new_height: int, fillValue: int):

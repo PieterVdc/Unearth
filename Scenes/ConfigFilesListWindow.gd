@@ -1,12 +1,12 @@
-extends WindowDialog
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oVBoxContainerConfigLocalMap = Nodelist.list["oVBoxContainerConfigLocalMap"]
-onready var oVBoxContainerConfigFxdata = Nodelist.list["oVBoxContainerConfigFxdata"]
-onready var oVBoxContainerConfigCampaign = Nodelist.list["oVBoxContainerConfigCampaign"]
-onready var oVBoxContainerConfigData = Nodelist.list["oVBoxContainerConfigData"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oReadCfg = Nodelist.list["oReadCfg"]
+extends Window
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oVBoxContainerConfigLocalMap = Nodelist.list["oVBoxContainerConfigLocalMap"]
+@onready var oVBoxContainerConfigFxdata = Nodelist.list["oVBoxContainerConfigFxdata"]
+@onready var oVBoxContainerConfigCampaign = Nodelist.list["oVBoxContainerConfigCampaign"]
+@onready var oVBoxContainerConfigData = Nodelist.list["oVBoxContainerConfigData"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oReadCfg = Nodelist.list["oReadCfg"]
 
 func _on_ConfigFilesListWindow_about_to_show():
 	update_everything()
@@ -37,10 +37,10 @@ func update_everything():
 
 func add_linkbutton(filePath, targetGrid):
 	var linkButtonNode = LinkButton.new()
-	linkButtonNode.connect("pressed", self, "_on_linkbutton_pressed", [filePath])
+	linkButtonNode.connect("pressed", Callable(self, "_on_linkbutton_pressed").bind(filePath))
 	linkButtonNode.underline = LinkButton.UNDERLINE_MODE_ON_HOVER
 	linkButtonNode.text = filePath.get_file()
-	linkButtonNode.hint_tooltip = filePath
+	linkButtonNode.tooltip_text = filePath
 	targetGrid.add_child(linkButtonNode)
 	var horizontalSeparatorNode = HSeparator.new()
 	targetGrid.add_child(horizontalSeparatorNode)
@@ -70,7 +70,7 @@ func try_open_directory(directoryPath, logDescription):
 	if directoryPath == null or directoryPath == "":
 		print(logDescription + " path is not set or empty.")
 		return false
-	var directoryAccess = Directory.new()
+	var directoryAccess = DirAccess.new()
 	if directoryAccess.dir_exists(directoryPath):
 		OS.shell_open(directoryPath)
 		return true

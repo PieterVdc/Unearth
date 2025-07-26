@@ -1,6 +1,6 @@
+@tool
 extends MenuButton
-tool
-onready var scriptIconTexture = get_icon("Script", "EditorIcons")
+@onready var scriptIconTexture = get_icon("Script", "EditorIcons")
 var popup = get_popup()
 
 func add_singletons(dictionary, plugin, currentlyOpen, alphasort:bool):

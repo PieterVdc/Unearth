@@ -1,4 +1,4 @@
-﻿extends Node
+extends Node
 
 const string = """
 0.61.811 - 26/7/2025
@@ -81,7 +81,7 @@ const string = """
 - How the Slabset editor checks which slabs exist has been changed
 - Fixed a Slabset editor bug where viewing an object could change its position and mark it as "changed"
 - Custom bridges are now possible
-- Objects get an arrow showing their orientation, "arrow scale" and "arrow max zoom" have been added to Preferences->Camera
+- Objects get an arrow showing their orientation, "arrow scale" and "arrow max zoom" have been added to Preferences->Camera3D
 - Slightly better flames and hero gates transparency
 - Added ScriptHelper icons to map: SET_DOOR, PLACE_DOOR, PLACE_TRAP, ADD_OBJECT_TO_LEVEL_AT_POS
 - Fixed a longstanding bug where if you right-clicked a creature/object, any values that were 0 would not be "grabbed"
@@ -98,7 +98,7 @@ const string = """
 - New script management, you now must click a button to explicitly create txt/lua files
 - When you press the script delete button they'll only be removed when you save the map
 - View -> Script file will decide which file to open based on which files are available. A prompt will appear if both files are available.
-- Tabs removed from Map Settings, Script Editor and Script Generator now have their own windows
+- TabBar removed from Map Settings, Script Editor and Script Generator now have their own windows
 - Save Map code refactored
 - Added default lua file text
 - Top menu (File,Edit,View,etc) will now display over the top of other windows
@@ -127,7 +127,7 @@ const string = """
 - Refactored object code to internally use GENRE
 - Load effects.toml as an included file (such as map00001.effects.toml file, or campaign file)
 - Load textureanim.toml as an included file
-- Texture animations correctly read from textureanim.toml
+- Texture2D animations correctly read from textureanim.toml
 0.50.631 - 30/7/2024
 - Column count set correctly for Classic Format
 0.50.630 - 30/7/2024
@@ -155,7 +155,7 @@ const string = """
 - Slabset: Up and Down keys now change Slab ID (Left and Right change variation)
 - Slabset: Fixed a crash
 0.48.601 - 29/5/2024
-- Fixed all issues with .cfg fallbacks (campaign objects weren't loading unless they had certain fields like 'Genre')
+- Fixed all issues with super.cfg fallbacks (campaign objects weren't loading unless they had certain fields like 'Genre')
 - Removed all code related to custom_objects.cfg
 - cubes.cfg loading refactor
 0.48.599 - 28/5/2024
@@ -255,7 +255,7 @@ const string = """
 - Fixed bug when manually typing a Thing's Position in a non-square map
 0.41.426 - 10/12/2023
 - slabset.cfg renamed to slabset.toml and columnset.cfg renamed to columnset.toml
-If you've created these files, you'll need to rename them for the latest alpha patch of keeperfx to be able to recognize them.
+If you've created these files, you'll need to rename them for the latest alpha patch of keeperfx to be able to _recognize them.
 0.40.424 - 6/12/2023
 - Always save script files (attempt at stopping a rare issue where the script file isn't saved)
 - Fixed Export Preview sometimes not working. Also changed its default preset.
@@ -296,7 +296,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Removed checkbox for editing level overview file
 - Fixed error message popup about old keeperfx version
 - Fixed custom creature level being tiny if it had no creature sprite
-- Added 'Place Path stones' percent to Placement settings
+- Added 'Place Path3D stones' percent to Placement settings
 - Merged some sprite adjustments and custom object images
 - Fixed casted sight anim displaying for Ensign, Room Flag, Power Lightning
 0.39 - 14/10/2023
@@ -405,7 +405,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Max map size set to 170x170
 0.33 - 11/3/2023
 - Laterite Cavern tileset named (download latest KeeperFX alpha to use)
-- 'Dungeon style' and 'Texture maps' renamed to 'Tileset' and 'Cached tileset'
+- 'Dungeon style' and 'Texture2D maps' renamed to 'Tileset' and 'Cached tileset'
 - When writing a number into a spinbox, the caret cursor is moved to the end of the field instead of the beginning
 - The /unearthdata/custom-object-images/ folder works differently now, added a readme.txt in there for a full explanation but basically you set the .png filenames to the object names
 - Custom images included inside /custom-object-images/ folder
@@ -420,10 +420,10 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Fixed some menu items being disabled (greyed out) when they shouldn't be
 0.32 - 13/2/2023
 - [do not use] text is now next to KeeperFX Format option
-- Texture Editing: Fixed a bug which broke autoreloading of Texture Editing depending on image editor used. If it didn't work for you before, it should now
-- Texture Editing: Display bright purple for any colours that are not part of the DK palette
-- Texture Editing: Autoreloading is now less laggy, but it does take a little longer to initialize now
-- Texture Editing: Automatically change your map's current Dungeon Style to show what you're currently editing
+- Texture2D Editing: Fixed a bug which broke autoreloading of Texture2D Editing depending on image editor used. If it didn't work for you before, it should now
+- Texture2D Editing: Display bright purple for any colours that are not part of the DK palette
+- Texture2D Editing: Autoreloading is now less laggy, but it does take a little longer to initialize now
+- Texture2D Editing: Automatically change your map's current Dungeon Style to show what you're currently editing
 - Rearranged menus, most notably 'Map Settings' has taken the place of 'Settings', which has been renamed to 'Preferences' and moved under 'File'
 - Some adjustments to menu theme
 - Include -nocd by default in command line
@@ -498,7 +498,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Map file format added
 - "Effect" renamed to "EffectGen" for keeperfx to read it correctly from .tngfx
 - Added MAP_FORMAT_VERSION to .lof, this can hopefully help with fixing any format issues in the future
-- When saving, delete files that are not of the correct format (.TNG and .TNGFX won't exist side by side)
+- When saving, delete files that are not of the correct format (.TNG and super.TNGFX won't exist side by side)
 - View map size in Map Settings (still only editable for New Map though)
 - 'Creating a new campaign' github link added to Help menu
 - Help menu now disables links based on whether KeeperFX is detected
@@ -559,7 +559,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Properties window: Level field will no longer always set itself to 10 when writing a number in it
 - Rewrote Frail Columns stuff
 - 1st person 3D view: pressing spacebar toggles mouse capture instead of switching to overhead view. This should make texture editing easier.
-- Texture Editing window: show Export button as disabled instead of hiding it. Slightly changed text explanation.
+- Texture2D Editing window: show Export button as disabled instead of hiding it. Slightly changed text explanation.
 - Map Settings: dungeon style list now includes filename of tmapa file
 - Map Settings: dungeon style list refreshes if it's already open while you're altering files
 - Placement options: hid Damaged Wall stuff, it's even less functional since I rewrote some code a few versions back
@@ -583,7 +583,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 0.20 - 28/5/2022
 - Placing door slabs now correctly updates door Thing ownership
 - 'Treasury Gold 5 (2000)' correctly renamed to 'Treasury Gold 5 (2400)'
-- Texture map 12 named as 'Lava Cavern' (it's a tileset file included with latest KeeperFX)
+- Texture2D map 12 named as 'Lava Cavern' (it's a tileset file included with latest KeeperFX)
 - Stray Door & Key Thing objects will be removed if they're not on door slabs
 - Gold ownership is updated to be the same as treasury ownership if on a treasury slab
 - If you delete a thing by pressing Delete key, allow placing on that same tile without needing to move the cursor off of it
@@ -631,7 +631,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Update all Utilized values whenever opening the column editor
 - WASD now uses Physical Key positions on keyboard for the sake of alternate keyboard layouts
 - Refresh script lines markers whenever manually adding or deleting an action point
-- Big adjustments to how Unearth internally handles columns. Instead of fully packing a map's .clm file upon opening it, entries are now added to the .clm file only when they're needed. (so whenever you place a slab)
+- Big adjustments to how Unearth internally handles columns. Instead of fully packing a map's super.clm file upon opening it, entries are now added to the super.clm file only when they're needed. (so whenever you place a slab)
 - Rewritten the way columns are built and indexed, might be a little slower but it's much more flexible like this
 - If script file has been externally modified then reload it when the Unearth window becomes focused (possibly fixes a bug)
 - Don't resave script file (.txt) if it hasn't been edited in unearth
@@ -645,7 +645,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 0.18 - 06/5/2022
 - Slightly zoomed out the slab/column viewer by default
 - Renamed some menus
-- When opening maps that have no .WLB file (such as level 10 of original campaign), generate a correct WLB file on save
+- When opening maps that have no super.WLB file (such as level 10 of original campaign), generate a correct WLB file on save
 - Treasury Gold is now locked to center of slabs in order to always be functional
 - Added gold count to Treasury Gold's name
 - Adjusted text in Thing selection window to be 2 lines at most
@@ -677,7 +677,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Added Framerate limit setting
 - Slab ownership tab: Fixed an issue where slabs weren't being updated when changing ownership
 - Slab ownership tab: Change ownership of spellbooks too
-- Add custom object: Code improved to better recognize which IDs you've removed
+- Add custom object: Code improved to better _recognize which IDs you've removed
 - Add custom object: Custom objects now stored inside of custom_objects.cfg instead of settings.cfg (you'll have to re-add anything you've added before, sorry)
 - Add custom slab: Cleaned up custom slabs config format (again, you'll have to recreate)
 - Add custom slab: Renamed unearthcustomslabs.cfg to custom_slabs.cfg
@@ -689,7 +689,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Fixed arrow keys not working in text fields
 - In the column editor, speed up the camera shift movement when changing the index value by a lot
 - Added Research Order to Script Generator
-- Texture 11 "Swamp Serpent" named
+- Texture2D 11 "Swamp Serpent" named
 - Added scripting links to Help menu
 - Updated 'About' section with hyperlinks, included Github
 - 'Unrecognized Slab ID' renamed to 'Unknown' (too long for UI)
@@ -741,7 +741,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - If you have no script, give warning after saving
 - Fixed a crash (probably)
 - Rewritten/reorganized the texture caching code again
-- Added 'Texture editing' feature to Edit menu, as long as you have the required filelist_tmapa000.txt and pack000 folder it'll auto-update them within the editor
+- Added 'Texture2D editing' feature to Edit menu, as long as you have the required filelist_tmapa000.txt and pack000 folder it'll auto-update them within the editor
 0.13 - 02/12/2021
 - Saving now writes to a buffer instead of directly to the hard drive
 - Loading now reads from a buffer instead of directly from the hard drive
@@ -771,7 +771,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Added "Place bridges only on liquid" checkbox to Slab settings
 - Settings window: Slab & Thing window scale setting now have a minimum and maximum (setting to 0 would cause crash)
 - Slab window: Icons added
-- Slab window: Slab50 and Purple Path moved to 'Other' tab
+- Slab window: Slab50 and Purple Path3D moved to 'Other' tab
 - Slab window: Scale size default decreased from 0.8 -> 0.76
 - Slab window: Offset slab style names and ownership names
 - Slab window: Slab style numbers now only shown if Style tab is selected
@@ -789,9 +789,9 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Load image as map: Fixed a crash and added "Click on a pixel within the image first." message
 - Quick message: Fixed message disappearing too early
 - Quick message: Allow multiple messages to display at once
-- Texture maps: Rewritten caching code to be clearer and less error prone
-- Texture maps: Date Modified of tmapa00#.dat files is now stored inside Settings.cfg (so it can detect any changes even when editor is closed)
-- Texture maps: Switched to using single PNG files for texture maps (internally using two TextureArrays, it's still the best solution)
+- Texture2D maps: Rewritten caching code to be clearer and less error prone
+- Texture2D maps: Date Modified of tmapa00#.dat files is now stored inside Settings.cfg (so it can detect any changes even when editor is closed)
+- Texture2D maps: Switched to using single PNG files for texture maps (internally using two TextureArrays, it's still the best solution)
 - Upon pressing ESC detect a window which has a close ("X") button and close it instead of asking to quit
 - Gate number displayed
 - Changed saving/loading code again, v0.11 may have had issues
@@ -826,7 +826,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Custom objects window: prefill the next empty subtype ID
 - Custom objects window: show warning if you type an ID that is already in use (by the editor)
 - Added Creature level font size "scale" and "max zoom" Settings
-- Added "Purple Path" slab (slab ID 54)
+- Added "Purple Path3D" slab (slab ID 54)
 - Unknown Slab IDs will now display their name as "Unrecognized Slab ID" in Properties instead of "Wall Automatic"
 - Prevent mouse edge panning while middle click is being held
 - 3D view now has two states, 1st person mode and non-1st person mode (this doesn't really change much for now)
@@ -878,7 +878,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Save As: prevent OK button from being clicked unless your map filename is in the correct format ("map#####")
 - Display filenames as lowercase in Map Browser window (just for appearance sake)
 - Tooltip font colour now a readable white
-- Fixed map names showing "translation IDs" in the Map Browser
+- Fixed map names showing "position IDs" in the Map Browser
 - Library wall cube texture fixed alongside the keeperfx fix
 - "Details" window renamed to "Properties" window
 - Properties window can no longer be dragged off screen
@@ -899,7 +899,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - Added "Slab" checkbox to Owner window. When placing Thing objects it'll always set the ownership of the Thing to the slab you're placing it on.
 - Added slider in Ownership window to change ownership colour alpha
 - Fixed camera bug when loading up Unearth in fullscreen
-- See Action Point and Light data in Properties window (Thing tab)
+- See Action Point and Light3D data in Properties window (Thing tab)
 - Added Action Points and Lights, placeable from Thing tab
 - Display Effect range and Action Point range when hovering over object, or object selected
 - .LGT files now save and load
@@ -907,7 +907,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - You can now left click on things to "select them" (allowing for editing in Properties window) and click again to deselect. The last thing you've placed will be auto-selected.
 - Selection status is shown in Properties window
 - Clearer values for Door locked and Door orientation (True/False, N/S and E/W)
-- The following fields are now editable in Properties window: Level, Owner, Effect Range, Light range, Point range, Point number, Herogate number, Light intensity, Door locked
+- The following fields are now editable in Properties window: Level, Owner, Effect Range, Light3D range, Point range, Point number, Herogate number, Light3D intensity, Door locked
 - Added "Slab settings" to menu. It allows you to set options for "Wall Automatic". Options include: Damage Wall % and setting Twins/Woman/Pair to Grouped or Random.
 0.08 - 6/10/2021
 - Added Thing window
@@ -947,7 +947,7 @@ If you've created these files, you'll need to rename them for the latest alpha p
 - The editor window's position, size, maximized state and fullscreen state is remembered upon subsequent launches
 - Added "New" menu option to finally create a new empty map filled with earth
 - "Play" button now becomes "Save & Play" if you've edited the map
-- Fixed 3D Camera not always initially facing the right direction
+- Fixed 3D Camera3D not always initially facing the right direction
 - Fixed purple pixels in textures issue (was incorrectly using main.pal instead of palette.dat)
 - Added "Save", "Save as" and "Open" menu options. The old "Open" has been renamed to "Browse"
 - Fixed texture caching looping forever when opening a map via file association in Windows

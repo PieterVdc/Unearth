@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 
@@ -38,7 +38,7 @@ func check_macro(line: int) -> void:
 		
 		# Fixes a crash when macro contains a new line and you move the cursor to that new line when executing the macro
 		if constructLine.ends_with("\n"):
-			script_editor.cursor_set_line(line+1)
+			script_editor.set_caret_line(line+1)
 
 
 func get_indentation(string: String) -> String:
@@ -91,25 +91,25 @@ func _init_macro_file() -> void:
 
 
 func _ready():
-	get_viewport().connect("gui_focus_changed", self, "_on_gui_focus_changed")
+	get_viewport().connect("gui_focus_changed", Callable(self, "_on_gui_focus_changed"))
 	_init_macro_file()
 
 
 func _notification(what: int):
-	if what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
+	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_IN:
 		_init_macro_file()  # Reinit macro if user modified file
 
 
 func _on_cursor_changed():
 	if is_instance_valid(script_editor):
-		if cursor_line != script_editor.cursor_get_line():
+		if cursor_line != script_editor.get_caret_line():
 			check_macro(cursor_line)
-			cursor_line = script_editor.cursor_get_line()
+			cursor_line = script_editor.get_caret_line()
 
 
 func _on_gui_focus_changed(node: Node):
 	if node is TextEdit:
 		if is_instance_valid(script_editor):
-			script_editor.disconnect("cursor_changed", self, "_on_cursor_changed")
+			script_editor.disconnect("cursor_changed", Callable(self, "_on_cursor_changed"))
 		script_editor = node
-		script_editor.connect("cursor_changed", self, "_on_cursor_changed")
+		script_editor.connect("cursor_changed", Callable(self, "_on_cursor_changed"))

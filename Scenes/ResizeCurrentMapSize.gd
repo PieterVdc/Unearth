@@ -1,23 +1,23 @@
-extends WindowDialog
-onready var oSettingsXSizeLine = Nodelist.list["oSettingsXSizeLine"]
-onready var oSettingsYSizeLine = Nodelist.list["oSettingsYSizeLine"]
-onready var oMapSizeTextLabel = Nodelist.list["oMapSizeTextLabel"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oResizeFillWithID = Nodelist.list["oResizeFillWithID"]
-onready var oResizeFillWithIDLabel = Nodelist.list["oResizeFillWithIDLabel"]
-onready var oResizeMapApplyBorderCheckbox = Nodelist.list["oResizeMapApplyBorderCheckbox"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oGuidelines = Nodelist.list["oGuidelines"]
-onready var oBuffers = Nodelist.list["oBuffers"]
+extends Window
+@onready var oSettingsXSizeLine = Nodelist.list["oSettingsXSizeLine"]
+@onready var oSettingsYSizeLine = Nodelist.list["oSettingsYSizeLine"]
+@onready var oMapSizeTextLabel = Nodelist.list["oMapSizeTextLabel"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oResizeFillWithID = Nodelist.list["oResizeFillWithID"]
+@onready var oResizeFillWithIDLabel = Nodelist.list["oResizeFillWithIDLabel"]
+@onready var oResizeMapApplyBorderCheckbox = Nodelist.list["oResizeMapApplyBorderCheckbox"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oGuidelines = Nodelist.list["oGuidelines"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
 
 func _on_ResizeCurrentMapSizeButton_pressed():
 	Utils.popup_centered(self)
@@ -87,7 +87,7 @@ func remove_outside_instances(newWidth, newHeight):
 		oMessage.quick("Deleted " + str(deletedInstancesCount) + " instances that were outside of the new map size.")
 
 
-onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
 
 # The main function that calls all the helper functions
 func _on_ResizeApplyButton_pressed():

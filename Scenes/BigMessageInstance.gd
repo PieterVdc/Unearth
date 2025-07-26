@@ -1,8 +1,8 @@
 extends AcceptDialog
 
 func _ready():
-	yield(get_tree(),'idle_frame')
-	connect("visibility_changed",self,"_on_visibility_changed")
+	await get_tree().idle_frame
+	connect("visibility_changed", Callable(self, "_on_visibility_changed"))
 
 func _on_visibility_changed():
 	if visible == false:

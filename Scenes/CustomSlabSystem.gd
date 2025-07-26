@@ -1,7 +1,7 @@
 extends Node
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 var cfg = ConfigFile.new()
 
@@ -142,4 +142,4 @@ func get_top_fake_cube_face(indexIn3x3, slabID):
 		var cubeID = cubesArray[get_height-1]
 		if cubeID > Cube.CUBES_COUNT:
 			return 1
-		return Cube.tex[cubeID][Cube.SIDE_TOP]
+		return Cube.tex[cubeID][Cube.MARGIN_TOP]

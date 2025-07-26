@@ -1,9 +1,9 @@
-extends WindowDialog
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oMessage = Nodelist.list["oMessage"]
+extends Window
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
 
 func _ready():
-	connect("about_to_show", self, "_on_about_to_show")
+	connect("about_to_popup", Callable(self, "_on_about_to_show"))
 
 func try_open(ext):
 	var pathToTryAndOpen = oCurrentMap.path + ext

@@ -1,19 +1,19 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oActionPointList = Nodelist.list["oActionPointList"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oActionPointList = Nodelist.list["oActionPointList"]
+@onready var oUi = Nodelist.list["oUi"]
 
 var ownership = 5 # Not used by Dungeon Keeper, this is just to make it easy for the editor.
 var thingType = Things.TYPE.EXTRA
 var subtype = 1 # As written in Things.DATA_EXTRA
 
-var locationX = null setget set_location_x
-var locationY = null setget set_location_y
-var locationZ = null setget set_location_z # This is actually unused for action points, but its presence fixes errors
-var pointRange = null setget set_pointrange
-var pointNumber = null setget set_pointNumber
+var locationX = null: set = set_location_x
+var locationY = null: set = set_location_y
+var locationZ = null: set = set_location_z
+var pointRange = null: set = set_pointrange
+var pointNumber = null: set = set_pointNumber
 var data7 = null
 
 func set_location_x(setVal):
@@ -72,7 +72,7 @@ func _on_VisibilityNotifier2D_screen_exited():
 
 
 func _enter_tree():
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	if oActionPointList:
 		oActionPointList.update_ap_list()
 

@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 
@@ -19,5 +19,5 @@ func _exit_tree():
 	remove_custom_type("AnimatedTextureButBetter")
 
 func get_current_resource_directory() -> String:
-	var current_path = get_editor_interface().get_edited_scene_root().get_filename()
+	var current_path = get_editor_interface().get_edited_scene_root().get_scene_file_path()
 	return current_path.get_base_dir()

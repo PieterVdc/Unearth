@@ -1,20 +1,20 @@
 extends VBoxContainer
 
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oColumnsetControls = Nodelist.list["oColumnsetControls"]
-onready var oConfirmRevertColumnset = Nodelist.list["oConfirmRevertColumnset"]
-onready var oCfgLoader = Nodelist.list["oCfgLoader"]
-onready var oColumnsetVoxelView = Nodelist.list["oColumnsetVoxelView"]
-onready var oColumnsetRevertButton = Nodelist.list["oColumnsetRevertButton"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oCurrentlyOpenColumnset = Nodelist.list["oCurrentlyOpenColumnset"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oModifiedColumnsetLabel = Nodelist.list["oModifiedColumnsetLabel"]
-onready var oModifiedColumnsetPanelContainer = Nodelist.list["oModifiedColumnsetPanelContainer"]
-onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oColumnsetControls = Nodelist.list["oColumnsetControls"]
+@onready var oConfirmRevertColumnset = Nodelist.list["oConfirmRevertColumnset"]
+@onready var oCfgLoader = Nodelist.list["oCfgLoader"]
+@onready var oColumnsetVoxelView = Nodelist.list["oColumnsetVoxelView"]
+@onready var oColumnsetRevertButton = Nodelist.list["oColumnsetRevertButton"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oCurrentlyOpenColumnset = Nodelist.list["oCurrentlyOpenColumnset"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oModifiedColumnsetLabel = Nodelist.list["oModifiedColumnsetLabel"]
+@onready var oModifiedColumnsetPanelContainer = Nodelist.list["oModifiedColumnsetPanelContainer"]
+@onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
 
 var flash_update_timer = Timer.new()
 
@@ -23,34 +23,34 @@ func _ready():
 	add_child(flash_update_timer)
 	flash_update_timer.one_shot = true
 	flash_update_timer.wait_time = 0.5
-	flash_update_timer.connect("timeout", self, "_on_flash_update_timer_timeout")
+	flash_update_timer.connect("timeout", Callable(self, "_on_flash_update_timer_timeout"))
 	
 	# Connect to ConfigFileManager signals
-	oConfigFileManager.connect("config_file_status_changed", self, "_on_config_status_changed")
+	oConfigFileManager.connect("config_file_status_changed", Callable(self, "_on_config_status_changed"))
 	
 	# Connect columnset controls
 	var ColumnsetRevertButton = get_node("HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/ColumnsetRevertButton")
 	var columnsetHelpButton = get_node("HBoxContainer/VBoxContainer/PanelContainer2/HBoxContainer/ColumnsetHelpButton")
-	ColumnsetRevertButton.connect("pressed", self, "_on_ColumnsetRevertButton_pressed")
-	columnsetHelpButton.connect("pressed", self, "_on_ColumnsetHelpButton_pressed")
+	ColumnsetRevertButton.connect("pressed", Callable(self, "_on_ColumnsetRevertButton_pressed"))
+	columnsetHelpButton.connect("pressed", Callable(self, "_on_ColumnsetHelpButton_pressed"))
 	
 	# Connect external dialog connections
-	oConfirmRevertColumnset.connect("confirmed", self, "_on_ConfirmRevertColumnset_confirmed")
+	oConfirmRevertColumnset.connect("confirmed", Callable(self, "_on_ConfirmRevertColumnset_confirmed"))
 	
 	# Connect to columnset controls to update save button availability
 	var timer = oColumnsetControls.regeneration_timer
-	timer.connect("timeout", self, "_on_columnset_timer_timeout")
+	timer.connect("timeout", Callable(self, "_on_columnset_timer_timeout"))
 	
 	# Connect visibility changed
-	connect("visibility_changed", self, "_on_TabColumnset_visibility_changed")
+	connect("visibility_changed", Callable(self, "_on_TabColumnset_visibility_changed"))
 	
 	# Connect flash update for columnset controls
 	connect_columnset_flash_update()
 
 func connect_columnset_flash_update():
 	# Connect Columnset controls (delayed flash update)
-	if oColumnsetControls.oColumnIndexSpinBox.is_connected("value_changed", self, "on_delayed_spinbox_value_changed") == false:
-		oColumnsetControls.oColumnIndexSpinBox.connect("value_changed", self, "on_delayed_spinbox_value_changed")
+	if oColumnsetControls.oColumnIndexSpinBox.is_connected("value_changed", Callable(self, "on_delayed_spinbox_value_changed")) == false:
+		oColumnsetControls.oColumnIndexSpinBox.connect("value_changed", Callable(self, "on_delayed_spinbox_value_changed"))
 
 func on_delayed_spinbox_value_changed(value):
 	flash_update_timer.stop()
@@ -74,7 +74,7 @@ func _on_TabColumnset_visibility_changed():
 
 func update_columnset_revert_button_state():
 	var list_of_modified_columns = Columnset.find_all_different_columns()
-	oColumnsetRevertButton.disabled = list_of_modified_columns.empty()
+	oColumnsetRevertButton.disabled = list_of_modified_columns.is_empty()
 	update_columnset_paths_label(list_of_modified_columns)
 	update_modified_label_for_all_columns(list_of_modified_columns)
 
@@ -96,7 +96,7 @@ func update_columnset_paths_label(list_of_modified_columns):
 		tooltip_text = "No saved file"
 	
 	oCurrentlyOpenColumnset.text = final_text
-	oCurrentlyOpenColumnset.hint_tooltip = tooltip_text
+	oCurrentlyOpenColumnset.tooltip_text = tooltip_text
 	oSlabsetWindow.update_window_title()
 
 func update_modified_label_for_all_columns(list_of_modified_columns):
@@ -122,7 +122,7 @@ func _on_ColumnsetHelpButton_pressed():
 
 func _on_ColumnsetRevertButton_pressed():
 	oConfirmRevertColumnset.dialog_text = "Revert all columns to default?"
-	oConfirmRevertColumnset.rect_min_size.x = 800
+	oConfirmRevertColumnset.custom_minimum_size.x = 800
 	Utils.popup_centered(oConfirmRevertColumnset)
 
 func _on_ConfirmRevertColumnset_confirmed():
@@ -146,7 +146,7 @@ func _on_ConfirmRevertColumnset_confirmed():
 		oSlabsetMapRegenerator.regenerate_slabs_using_columnset(idx)
 
 func _on_config_status_changed():
-	if Columnset.default_data.empty():
+	if Columnset.default_data.is_empty():
 		return
 	var list_of_modified_columns = Columnset.find_all_different_columns()
 	update_columnset_paths_label(list_of_modified_columns)

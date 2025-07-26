@@ -11,7 +11,7 @@ func popup_centered(node):
 
 func _input(_event):
 	if Input.is_action_just_pressed("toggle_fullscreen"):
-		OS.window_fullscreen = !OS.window_fullscreen
+		get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (!((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))) else Window.MODE_WINDOWED
 
 
 var regex = RegEx.new()
@@ -39,14 +39,14 @@ func load_external_texture(path):
 	var img = Image.new()
 	img.load(path)
 	var texture = ImageTexture.new()
-	texture.create_from_image(img, Texture.FLAG_MIPMAPS+Texture.FLAG_ANISOTROPIC_FILTER)
+	texture.create_from_image(img) #,Texture2D.FLAG_MIPMAPS+Texture2D.FLAG_ANISOTROPIC_FILTER
 	return texture
 
 func get_filetype_in_directory(directory_path: String, file_extension: String) -> Array:
 	var files = []
-	var directory = Directory.new()
+	var directory = DirAccess.new()
 	if directory.open(directory_path) == OK:
-		directory.list_dir_begin()
+		directory.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = directory.get_next()
 		while file_name != "":
 			if not directory.current_is_dir() and file_name.get_extension().to_lower() == file_extension.to_lower():
@@ -84,7 +84,7 @@ func _get_node_display_details(targetNode) -> String:
 		# TextureButton uses textures, not text. No text property to display.
 		pass
 
-	elif targetNode is BaseButton: # Covers Button, CheckBox, LinkButton, ToolButton, MenuButton etc.
+	elif targetNode is BaseButton: # Covers Button, CheckBox, LinkButton, Button, MenuButton etc.
 									# OptionButton and TextureButton are handled above.
 		if "text" in targetNode: # Safely check for 'text' property
 			nodeTextValue = targetNode.text
@@ -155,12 +155,12 @@ func _recursive_log_named_nodes(targetNode, linePrefix, isLastSibling):
 		_recursive_log_named_nodes(currentChild, childRecursivePrefix, index == childCount - 1)
 
 func case_insensitive_file(directoryPath: String, baseFileName: String, targetExtension: String) -> String:
-	var d = Directory.new()
+	var d = DirAccess.new()
 	if d.open(directoryPath) != OK:
 		printerr("Utils.case_insensitive_file: Could not open directory: ", directoryPath)
 		return ""
 	
-	d.list_dir_begin(true, false)
+	d.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	var entryName = d.get_next()
 
 	var lowerExt = targetExtension

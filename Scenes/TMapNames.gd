@@ -1,7 +1,7 @@
 extends Node
-onready var oTMapLoader = Nodelist.list["oTMapLoader"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oTMapLoader = Nodelist.list["oTMapLoader"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
 
 var texture_map_names = {}
 

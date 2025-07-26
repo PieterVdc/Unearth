@@ -1,6 +1,6 @@
 extends Node2D
-onready var oUi = Nodelist.list["oUi"]
-onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oEditor = Nodelist.list["oEditor"]
 
 var ts = Constants.TILE_SIZE
 

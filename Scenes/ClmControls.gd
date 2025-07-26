@@ -1,41 +1,41 @@
 extends PanelContainer
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oColumnDetails = Nodelist.list["oColumnDetails"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
-onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
-onready var oColumnsetVoxelView = Nodelist.list["oColumnsetVoxelView"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oTabColumnset = Nodelist.list["oTabColumnset"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oColumnDetails = Nodelist.list["oColumnDetails"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
+@onready var oColumnsetVoxelView = Nodelist.list["oColumnsetVoxelView"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oTabColumnset = Nodelist.list["oTabColumnset"]
 
-onready var oColumnIndexSpinBox = $"%ColumnIndexSpinBox"
-onready var oGridAdvancedValues = $"%GridAdvancedValues"
+@onready var oColumnIndexSpinBox = $"%ColumnIndexSpinBox"
+@onready var oGridAdvancedValues = $"%GridAdvancedValues"
 
-onready var oHeightSpinBox = $"%HeightSpinBox"
-onready var oSolidMaskSpinBox = $"%SolidMaskSpinBox"
-onready var oPermanentSpinBox = $"%PermanentSpinBox"
-onready var oOrientationSpinBox = $"%OrientationSpinBox"
-onready var oLintelSpinBox = $"%LintelSpinBox"
-onready var oFloorTextureSpinBox = $"%FloorTextureSpinBox"
-onready var oUtilizedSpinBox = $"%UtilizedSpinBox"
+@onready var oHeightSpinBox = $"%HeightSpinBox"
+@onready var oSolidMaskSpinBox = $"%SolidMaskSpinBox"
+@onready var oPermanentSpinBox = $"%PermanentSpinBox"
+@onready var oOrientationSpinBox = $"%OrientationSpinBox"
+@onready var oLintelSpinBox = $"%LintelSpinBox"
+@onready var oFloorTextureSpinBox = $"%FloorTextureSpinBox"
+@onready var oUtilizedSpinBox = $"%UtilizedSpinBox"
 
-onready var oColumnFirstUnusedButton = $"%ColumnFirstUnusedButton"
-onready var oColumnRevertButton = $"%ColumnRevertButton"
-onready var oColumnCopyButton = $"%ColumnCopyButton"
-onready var oColumnPasteButton = $"%ColumnPasteButton"
+@onready var oColumnFirstUnusedButton = $"%ColumnFirstUnusedButton"
+@onready var oColumnRevertButton = $"%ColumnRevertButton"
+@onready var oColumnCopyButton = $"%ColumnCopyButton"
+@onready var oColumnPasteButton = $"%ColumnPasteButton"
 
-onready var oCube8SpinBox = $"%Cube8SpinBox"
-onready var oCube7SpinBox = $"%Cube7SpinBox"
-onready var oCube6SpinBox = $"%Cube6SpinBox"
-onready var oCube5SpinBox = $"%Cube5SpinBox"
-onready var oCube4SpinBox = $"%Cube4SpinBox"
-onready var oCube3SpinBox = $"%Cube3SpinBox"
-onready var oCube2SpinBox = $"%Cube2SpinBox"
-onready var oCube1SpinBox = $"%Cube1SpinBox"
+@onready var oCube8SpinBox = $"%Cube8SpinBox"
+@onready var oCube7SpinBox = $"%Cube7SpinBox"
+@onready var oCube6SpinBox = $"%Cube6SpinBox"
+@onready var oCube5SpinBox = $"%Cube5SpinBox"
+@onready var oCube4SpinBox = $"%Cube4SpinBox"
+@onready var oCube3SpinBox = $"%Cube3SpinBox"
+@onready var oCube2SpinBox = $"%Cube2SpinBox"
+@onready var oCube1SpinBox = $"%Cube1SpinBox"
 
-onready var cubeSpinBoxArray = [
+@onready var cubeSpinBoxArray = [
 	oCube1SpinBox,
 	oCube2SpinBox,
 	oCube3SpinBox,
@@ -81,20 +81,20 @@ func _ready():
 			nodeVoxelView = oColumnsetVoxelView
 			
 	
-	oColumnIndexSpinBox.connect("value_changed", nodeVoxelView, "_on_ColumnIndexSpinBox_value_changed")
+	oColumnIndexSpinBox.connect("value_changed", Callable(nodeVoxelView, "_on_ColumnIndexSpinBox_value_changed"))
 	
-	oFloorTextureSpinBox.connect("mouse_entered", self, "_on_floortexture_mouse_entered")
-	oFloorTextureSpinBox.connect("mouse_exited", self, "_on_floortexture_mouse_exited")
+	oFloorTextureSpinBox.connect("mouse_entered", Callable(self, "_on_floortexture_mouse_entered"))
+	oFloorTextureSpinBox.connect("mouse_exited", Callable(self, "_on_floortexture_mouse_exited"))
 	
 	for i in cubeSpinBoxArray.size():
-		cubeSpinBoxArray[i].connect("value_changed", self, "_on_cube_value_changed", [i])
-		cubeSpinBoxArray[i].connect("mouse_entered", self, "_on_cube_mouse_entered", [i])
-		cubeSpinBoxArray[i].connect("mouse_exited", self, "_on_cube_mouse_exited", [i])
+		cubeSpinBoxArray[i].connect("value_changed", Callable(self, "_on_cube_value_changed").bind(i))
+		cubeSpinBoxArray[i].connect("mouse_entered", Callable(self, "_on_cube_mouse_entered").bind(i))
+		cubeSpinBoxArray[i].connect("mouse_exited", Callable(self, "_on_cube_mouse_exited").bind(i))
 	
 	regeneration_timer = Timer.new()
 	regeneration_timer.wait_time = 0.25
 	regeneration_timer.one_shot = true
-	regeneration_timer.connect("timeout", self, "_on_regeneration_timer_timeout")
+	regeneration_timer.connect("timeout", Callable(self, "_on_regeneration_timer_timeout"))
 	add_child(regeneration_timer)
 	
 	oGridAdvancedValues.visible = false
@@ -481,7 +481,7 @@ func _on_ColumnCopyButton_pressed():
 	oMessage.quick("Column copied to clipboard")
 
 func _on_ColumnPasteButton_pressed():
-	if clipboard["cubes"].empty():
+	if clipboard["cubes"].is_empty():
 		oMessage.quick("Clipboard is empty. Copy a column first.")
 		return
 	

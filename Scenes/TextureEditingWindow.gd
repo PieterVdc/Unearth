@@ -1,13 +1,13 @@
-extends WindowDialog
+extends Window
 
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oExportTmapButton = Nodelist.list["oExportTmapButton"]
-onready var oReloaderPathPackLabel = Nodelist.list["oReloaderPathPackLabel"]
-onready var oTEScrollContainer = Nodelist.list["oTEScrollContainer"]
-onready var oTeditLoadDAT = Nodelist.list["oTeditLoadDAT"]
-onready var oTeditSavePNG = Nodelist.list["oTeditSavePNG"]
-onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
-onready var oTeditSaveDAT = Nodelist.list["oTeditSaveDAT"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oExportTmapButton = Nodelist.list["oExportTmapButton"]
+@onready var oReloaderPathPackLabel = Nodelist.list["oReloaderPathPackLabel"]
+@onready var oTEScrollContainer = Nodelist.list["oTEScrollContainer"]
+@onready var oTeditLoadDAT = Nodelist.list["oTeditLoadDAT"]
+@onready var oTeditSavePNG = Nodelist.list["oTeditSavePNG"]
+@onready var oTeditLiveReloadPNG = Nodelist.list["oTeditLiveReloadPNG"]
+@onready var oTeditSaveDAT = Nodelist.list["oTeditSaveDAT"]
 
 var _dialog_confirmed = false
 
@@ -48,7 +48,7 @@ func disable_export_button():
 
 func update_reloader_path_label(path: String):
 	oReloaderPathPackLabel.text = path
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	oTEScrollContainer.scroll_horizontal = 1000000
 
 
@@ -56,13 +56,13 @@ func show_confirmation_dialog(message: String) -> bool:
 	var confirmDialog = ConfirmationDialog.new()
 	confirmDialog.dialog_text = message
 	confirmDialog.window_title = "Confirm File Replacement"
-	confirmDialog.popup_exclusive = true
+	confirmDialog.exclusive = true
 	add_child(confirmDialog)
 	_dialog_confirmed = false
-	confirmDialog.connect("confirmed", self, "_on_dialog_confirmed")
+	confirmDialog.connect("confirmed", Callable(self, "_on_dialog_confirmed"))
 	confirmDialog.popup_centered()
-	yield(confirmDialog, "popup_hide")
-	yield(get_tree(), "idle_frame")
+	await confirmDialog.popup_hide
+	await get_tree().idle_frame
 	var userConfirmed = _dialog_confirmed
 	confirmDialog.queue_free()
 	return userConfirmed

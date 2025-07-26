@@ -1,12 +1,12 @@
 extends Node
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oPlaceLockedCheckBox = Nodelist.list["oPlaceLockedCheckBox"]
-onready var oLavaEffectPercent = Nodelist.list["oLavaEffectPercent"]
-onready var oWaterEffectPercent = Nodelist.list["oWaterEffectPercent"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oPlaceLockedCheckBox = Nodelist.list["oPlaceLockedCheckBox"]
+@onready var oLavaEffectPercent = Nodelist.list["oLavaEffectPercent"]
+@onready var oWaterEffectPercent = Nodelist.list["oWaterEffectPercent"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
-onready var dir = oSlabPlacement.dir
+@onready var dir = oSlabPlacement.dir
 
 func place_slab_objects(xSlab, ySlab, slabID, ownership, clmIndexGroup, bitmask, surrID, bitmaskType):
 	oInstances.delete_attached_instances_on_slab(xSlab, ySlab)

@@ -9,7 +9,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 	if not file.file_exists(file_path):
 		return {"config": config, "comments": comments}
 	
-	var start_time = OS.get_ticks_msec()
+	var start_time = Time.get_ticks_msec()
 	
 	if file.open(file_path, File.READ) != OK:
 		return {"config": config, "comments": comments}
@@ -25,7 +25,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 	for line in lines:
 		var stripped = line.strip_edges()
 		
-		if stripped.empty():
+		if stripped.is_empty():
 			continue
 		if stripped.begins_with(";"):
 			pending_comments.append(stripped)
@@ -55,7 +55,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 				var sacrifice_array = [key, items[0]]
 				for i in range(1, items.size()):
 					var item = items[i].strip_edges()
-					if not item.empty():
+					if not item.is_empty():
 						sacrifice_array.append(item)
 				config[current_section].append(sacrifice_array)
 		elif is_rules_cfg and current_section == "research":
@@ -63,12 +63,12 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 			var filtered_items = []
 			for item in items:
 				var clean_item = item.strip_edges()
-				if not clean_item.empty():
+				if not clean_item.is_empty():
 					filtered_items.append(clean_item)
 			
 			if filtered_items.size() >= 3:
 				var research_array = [filtered_items[0], filtered_items[1]]
-				research_array.append(int(filtered_items[2]) if filtered_items[2].is_valid_integer() else filtered_items[2])
+				research_array.append(int(filtered_items[2]) if filtered_items[2].is_valid_int() else filtered_items[2])
 				config[current_section].append(research_array)
 		else:
 			var items = value.split(" ")
@@ -76,11 +76,11 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 				var result = []
 				for item in items:
 					var clean_item = item.strip_edges()
-					if not clean_item.empty():
-						result.append(int(clean_item) if clean_item.is_valid_integer() else clean_item)
+					if not clean_item.is_empty():
+						result.append(int(clean_item) if clean_item.is_valid_int() else clean_item)
 				config[current_section][key] = result
 			else:
-				config[current_section][key] = int(value) if value.is_valid_integer() else value
+				config[current_section][key] = int(value) if value.is_valid_int() else value
 		
 		if pending_comments.size() > 0:
 			if not comments.has(current_section):
@@ -88,7 +88,7 @@ func read_dkcfg_file(file_path: String) -> Dictionary:
 			comments[current_section][key] = pending_comments.duplicate()
 			pending_comments.clear()
 	
-	var elapsed_time = OS.get_ticks_msec() - start_time
+	var elapsed_time = Time.get_ticks_msec() - start_time
 	print("Read " + filename + " dkcfg with comments in : " + str(elapsed_time) + "ms")
 	
 	return {"config": config, "comments": comments}

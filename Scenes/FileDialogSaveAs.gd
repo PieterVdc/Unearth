@@ -1,9 +1,9 @@
 extends FileDialog
-onready var oGame = Nodelist.list["oGame"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oSaveMap = Nodelist.list["oSaveMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oSaveMap = Nodelist.list["oSaveMap"]
 
 var saveInstruction = Label.new()
 var lineEdit
@@ -21,23 +21,23 @@ func _ready():
 	lineEdit = get_line_edit()
 	get_vbox().add_child(saveInstruction)
 	get_vbox().move_child(saveInstruction,3)
-	lineEdit.connect('focus_exited',self, 'line_edit_focus_exited')
+	lineEdit.connect('focus_exited', Callable(self, 'line_edit_focus_exited'))
 	
-	acceptButton = get_ok()
+	acceptButton = get_ok_button()
 
 func line_edit_focus_exited():
 	if int(lineEdit.text) == 0:
 		lineEdit.text = "1"
 	while lineEdit.text.length() < 8:
 		lineEdit.text = lineEdit.text.insert(3,"0")
-	lineEdit.caret_position = lineEdit.text.length() #Needed for linux when canceling and reopening save as dialog
+	lineEdit.caret_column = lineEdit.text.length() #Needed for linux when canceling and reopening save as dialog
 
 func _on_FileDialogSaveAs_about_to_show():
 	
 	var path
 	if oCurrentMap.path == "":
 		var personalFolder = oGame.DK_LEVELS_DIRECTORY.plus_file("personal")
-		if Directory.new().dir_exists(personalFolder) and oGame.keeperfx_is_installed() == true:
+		if DirAccess.new().dir_exists(personalFolder) and oGame.keeperfx_is_installed() == true:
 			path = personalFolder # KeeperFX has personal folder
 		else:
 			path = oGame.DK_LEVELS_DIRECTORY # Old DK does not have personal folder
@@ -58,10 +58,10 @@ func _on_FileDialogSaveAs_about_to_show():
 		var currentMapNumber = oCurrentMap.path.get_file().to_upper().trim_prefix("MAP")
 		lineEdit.text = str(currentMapNumber)
 	
-	yield(get_tree(),'idle_frame')
-	lineEdit.caret_position = lineEdit.text.length()
+	await get_tree().idle_frame
+	lineEdit.caret_column = lineEdit.text.length()
 	lineEdit.grab_focus()
-	deselect_items()
+	deselect_all()
 
 var previousCurrentDir = ""
 
@@ -77,7 +77,7 @@ func _process(delta):
 		previousCurrentDir = current_dir
 		working_directory_was_changed()
 	
-	saveInstruction.set("custom_colors/font_color", Color(1,0.5,0.5,1))
+	saveInstruction.set("theme_override_colors/font_color", Color(1,0.5,0.5,1))
 	
 	var dir = current_dir.to_upper()
 	if oGame.keeperfx_is_installed() == true:
@@ -88,24 +88,24 @@ func _process(delta):
 			saveInstruction.text = "Must save in a sub directory. (KeeperFX)"
 		if dir.get_base_dir().ends_with("/LEVELS") or dir.get_base_dir().ends_with("/CAMPGNS"):
 			saveInstruction.text = "Map playable from this directory. (KeeperFX)"
-			saveInstruction.set("custom_colors/font_color", Color(0.5,1.0,0.5,1))
+			saveInstruction.set("theme_override_colors/font_color", Color(0.5,1.0,0.5,1))
 	else:
 		saveInstruction.text = "Map not playable from this directory. (Original DK)"
 		# Original DK
 		if dir.ends_with("/LEVELS"):
 			saveInstruction.text = "Map playable from this directory. (Original DK)"
-			saveInstruction.set("custom_colors/font_color", Color(0.5,1.0,0.5,1))
+			saveInstruction.set("theme_override_colors/font_color", Color(0.5,1.0,0.5,1))
 
 func working_directory_was_changed():
 	if oCurrentMap.path == "":
 		var newMapNumber = determine_next_available_map_number_in_dir(current_dir)
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		lineEdit.text = 'map' + str(newMapNumber)
 		line_edit_focus_exited()
 		
 
 func linedit_was_changed():
-	var rememberCaretPos = lineEdit.caret_position
+	var rememberCaretPos = lineEdit.caret_column
 	lineEdit.text = lineEdit.text.trim_prefix("map")
 	
 	# remove the letters "m-a-p" when checking whether the string has letters. removing the prefix isn't good enough here.
@@ -127,7 +127,7 @@ func linedit_was_changed():
 		oMessage.quick("Map number cannot be larger than 32767")
 	
 	lineEdit.text = "map"+lineEdit.text
-	lineEdit.caret_position = rememberCaretPos+3
+	lineEdit.caret_column = rememberCaretPos+3
 
 func _on_FileDialogSaveAs_visibility_changed():
 	if is_instance_valid(oUi) == false: return
@@ -143,9 +143,9 @@ func determine_next_available_map_number_in_dir(path):
 	path = drive.plus_file(path)
 	
 	var mapFileNumbers = []
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.open(path) == OK:
-		dir.list_dir_begin()
+		dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = dir.get_next()
 		while file_name != "":
 			if dir.current_is_dir():
@@ -157,7 +157,7 @@ func determine_next_available_map_number_in_dir(path):
 	else:
 		print("An error occurred when trying to access the path.")
 	
-	if mapFileNumbers.empty() == true:
+	if mapFileNumbers.is_empty() == true:
 		return 1
 	else:
 		mapFileNumbers.sort()
@@ -181,6 +181,6 @@ func _on_FileDialogSaveAs_file_selected(filePath):
 
 func _input(event):
 	if visible and event.is_action_pressed("ui_accept"):
-		get_tree().set_input_as_handled() # Consume the input event to stop the default behavior
+		get_viewport().set_input_as_handled() # Consume the input event to stop the default behavior
 		lineEdit.release_focus()
 		acceptButton.emit_signal("pressed")

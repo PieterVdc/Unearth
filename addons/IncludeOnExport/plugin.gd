@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var scriptExportPlugin = preload("res://addons/IncludeOnExport/export.gd").new()

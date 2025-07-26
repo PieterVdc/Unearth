@@ -1,35 +1,35 @@
 extends VBoxContainer
 class_name SpecialTabContainer
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
-onready var oTopTabsSection = $TopTabsSection
-onready var tabFolder = $TabFolder
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oTopTabsSection = $TopTabsSection
+@onready var tabFolder = $TabFolder
 var tabSystem
 var btnLeft
 var btnRight
 
-var current_tab setget set_current_tab,get_current_tab
+var current_tab : get = get_current_tab, set = set_current_tab
 
 var fullNameTabsWidth = 0
 
 func _ready():
 	
-	tabSystem = oTopTabsSection.get_node("Tabs")
+	tabSystem = oTopTabsSection.get_node("TabBar")
 	
 	btnLeft = oTopTabsSection.get_node("TextureButtonLeft")
 	btnRight = oTopTabsSection.get_node("TextureButtonRight")
 	
-	tabSystem.connect("reposition_active_tab_request", self, "_on_Tabs_reposition_active_tab_request")
-	tabSystem.connect("tab_changed", self, "_on_Tabs_tab_changed")
-	tabSystem.connect("resized", self, "_on_Tabs_resized")
-	tabSystem.connect("tab_hover", self, "_on_tab_hover")
-	tabSystem.connect("mouse_exited", self, "_on_mouse_exited")
-	tabSystem.connect("gui_input", self, "_on_gui_input")
-	btnLeft.connect("pressed", self, "_on_TextureButtonLeft_pressed")
-	btnRight.connect("pressed", self, "_on_TextureButtonRight_pressed")
+	tabSystem.connect("reposition_active_tab_request", Callable(self, "_on_Tabs_reposition_active_tab_request"))
+	tabSystem.connect("tab_changed", Callable(self, "_on_Tabs_tab_changed"))
+	tabSystem.connect("resized", Callable(self, "_on_Tabs_resized"))
+	tabSystem.connect("tab_hovered", Callable(self, "_on_tab_hover"))
+	tabSystem.connect("mouse_exited", Callable(self, "_on_mouse_exited"))
+	tabSystem.connect("gui_input", Callable(self, "_on_gui_input"))
+	btnLeft.connect("pressed", Callable(self, "_on_TextureButtonLeft_pressed"))
+	btnRight.connect("pressed", Callable(self, "_on_TextureButtonRight_pressed"))
 	
-	tabSystem.rect_min_size.y = 24
+	tabSystem.custom_minimum_size.y = 24
 	
-	tabSystem.add_stylebox_override("tab_bg",preload('res://Theme/thin_tab_bg.tres'))
+	tabSystem.add_theme_stylebox_override("tab_bg",preload('res://Theme/thin_tab_bg.tres'))
 
 func initialize(tabNameArray):
 	
@@ -37,7 +37,7 @@ func initialize(tabNameArray):
 		var idx = controlID.get_index()
 		
 		var setName
-		if tabNameArray.empty() == false:
+		if tabNameArray.is_empty() == false:
 			setName = tabNameArray[idx]
 		else:
 			setName = controlID.name
@@ -46,7 +46,7 @@ func initialize(tabNameArray):
 	
 	set_icons()
 	
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	fullNameTabsWidth = 32 # needs a little extra to work correctly
 	for i in get_tab_count():
 		fullNameTabsWidth += tabSystem.get_tab_rect(i).size.x
@@ -77,7 +77,7 @@ func set_icons():
 			img.resize(31, 31*aspectRatioH)
 		
 		var imgTex = ImageTexture.new()
-		imgTex.create_from_image(img, 0)
+		imgTex.create_from_image(img) #,0
 		
 		tabSystem.set_tab_icon(tabIndex, imgTex)
 
@@ -95,7 +95,7 @@ func set_current_tab(tab):
 			i.visible = false
 	
 	for i in 2:
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		tabSystem.ensure_tab_visible(tab)
 
 
@@ -115,7 +115,7 @@ func _on_Tabs_resized():
 	if get_tab_count() == 0: return # Fixes an error when initializing
 	#tabSystem.disconnect("resized",self,"_on_Tabs_resized")
 	set_current_tab(tabSystem.current_tab)
-	yield(get_tree(),'idle_frame') # Stops arrow from going off frame for a split second
+	await get_tree().idle_frame # Stops arrow from going off frame for a split second
 	calculate_tab_title_width()
 	
 	#tabSystem.connect("resized",self,"_on_Tabs_resized")
@@ -177,9 +177,9 @@ func get_current_tab():
 
 func _on_gui_input(event):
 	if event is InputEventMouseButton and event.is_pressed():
-		if event.button_index == BUTTON_WHEEL_UP:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_on_TextureButtonRight_pressed()
-		if event.button_index == BUTTON_WHEEL_DOWN:
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_on_TextureButtonLeft_pressed()
 
 

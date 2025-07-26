@@ -1,20 +1,20 @@
-extends WindowDialog
-onready var oDkSlabsetVoxelView = Nodelist.list["oDkSlabsetVoxelView"]
-onready var oSlabsetIDSpinBox = Nodelist.list["oSlabsetIDSpinBox"]
-onready var oVariationNumberSpinBox = Nodelist.list["oVariationNumberSpinBox"]
-onready var oSlabsetTabs = Nodelist.list["oSlabsetTabs"]
-onready var oColumnsetControls = Nodelist.list["oColumnsetControls"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
-onready var oTabSlabset = Nodelist.list["oTabSlabset"]
-onready var oTabColumnset = Nodelist.list["oTabColumnset"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oCfgLoader = Nodelist.list["oCfgLoader"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+extends Window
+@onready var oDkSlabsetVoxelView = Nodelist.list["oDkSlabsetVoxelView"]
+@onready var oSlabsetIDSpinBox = Nodelist.list["oSlabsetIDSpinBox"]
+@onready var oVariationNumberSpinBox = Nodelist.list["oVariationNumberSpinBox"]
+@onready var oSlabsetTabs = Nodelist.list["oSlabsetTabs"]
+@onready var oColumnsetControls = Nodelist.list["oColumnsetControls"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oTabSlabset = Nodelist.list["oTabSlabset"]
+@onready var oTabColumnset = Nodelist.list["oTabColumnset"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oCfgLoader = Nodelist.list["oCfgLoader"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
 
 var is_initializing = false
 
@@ -35,10 +35,10 @@ func _ready():
 
 	
 	# Connect window signals
-	connect("visibility_changed", self, "_on_SlabsetWindow_visibility_changed")
+	connect("visibility_changed", Callable(self, "_on_SlabsetWindow_visibility_changed"))
 	
-	oSlabsetTabs.connect("tab_changed", self, "_on_SlabsetTabs_tab_changed")
-	oTabSlabset.connect("column_shortcut_pressed", self, "_on_TabSlabset_column_shortcut_pressed")
+	oSlabsetTabs.connect("tab_changed", Callable(self, "_on_SlabsetTabs_tab_changed"))
+	oTabSlabset.connect("column_shortcut_pressed", Callable(self, "_on_TabSlabset_column_shortcut_pressed"))
 
 
 func update_window_title():
@@ -94,32 +94,32 @@ func popup_on_right_side():
 	var desiredSize = oUi.get_desired_window_size(name)
 	
 	if desiredPosition == Vector2.ZERO or desiredSize == Vector2.ZERO:
-		var screenSize = OS.get_screen_size()
+		var screenSize = DisplayServer.screen_get_size()
 		var defaultWidth = 610
 		var defaultHeight = 990
 		
 		if desiredSize == Vector2.ZERO:
-			rect_size = Vector2(defaultWidth, defaultHeight)
-			oUi.set_desired_window_size(name, rect_size)
+			size = Vector2(defaultWidth, defaultHeight)
+			oUi.set_desired_window_size(name, size)
 		else:
-			rect_size = desiredSize
+			size = desiredSize
 		
 		if desiredPosition == Vector2.ZERO:
 			var rightSideX = screenSize.x - defaultWidth - 50
 			var centeredY = (screenSize.y - defaultHeight) / 2
-			rect_position = Vector2(rightSideX, centeredY)
-			oUi.set_desired_window_position(name, rect_position)
+			position = Vector2(rightSideX, centeredY)
+			oUi.set_desired_window_position(name, position)
 		else:
-			rect_position = desiredPosition
+			position = desiredPosition
 	else:
-		rect_position = desiredPosition
-		rect_size = desiredSize
+		position = desiredPosition
+		size = desiredSize
 	
 	visible = true
 
 func _notification(what):
 	match what:
-		NOTIFICATION_WM_FOCUS_IN:
+		NOTIFICATION_APPLICATION_FOCUS_IN:
 			if oCurrentMap.path != "":
 				oTabSlabset.update_slabset_revert_button_state()
 				oTabColumnset.update_columnset_revert_button_state()
@@ -133,7 +133,7 @@ func _on_SlabsetWindow_visibility_changed():
 		
 		update_window_title()
 		
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		oDkSlabsetVoxelView.oAllVoxelObjects.visible = true
 		is_initializing = false
 		update_flash_state()

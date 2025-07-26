@@ -1,7 +1,7 @@
 extends Tree
-onready var oGame = Nodelist.list["oGame"]
-onready var oDataMapName = Nodelist.list["oDataMapName"]
-onready var oDataLof = Nodelist.list["oDataLof"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oDataMapName = Nodelist.list["oDataMapName"]
+@onready var oDataLof = Nodelist.list["oDataLof"]
 
 var treeItemsThatWantNames = {} # <BASENAME> <TreeItem>
 var gatherMapNames = {} # <BASENAME> <LifNameString>
@@ -9,7 +9,7 @@ var gatherMapNames = {} # <BASENAME> <LifNameString>
 var allMapsForRandomizier = []
 
 func update_source_tree(): # Call this whenever there's an update to the filesystem, or whenever you open the map list
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	
 	allMapsForRandomizier.clear()
 	
@@ -33,12 +33,12 @@ func update_source_tree(): # Call this whenever there's an update to the filesys
 		var txt = oDataMapName.get_special_lif_text(BASENAME)
 		fetchItem.set_text(1, txt)
 	
-	print('SourceMapTree updated in: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('SourceMapTree updated in: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 func deep_scan(rootPath, parentTreeItem):
-	var dir = Directory.new()
+	var dir = DirAccess.new()
 	if dir.open(rootPath) == OK:
-		dir.list_dir_begin(true, false)
+		dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		add_directory_contents(dir, parentTreeItem)
 		dir.list_dir_end()
 	else:
@@ -56,7 +56,7 @@ func add_directory_contents(dir, treeItem):
 		fileName = dir.get_next()
 	
 	if OS.get_name() == "X11":
-		pathsToSort.sort_custom(MyCustomSorter, "sort_ascending")
+		pathsToSort.sort_custom(Callable(MyCustomSorter, "sort_ascending"))
 	
 	for i in pathsToSort:
 		var pathString = i[0]
@@ -72,9 +72,9 @@ func add_directory_contents(dir, treeItem):
 		var parentItem = itemData[2]
 		if itemType == "dir":
 			var newTreeItem = add_tree_dir(self, parentItem, pathString)
-			var subDir = Directory.new()
+			var subDir = DirAccess.new()
 			subDir.open(pathString)
-			subDir.list_dir_begin(true, false)
+			subDir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 			add_directory_contents(subDir, newTreeItem)
 		elif itemType == "file":
 			var EXT = pathString.get_extension().to_upper()

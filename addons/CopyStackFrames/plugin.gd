@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var copy_button: Button
@@ -8,7 +8,7 @@ func _enter_tree() -> void:
 	copy_button = Button.new()
 	copy_button.text = "Copy Stack"
 	add_control_to_container(CONTAINER_TOOLBAR, copy_button)
-	copy_button.connect("pressed", self, "_on_copy_pressed")
+	copy_button.connect("pressed", Callable(self, "_on_copy_pressed"))
 
 
 func _exit_tree() -> void:
@@ -49,7 +49,7 @@ func find_stack_tree() -> Tree:
 		print("Copy Stack Frames: Failed to find 'TabContainer'")
 		return null
 
-	var dbg: Node = tc.find_node("Debugger", true, false)
+	var dbg: Node = tc.find_child("Debugger", true, false)
 	if not dbg:
 		print("Copy Stack Frames: Failed to find 'Debugger' VBox")
 		return null
@@ -123,7 +123,7 @@ func _on_copy_pressed() -> void:
 		text += "%s - %s:%s - at function: %s\n" % [frame, file, line, func_name]
 		item = item.get_next()
 
-	if text.empty():
+	if text.is_empty():
 		OS.alert("Stack is empty.", "Copy Stack Frames")
 		return
 	

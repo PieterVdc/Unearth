@@ -1,4 +1,4 @@
-tool
+@tool
 
 
 static func get_node_in_parents(node, klass):
@@ -27,7 +27,7 @@ static func is_in_edited_scene(node):
 	# Obviously it won't work for nested viewports since that's basically what this function checks.
 	if not node.is_inside_tree():
 		return false
-	var vp = get_node_in_parents(node, Viewport)
+	var vp = get_node_in_parents(node, SubViewport)
 	if vp == null:
 		return false
 	return vp.get_parent() != null

@@ -47,8 +47,8 @@ enum {
 	SIDE_EAST = 1,
 	SIDE_SOUTH = 2,
 	SIDE_WEST = 3,
-	SIDE_TOP = 4,
-	SIDE_BOTTOM = 5,
+	MARGIN_TOP = 4,
+	MARGIN_BOTTOM = 5,
 }
 func clear_all_cube_data():
 	tex.clear()

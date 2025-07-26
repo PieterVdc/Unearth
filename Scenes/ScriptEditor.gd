@@ -1,24 +1,24 @@
 extends PanelContainer
-onready var oScriptTextEdit = Nodelist.list["oScriptTextEdit"]
-onready var oDataScript = Nodelist.list["oDataScript"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oScriptEditorStatusLabel = Nodelist.list["oScriptEditorStatusLabel"]
-onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
+@onready var oScriptTextEdit = Nodelist.list["oScriptTextEdit"]
+@onready var oDataScript = Nodelist.list["oDataScript"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oScriptEditorStatusLabel = Nodelist.list["oScriptEditorStatusLabel"]
+@onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oScriptEditorWindow = Nodelist.list["oScriptEditorWindow"]
 
 var scriptHasBeenEditedInUnearth = false
 
-var SCRIPT_EDITOR_FONT_SIZE = 20 setget set_SCRIPT_EDITOR_FONT_SIZE, get_SCRIPT_EDITOR_FONT_SIZE
+var SCRIPT_EDITOR_FONT_SIZE = 20: get = get_SCRIPT_EDITOR_FONT_SIZE, set = set_SCRIPT_EDITOR_FONT_SIZE
 
 func set_SCRIPT_EDITOR_FONT_SIZE(setVal):
 	SCRIPT_EDITOR_FONT_SIZE = setVal
 	var current_font = oScriptTextEdit.get_font("font").duplicate()
 	current_font.size = SCRIPT_EDITOR_FONT_SIZE
-	oScriptTextEdit.add_font_override("font", current_font)
+	oScriptTextEdit.add_theme_font_override("font", current_font)
 
 
 func get_SCRIPT_EDITOR_FONT_SIZE():
@@ -36,7 +36,7 @@ func _on_ScriptTextEdit_text_changed():
 	update_empty_script_status()
 	
 	var updateHelpers = false
-	var line = oScriptTextEdit.get_line(oScriptTextEdit.cursor_get_line())
+	var line = oScriptTextEdit.get_line(oScriptTextEdit.get_caret_line())
 	for i in oScriptHelpers.commandsWithPositions.size():
 		if oScriptHelpers.commandsWithPositions[i][0] in line.to_upper():
 			updateHelpers = true
@@ -80,14 +80,14 @@ func load_generated_text(setWithString):
 func update_texteditor():
 	# This is for when pressing Undo
 	var scroll = oScriptTextEdit.scroll_vertical
-	var lineNumber = oScriptTextEdit.cursor_get_line()
-	var columnNumber = oScriptTextEdit.cursor_get_column()
+	var lineNumber = oScriptTextEdit.get_caret_line()
+	var columnNumber = oScriptTextEdit.get_caret_column()
 	
 	oScriptTextEdit.text = oDataScript.data # This resets a bunch of stuff in TextEdit like cursor line.
 	
-	oScriptTextEdit.cursor_set_line(lineNumber)
+	oScriptTextEdit.set_caret_line(lineNumber)
 	oScriptTextEdit.scroll_vertical = scroll
-	oScriptTextEdit.cursor_set_column(columnNumber)
+	oScriptTextEdit.set_caret_column(columnNumber)
 	
 	update_empty_script_status()
 	oScriptHelpers.start() # in the case of editing text file outside of Unearth
@@ -105,7 +105,7 @@ func _on_ScriptHelpButton_pressed():
 
 func _input(event):
 	if event is InputEventMouseButton and (event.is_pressed()):
-		if Rect2( oScriptTextEdit.rect_global_position, oScriptTextEdit.rect_size ).has_point(oScriptTextEdit.get_global_mouse_position()) == false:
+		if Rect2( oScriptTextEdit.global_position, oScriptTextEdit.size ).has_point(oScriptTextEdit.get_global_mouse_position()) == false:
 			oScriptTextEdit.release_focus()
 
 

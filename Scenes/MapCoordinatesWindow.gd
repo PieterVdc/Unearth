@@ -1,14 +1,14 @@
-extends WindowDialog
+extends Window
 
-onready var oMapProperties = Nodelist.list["oMapProperties"]
-onready var oEnsignFlagImg = Nodelist.list["oEnsignFlagImg"]
-onready var oLandviewAspectRatioContainer = Nodelist.list["oLandviewAspectRatioContainer"]
-onready var oLandviewImage = Nodelist.list["oLandviewImage"]
-onready var oEnsignPositionX = Nodelist.list["oEnsignPositionX"]
-onready var oEnsignPositionY = Nodelist.list["oEnsignPositionY"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oChooseLandviewImageFileDialog = Nodelist.list["oChooseLandviewImageFileDialog"]
-onready var oLandViewFlagPosLabel = Nodelist.list["oLandViewFlagPosLabel"]
+@onready var oMapProperties = Nodelist.list["oMapProperties"]
+@onready var oEnsignFlagImg = Nodelist.list["oEnsignFlagImg"]
+@onready var oLandviewAspectRatioContainer = Nodelist.list["oLandviewAspectRatioContainer"]
+@onready var oLandviewImage = Nodelist.list["oLandviewImage"]
+@onready var oEnsignPositionX = Nodelist.list["oEnsignPositionX"]
+@onready var oEnsignPositionY = Nodelist.list["oEnsignPositionY"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oChooseLandviewImageFileDialog = Nodelist.list["oChooseLandviewImageFileDialog"]
+@onready var oLandViewFlagPosLabel = Nodelist.list["oLandViewFlagPosLabel"]
 
 var imageData = Image.new()
 var textureData = ImageTexture.new()
@@ -30,12 +30,12 @@ func update_landview_screen():
 	oLandviewAspectRatioContainer.ratio = image_resolution.x / image_resolution.y
 	
 	# Flag Size
-	var adjustScale = oLandviewImage.rect_size / image_resolution
-	oEnsignFlagImg.rect_scale = Vector2(adjustScale.x, adjustScale.x)
+	var adjustScale = oLandviewImage.size / image_resolution
+	oEnsignFlagImg.scale = Vector2(adjustScale.x, adjustScale.x)
 	
 	# Flag Position
-	var flag_position = normalized_flag_position * oLandviewImage.rect_size
-	oEnsignFlagImg.rect_position = flag_position - oEnsignFlagImg.rect_pivot_offset
+	var flag_position = normalized_flag_position * oLandviewImage.size
+	oEnsignFlagImg.position = flag_position - oEnsignFlagImg.pivot_offset
 	
 	var new_set_pos = get_coords()
 	oLandViewFlagPosLabel.text = "(" + str(new_set_pos.x) + ", " + str(new_set_pos.y) + ")"
@@ -59,7 +59,7 @@ func _on_CloseMapCoordButton_pressed():
 func _on_LandviewImage_gui_input(event):
 	if visible == false: return
 
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			holding_left_click = true
 		else:
@@ -67,10 +67,10 @@ func _on_LandviewImage_gui_input(event):
 
 	if holding_left_click == true:
 		var clamped_position = Vector2()
-		clamped_position.x = clamp(event.position.x, 0, oLandviewImage.rect_size.x)
-		clamped_position.y = clamp(event.position.y, 0, oLandviewImage.rect_size.y)
+		clamped_position.x = clamp(event.position.x, 0, oLandviewImage.size.x)
+		clamped_position.y = clamp(event.position.y, 0, oLandviewImage.size.y)
 
-		normalized_flag_position = clamped_position / oLandviewImage.rect_size
+		normalized_flag_position = clamped_position / oLandviewImage.size
 		update_landview_screen()
 		manually_set_new_coords()
 
@@ -95,7 +95,7 @@ func _on_ChooseLandviewImageFileDialog_file_selected(path):
 		oMessage.quick("Error loading file.")
 		return
 	textureData = ImageTexture.new()
-	textureData.create_from_image(imageData, 0) # flags off
+	textureData.create_from_image(imageData) #,0 # flags off
 	oLandviewImage.texture = textureData
 	
 	update_image_resolution()

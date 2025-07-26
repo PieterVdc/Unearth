@@ -1,19 +1,19 @@
 extends VBoxContainer
-onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oClmEditorControls = Nodelist.list["oClmEditorControls"]
-onready var oConfirmClmClearUnused = Nodelist.list["oConfirmClmClearUnused"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oMapClmFilenameLabel = Nodelist.list["oMapClmFilenameLabel"]
-onready var oColumnEditorClearUnusedButton = Nodelist.list["oColumnEditorClearUnusedButton"]
-onready var oColumnEditorSortButton = Nodelist.list["oColumnEditorSortButton"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
-onready var oClmDataReadOnlyCheckBox = Nodelist.list["oClmDataReadOnlyCheckBox"]
+@onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oClmEditorControls = Nodelist.list["oClmEditorControls"]
+@onready var oConfirmClmClearUnused = Nodelist.list["oConfirmClmClearUnused"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oMapClmFilenameLabel = Nodelist.list["oMapClmFilenameLabel"]
+@onready var oColumnEditorClearUnusedButton = Nodelist.list["oColumnEditorClearUnusedButton"]
+@onready var oColumnEditorSortButton = Nodelist.list["oColumnEditorSortButton"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oSlabsetWindow = Nodelist.list["oSlabsetWindow"]
+@onready var oClmDataReadOnlyCheckBox = Nodelist.list["oClmDataReadOnlyCheckBox"]
 
 var overhead_update_timer = Timer.new()
 var pending_clm_index = -1
@@ -21,31 +21,31 @@ var pending_clm_index = -1
 func _ready():
 	overhead_update_timer.one_shot = true
 	overhead_update_timer.wait_time = 0.25
-	overhead_update_timer.connect("timeout", self, "_on_overhead_update_timer_timeout")
+	overhead_update_timer.connect("timeout", Callable(self, "_on_overhead_update_timer_timeout"))
 	add_child(overhead_update_timer)
 	
 	if is_instance_valid(oClmEditorControls):
-		oClmEditorControls.connect("cube_value_changed", self, "_on_cube_value_changed")
-		oClmEditorControls.connect("floor_texture_changed", self, "_on_floor_texture_changed")
-		oClmEditorControls.connect("column_pasted", self, "_on_column_pasted")
-		oClmEditorControls.connect("column_reverted", self, "_on_column_reverted")
+		oClmEditorControls.connect("cube_value_changed", Callable(self, "_on_cube_value_changed"))
+		oClmEditorControls.connect("floor_texture_changed", Callable(self, "_on_floor_texture_changed"))
+		oClmEditorControls.connect("column_pasted", Callable(self, "_on_column_pasted"))
+		oClmEditorControls.connect("column_reverted", Callable(self, "_on_column_reverted"))
 	
 	# Setup read-only checkbox
-	oClmDataReadOnlyCheckBox.connect("toggled", self, "_on_ReadOnlyCheckBox_toggled")
+	oClmDataReadOnlyCheckBox.connect("toggled", Callable(self, "_on_ReadOnlyCheckBox_toggled"))
 	
 	# Connect TabClmEditor controls
 	var columnEditorClearUnusedButton = get_node("HBoxContainer/VBoxContainer2/PanelContainer2/HBoxContainer/ColumnEditorClearUnusedButton")
 	var columnEditorSortButton = get_node("HBoxContainer/VBoxContainer2/PanelContainer2/HBoxContainer/ColumnEditorSortButton")
 	var columnEditorHelpButton = get_node("HBoxContainer/VBoxContainer2/PanelContainer2/HBoxContainer/ColumnEditorHelpButton")
-	connect("visibility_changed", self, "_on_ColumnEditor_visibility_changed")
+	connect("visibility_changed", Callable(self, "_on_ColumnEditor_visibility_changed"))
 	
-	columnEditorClearUnusedButton.connect("pressed", self, "_on_ColumnEditorClearUnusedButton_pressed")
-	columnEditorSortButton.connect("pressed", self, "_on_ColumnEditorSortButton_pressed")
-	columnEditorHelpButton.connect("pressed", self, "_on_ColumnEditorHelpButton_pressed")
+	columnEditorClearUnusedButton.connect("pressed", Callable(self, "_on_ColumnEditorClearUnusedButton_pressed"))
+	columnEditorSortButton.connect("pressed", Callable(self, "_on_ColumnEditorSortButton_pressed"))
+	columnEditorHelpButton.connect("pressed", Callable(self, "_on_ColumnEditorHelpButton_pressed"))
 	
 	# Connect ConfirmClmClearUnused
 	if is_instance_valid(oConfirmClmClearUnused):
-		oConfirmClmClearUnused.connect("confirmed", self, "_on_ConfirmClmClearUnused_confirmed")
+		oConfirmClmClearUnused.connect("confirmed", Callable(self, "_on_ConfirmClmClearUnused_confirmed"))
 
 func _on_cube_value_changed(clmIndex):
 	if clmIndex > 0:
@@ -90,12 +90,12 @@ func get_clm_column_index():
 	return oClmEditorControls.oColumnIndexSpinBox.value
 
 func setup_flash_connection():
-	if not oClmEditorControls.oColumnIndexSpinBox.is_connected("value_changed", self, "_on_clm_column_index_changed"):
-		oClmEditorControls.oColumnIndexSpinBox.connect("value_changed", self, "_on_clm_column_index_changed")
+	if not oClmEditorControls.oColumnIndexSpinBox.is_connected("value_changed", Callable(self, "_on_clm_column_index_changed")):
+		oClmEditorControls.oColumnIndexSpinBox.connect("value_changed", Callable(self, "_on_clm_column_index_changed"))
 
 func disconnect_flash_connection():
-	if oClmEditorControls.oColumnIndexSpinBox.is_connected("value_changed", self, "_on_clm_column_index_changed"):
-		oClmEditorControls.oColumnIndexSpinBox.disconnect("value_changed", self, "_on_clm_column_index_changed")
+	if oClmEditorControls.oColumnIndexSpinBox.is_connected("value_changed", Callable(self, "_on_clm_column_index_changed")):
+		oClmEditorControls.oColumnIndexSpinBox.disconnect("value_changed", Callable(self, "_on_clm_column_index_changed"))
 
 func _on_clm_column_index_changed(value):
 	oSlabsetWindow.update_flash_state()
@@ -111,10 +111,10 @@ func _on_ColumnEditor_visibility_changed():
 		oClmEditorVoxelView.initialize()
 		if oCurrentMap.path == "":
 			oMapClmFilenameLabel.text = "No saved file"
-			oMapClmFilenameLabel.hint_tooltip = ""
+			oMapClmFilenameLabel.tooltip_text = ""
 		else:
 			oMapClmFilenameLabel.text = oCurrentMap.path.get_file().get_basename() + ".clm"
-			oMapClmFilenameLabel.hint_tooltip = oCurrentMap.path.get_base_dir() + "/" + oCurrentMap.path.get_file().get_basename() + ".clm"
+			oMapClmFilenameLabel.tooltip_text = oCurrentMap.path.get_base_dir() + "/" + oCurrentMap.path.get_file().get_basename() + ".clm"
 		oClmEditorControls._on_ColumnIndexSpinBox_value_changed(oClmEditorControls.oColumnIndexSpinBox.value)
 		update_clm_editing_buttons()
 		oSlabsetWindow.update_flash_state()
@@ -122,7 +122,7 @@ func _on_ColumnEditor_visibility_changed():
 		_on_ReadOnlyCheckBox_toggled(oClmDataReadOnlyCheckBox.pressed)
 	else:
 		# Update "Clm entries" in properties window
-		yield(get_tree(),'idle_frame')
+		await get_tree().idle_frame
 		oDataClm.count_filled_clm_entries()
 
 func update_clm_editing_buttons():

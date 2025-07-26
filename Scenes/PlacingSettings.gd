@@ -1,13 +1,13 @@
 extends VBoxContainer
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oPlacingListData = Nodelist.list["oPlacingListData"]
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
-onready var oPlacingTipsButton = Nodelist.list["oPlacingTipsButton"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oLimitThing = Nodelist.list["oLimitThing"]
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oPlacingListData = Nodelist.list["oPlacingListData"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oPropertiesTabs = Nodelist.list["oPropertiesTabs"]
+@onready var oPlacingTipsButton = Nodelist.list["oPlacingTipsButton"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oLimitThing = Nodelist.list["oLimitThing"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
 
 # Default values for placement
 var effectRange = 5
@@ -112,7 +112,7 @@ func update_placing_tab():
 				1:
 					availableFields = [FIELDS.SUBTYPE, FIELDS.NAME_ID, FIELDS.THINGTYPE, FIELDS.POINT_RANGE] # Action point
 				2:
-					availableFields = [FIELDS.SUBTYPE, FIELDS.NAME_ID, FIELDS.THINGTYPE, FIELDS.LIGHT_RANGE, FIELDS.LIGHT_INTENSITY] # Light
+					availableFields = [FIELDS.SUBTYPE, FIELDS.NAME_ID, FIELDS.THINGTYPE, FIELDS.LIGHT_RANGE, FIELDS.LIGHT_INTENSITY] # Light3D
 	
 	for i in FIELDS.size():
 		var description = null
@@ -141,7 +141,7 @@ func update_placing_tab():
 					description = "Point range"
 					value = pointRange
 				FIELDS.LIGHT_RANGE:
-					description = "Light range" # 9-10
+					description = "Light3D range" # 9-10
 					value = lightRange
 				FIELDS.LIGHT_INTENSITY:
 					description = "Intensity" # 9-10

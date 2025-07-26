@@ -1,11 +1,11 @@
 extends Node2D
 
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oUi = Nodelist.list["oUi"]
 
 func calculate_cursor_data():
 	var defaultData = {
@@ -83,7 +83,7 @@ func get_variation_description(variation, bitmaskType, surrID):
 	return baseDescription
 
 func find_variations_using_columnset(targetColumnsetIndex):
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var matchingVariations = []
 	var slabsetSize = Slabset.dat.size()
 	for variation in slabsetSize:
@@ -98,7 +98,7 @@ func find_variations_using_columnset(targetColumnsetIndex):
 						"subtileIndex": subtileIndex
 					})
 					break
-	print('Codetime: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Codetime: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	return matchingVariations
 
 func regenerate_slabs_using_columnset(columnsetIndex):

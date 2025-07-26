@@ -1,10 +1,10 @@
 extends Node
-onready var oPlayerCount = Nodelist.list["oPlayerCount"]
-onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
-onready var oPlayerDistance = Nodelist.list["oPlayerDistance"]
-onready var oPlayerPositioning = Nodelist.list["oPlayerPositioning"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
+@onready var oPlayerCount = Nodelist.list["oPlayerCount"]
+@onready var oNoiseDistance = Nodelist.list["oNoiseDistance"]
+@onready var oPlayerDistance = Nodelist.list["oPlayerDistance"]
+@onready var oPlayerPositioning = Nodelist.list["oPlayerPositioning"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oRandomPlayers = Nodelist.list["oRandomPlayers"]
 
 const impenetrableColour = Color(0.0, 0.0, 0.0, 1.0)
 
@@ -20,8 +20,8 @@ func apply_pizza_symmetry(imageData):
 	var angleStep = 2.0 * PI / playerCount
 	var originalImage = imageData.duplicate()
 	imageData.fill(Color(1,0,0,1))
-	originalImage.lock()
-	imageData.lock()
+	false # originalImage.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for y in range(h):
 		for x in range(w):
 			var pixelAngle = atan2(y - centerY, x - centerX)
@@ -37,8 +37,8 @@ func apply_pizza_symmetry(imageData):
 			if baseXInt >= 0 and baseXInt < w and baseYInt >= 0 and baseYInt < h:
 				var originalColor = originalImage.get_pixel(baseXInt, baseYInt)
 				imageData.set_pixel(x, y, originalColor)
-	originalImage.unlock()
-	imageData.unlock()
+	false # originalImage.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 
 
 func calculate_available_radius_for_angle(mapSizeX, mapSizeY, imageData, angle):
@@ -48,7 +48,7 @@ func calculate_available_radius_for_angle(mapSizeX, mapSizeY, imageData, angle):
 	var borderWidth = oNoiseDistance.value
 	if borderWidth <= 0.1:
 		return (min(mapSizeX, mapSizeY) - 5) * 0.5
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	var availableRadius = 0.0
 	for testRadius in range(5, int(maxTestRadius), 2):
 		var testX = centerX + cos(angle) * testRadius
@@ -59,7 +59,7 @@ func calculate_available_radius_for_angle(mapSizeX, mapSizeY, imageData, angle):
 		testPos.y = clamp(testPos.y, playerMargin, mapSizeY - playerMargin - 1)
 		if check_valid_player_position_unlocked(testPos, imageData):
 			availableRadius = testRadius
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	return availableRadius
 
 
@@ -71,7 +71,7 @@ func calculate_available_radius(mapSizeX, mapSizeY, imageData):
 	var borderWidth = oNoiseDistance.value
 	if borderWidth <= 0.1:
 		return (min(mapSizeX, mapSizeY) - 8) * 0.5
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for testRadius in range(5, int(maxTestRadius), 2):
 		var validPositions = 0
 		var totalTests = 8
@@ -87,7 +87,7 @@ func calculate_available_radius(mapSizeX, mapSizeY, imageData):
 				validPositions += 1
 		if validPositions >= totalTests * 0.5:
 			availableRadius = testRadius
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	return availableRadius
 
 
@@ -112,7 +112,7 @@ func place_players_in_pizza_slices(mapSizeX, mapSizeY, imageData, playerPosition
 	var radiusValue = oPlayerDistance.value
 	var positioningValue = oPlayerPositioning.value
 	var angleStep = 2.0 * PI / playerCount
-	var randomRotation = rand_range(0, 2.0 * PI)
+	var randomRotation = randf_range(0, 2.0 * PI)
 	var globalMaxRadius = (min(mapSizeX, mapSizeY) - 5) * 0.5
 	print("Pizza slice placement: ", playerCount, " players, center(", centerX, ",", centerY, "), radius factor: ", radiusValue, ", positioning: ", positioningValue)
 	for playerIndex in range(playerCount):
@@ -197,9 +197,9 @@ func find_position_with_spiral_search(centerX, centerY, mapSizeX, mapSizeY, imag
 
 
 func check_valid_single_pixel_position(pos, imageData):
-	imageData.lock()
+	false # imageData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	var result = imageData.get_pixel(pos.x, pos.y) != impenetrableColour
-	imageData.unlock()
+	false # imageData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	return result
 
 

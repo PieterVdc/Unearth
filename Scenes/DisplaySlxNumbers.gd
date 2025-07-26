@@ -1,11 +1,11 @@
 extends Node2D
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oSlabStyle = Nodelist.list["oSlabStyle"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oSlabStyle = Nodelist.list["oSlabStyle"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
 var tileDrawDist = 96
 var draw_grid = false
-var dynamic_font = DynamicFont.new()
+var dynamic_font = FontFile.new()
 
 func _ready():
 	dynamic_font.font_data = preload("res://Theme/ClassicConsole.ttf")
@@ -18,7 +18,7 @@ func _draw():
 	if oSlabStyle.visible == false: return
 	if oSelector.mode != oSelector.MODE_TILE: return
 	
-	oDataSlx.slxImgData.lock()
+	false # oDataSlx.slxImgData.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 	for x in M.xSize:
 		for y in M.ySize:
 			var value = oDataSlx.slxImgData.get_pixel(x,y).r8
@@ -34,4 +34,4 @@ func _draw():
 					color = Color(1,1,1,0.5)
 				
 				draw_string(dynamic_font, pos, string, color)
-	oDataSlx.slxImgData.unlock()
+	false # oDataSlx.slxImgData.unlock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed

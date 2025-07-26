@@ -1,25 +1,25 @@
 extends Node
 
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
-onready var oReadPalette = Nodelist.list["oReadPalette"]
-onready var oGame = Nodelist.list["oGame"]
-onready var oRNC = Nodelist.list["oRNC"]
-onready var oGame3D = Nodelist.list["oGame3D"]
-onready var oCustomSlabVoxelView = Nodelist.list["oCustomSlabVoxelView"]
-onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
-onready var oMapProperties = Nodelist.list["oMapProperties"]
-onready var oTextureAnimation = Nodelist.list["oTextureAnimation"]
-onready var oCfgLoader = Nodelist.list["oCfgLoader"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oDataLevelStyle = Nodelist.list["oDataLevelStyle"]
+@onready var oReadPalette = Nodelist.list["oReadPalette"]
+@onready var oGame = Nodelist.list["oGame"]
+@onready var oRNC = Nodelist.list["oRNC"]
+@onready var oGame3D = Nodelist.list["oGame3D"]
+@onready var oCustomSlabVoxelView = Nodelist.list["oCustomSlabVoxelView"]
+@onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
+@onready var oMapProperties = Nodelist.list["oMapProperties"]
+@onready var oTextureAnimation = Nodelist.list["oTextureAnimation"]
+@onready var oCfgLoader = Nodelist.list["oCfgLoader"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
 
 const TMAP_IMAGE_WIDTH: int = 256
 const TMAP_IMAGE_HEIGHT: int = 2176
 const TMAP_HALF_HEIGHT: int = TMAP_IMAGE_HEIGHT / 2
-const TEXTURE_FLAGS = Texture.FLAG_REPEAT + Texture.FLAG_ANISOTROPIC_FILTER
+const TEXTURE_FLAGS = Texture2D.FLAG_REPEAT + Texture2D.FLAG_ANISOTROPIC_FILTER
 
 enum {
 	LOADING_NOT_STARTED,
@@ -33,7 +33,7 @@ var texturesLoadedState = LOADING_NOT_STARTED
 
 func finish_load_ui():
 	for i in 100:
-		yield(get_tree(), 'idle_frame')
+		await get_tree().idle_frame
 	oMapProperties._on_MapProperties_visibility_changed()
 
 
@@ -53,7 +53,7 @@ func parse_tmap_path_details(filePath: String):
 		var dotIndex = baseNameLower.rfind(patternWithDot)
 		if dotIndex != -1:
 			var potentialNumber = baseNameLower.substr(dotIndex + patternWithDot.length())
-			if potentialNumber.is_valid_integer():
+			if potentialNumber.is_valid_int():
 				tmapType = core_type_str
 				numberStr = potentialNumber
 				break 
@@ -61,12 +61,12 @@ func parse_tmap_path_details(filePath: String):
 		# Check for format: tmapaNUMBER or tmapbNUMBER (at the beginning)
 		if baseNameLower.begins_with(core_type_str):
 			var potentialNumber = baseNameLower.substr(core_type_str.length())
-			if potentialNumber.is_valid_integer():
+			if potentialNumber.is_valid_int():
 				tmapType = core_type_str
 				numberStr = potentialNumber
 				break 
 
-	if tmapType != "" and numberStr != "" and numberStr.is_valid_integer():
+	if tmapType != "" and numberStr != "" and numberStr.is_valid_int():
 		return { "number": int(numberStr), "type": tmapType }
 	else:
 		return null
@@ -97,7 +97,7 @@ func get_effective_tmap_data_from_cfgloader() -> Dictionary:
 		for pathStrKey in pathsList:
 			if pathStrKey == null:
 				continue
-			if pathStrKey.get_extension().to_lower() != "dat": # Only process .dat files
+			if pathStrKey.get_extension().to_lower() != "dat": # Only process super.dat files
 				continue
 
 			var parsedTmapDetails = parse_tmap_path_details(pathStrKey)
@@ -122,7 +122,7 @@ func get_effective_tmap_data_from_cfgloader() -> Dictionary:
 func start():
 	if oGame.EXECUTABLE_PATH == "" or oGame.DK_DATA_DIRECTORY == "" or oGame.GAME_DIRECTORY == "":
 		return
-	var totalProcessStartTime = OS.get_ticks_msec()
+	var totalProcessStartTime = Time.get_ticks_msec()
 	texturesLoadedState = LOADING_IN_PROGRESS
 
 	if oReadPalette.initialize_palette_resources(Settings.unearthdata.plus_file("palette.dat")) == false or oReadPalette.get_palette_texture() == null:
@@ -138,7 +138,7 @@ func start():
 	cachedTextures.clear()
 	
 	var maxTmapNumber = -1
-	if tmapaDatListSorted.empty() == false:
+	if tmapaDatListSorted.is_empty() == false:
 		for pathStr in tmapaDatListSorted:
 			var parsedDetails = parse_tmap_path_details(pathStr)
 			if parsedDetails != null and parsedDetails.number > maxTmapNumber:
@@ -168,22 +168,22 @@ func start():
 	
 	rememberedTmapaPaths = newRememberedPaths
 	Settings.set_setting("REMEMBER_TMAPA_PATHS", rememberedTmapaPaths)
-	if cachedTextures.empty() and tmapaDatListSorted.empty() == false:
-		oMessage.big("Error", "No TMAP textures were loaded, though .dat files were found. Check console.")
+	if cachedTextures.is_empty() and tmapaDatListSorted.is_empty() == false:
+		oMessage.big("Error", "No TMAP textures were loaded, though super.dat files were found. Check console.")
 		texturesLoadedState = LOADING_NOT_STARTED
 		return
 
 	texturesLoadedState = LOADING_SUCCESS
-	print("TMapLoader: " + str(OS.get_ticks_msec() - totalProcessStartTime) + "ms")
+	print("TMapLoader: " + str(Time.get_ticks_msec() - totalProcessStartTime) + "ms")
 	call_deferred("finish_load_ui")
 
 
 func create_l8_image(tmapDatPath: String) -> Image:
-	var CODETIME_START = OS.get_ticks_msec()
-	var l8ByteArray: PoolByteArray = oRNC.decompress(tmapDatPath)
-	print('RNC processing ' + tmapDatPath + " : " + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	var CODETIME_START = Time.get_ticks_msec()
+	var l8ByteArray: PackedByteArray = oRNC.decompress(tmapDatPath)
+	print('RNC processing ' + tmapDatPath + " : " + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	
-	if l8ByteArray.empty():
+	if l8ByteArray.is_empty():
 		printerr("Failed to process file: ", tmapDatPath)
 		return null
 	
@@ -232,10 +232,10 @@ func cache_loaded_image(l8Image: Image, tmapNumber: int, tmapType: String):
 		printerr("Failed to split L8 image for tmap ", tmapNumber, " type ", tmapType)
 		return
 	var topTexture = ImageTexture.new()
-	topTexture.create_from_image(topHalfImage, TEXTURE_FLAGS)
+	topTexture.create_from_image(topHalfImage) #,TEXTURE_FLAGS
 	
 	var bottomTexture = ImageTexture.new()
-	bottomTexture.create_from_image(bottomHalfImage, TEXTURE_FLAGS)
+	bottomTexture.create_from_image(bottomHalfImage) #,TEXTURE_FLAGS
 
 	if tmapType == "tmapa":
 		cachedTextures[tmapNumber][0] = topTexture
@@ -248,25 +248,25 @@ func cache_loaded_image(l8Image: Image, tmapNumber: int, tmapType: String):
 
 
 func _create_blank_half_texture() -> ImageTexture:
-	var defaultBytes = PoolByteArray()
+	var defaultBytes = PackedByteArray()
 	defaultBytes.resize(TMAP_IMAGE_WIDTH * TMAP_HALF_HEIGHT)
 	var blankImage = Image.new()
 	blankImage.create_from_data(TMAP_IMAGE_WIDTH, TMAP_HALF_HEIGHT, false, Image.FORMAT_L8, defaultBytes)
 	var blankTexture = ImageTexture.new()
-	blankTexture.create_from_image(blankImage, TEXTURE_FLAGS)
+	blankTexture.create_from_image(blankImage) #,TEXTURE_FLAGS
 	return blankTexture
 
 
 func _apply_shader_parameters(material: ShaderMaterial, shaderParameters: Dictionary):
 	if material != null:
 		for paramName in shaderParameters:
-			material.set_shader_param(paramName, shaderParameters[paramName])
+			material.set_shader_parameter(paramName, shaderParameters[paramName])
 
 var alreadyShowedErrorOnce = false
 
 func apply_texture_pack():
 	var tilesetIndex = oDataLevelStyle.data
-	if texturesLoadedState != LOADING_SUCCESS or cachedTextures.empty():
+	if texturesLoadedState != LOADING_SUCCESS or cachedTextures.is_empty():
 		oMessage.big("Error", "Tilesets are not loaded or failed to load. Cannot set texture pack.")
 		return
 	var localPaletteTexture = oReadPalette.get_palette_texture()
@@ -310,16 +310,16 @@ func apply_texture_pack():
 			_apply_shader_parameters(nodeID.get_voxel_material("selected") as ShaderMaterial, shaderParameters)
 		elif nodeID.has_node("oAllVoxelObjects") and nodeID.has_node("oSelectedVoxelObject"):
 			var allVoxelsNode = nodeID.get_node("oAllVoxelObjects")
-			if allVoxelsNode is MeshInstance and allVoxelsNode.mesh != null and allVoxelsNode.mesh.surface_get_material_count() > 0:
+			if allVoxelsNode is MeshInstance3D and allVoxelsNode.mesh != null and allVoxelsNode.mesh.surface_get_material_count() > 0:
 				_apply_shader_parameters(allVoxelsNode.mesh.surface_get_material(0) as ShaderMaterial, shaderParameters)
 			var selectedVoxelsNode = nodeID.get_node("oSelectedVoxelObject")
-			if selectedVoxelsNode is MeshInstance and selectedVoxelsNode.mesh != null and selectedVoxelsNode.mesh.surface_get_material_count() > 0:
+			if selectedVoxelsNode is MeshInstance3D and selectedVoxelsNode.mesh != null and selectedVoxelsNode.mesh.surface_get_material_count() > 0:
 				_apply_shader_parameters(selectedVoxelsNode.mesh.surface_get_material(0) as ShaderMaterial, shaderParameters)
 	apply_slabwindow_textures(shaderParameters)
 
 
 func apply_slabwindow_textures(shaderParameters: Dictionary):
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	for nodeID in get_tree().get_nodes_in_group("SlabDisplay"):
 		if is_instance_valid(nodeID):
 			_apply_shader_parameters(nodeID.get_material() as ShaderMaterial, shaderParameters)

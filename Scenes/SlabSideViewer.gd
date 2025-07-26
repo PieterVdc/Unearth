@@ -1,8 +1,8 @@
 extends Node2D
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
 
 var sd
 

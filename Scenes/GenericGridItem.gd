@@ -2,7 +2,7 @@ extends PanelContainer
 
 signal pressed
 
-var img_normal setget set_image_normal
+var img_normal : set = set_image_normal
 var img_pressed
 var img_hover
 var img_margin = 0
@@ -33,13 +33,13 @@ func _on_GenericGridItem_mouse_exited():
 
 func _on_GenericGridItem_gui_input(event):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT:
-			if event.pressed == true:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.button_pressed == true:
 				if img_pressed:
 					$TextureRect.texture = img_pressed
 				emit_signal("pressed")
 				for i in 20:
-					yield(get_tree(),'idle_frame')
+					await get_tree().idle_frame
 				_on_GenericGridItem_mouse_exited()
 
 

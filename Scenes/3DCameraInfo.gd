@@ -1,7 +1,7 @@
 extends Label
-onready var oPlayer = Nodelist.list["oPlayer"]
-onready var oCamera3D = Nodelist.list["oCamera3D"]
-onready var oHead = Nodelist.list["oHead"]
+@onready var oPlayer = Nodelist.list["oPlayer"]
+@onready var oCamera3D = Nodelist.list["oCamera3D"]
+@onready var oHead = Nodelist.list["oHead"]
 
 var ENABLE_CAMERA_COORDS = false
 
@@ -9,9 +9,9 @@ func _ready():
 	visible = false
 
 func _process(delta):
-	var cx = 'x '+str(oPlayer.translation.x)
-	var cz = 'z '+str(oPlayer.translation.z)
-	var cy = 'y '+str(oPlayer.translation.y)
+	var cx = 'x '+str(oPlayer.position.x)
+	var cz = 'z '+str(oPlayer.position.z)
+	var cy = 'y '+str(oPlayer.position.y)
 	
 	var textline1 = ''#'Draw distance : '+str(oCamera3D.far) + '\n'
 	var textline2 = compass() + '\n'
@@ -19,7 +19,7 @@ func _process(delta):
 	var textline4 = cz+'\n'
 	var textline5 = cy+'\n'
 	var textline6 = ''
-	var textline7 = ''#'Vertex attributes '+str(get_tree().get_root().get_render_info(Viewport.RENDER_INFO_VERTICES_IN_FRAME))+'\n'
+	var textline7 = ''#'Vertex attributes '+str(get_tree().get_root().get_rendering_info(SubViewport.RENDER_INFO_VERTICES_IN_FRAME))+'\n'
 	
 	text = textline1+textline2+textline3+textline4+textline5+textline6+textline7
 

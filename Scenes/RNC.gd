@@ -7,7 +7,7 @@ const RNC_PACKED_CRC_ERROR = -4
 const RNC_UNPACKED_CRC_ERROR = -5
 const RNC_SIGNATURE = 0x524E4301
 
-const CRCTAB = PoolIntArray([
+const CRCTAB = PackedInt32Array([
 	0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
 	0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
 	0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -42,7 +42,7 @@ const CRCTAB = PoolIntArray([
 	0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
 ])
 
-const MIRROR_8BIT = PoolIntArray([
+const MIRROR_8BIT = PackedInt32Array([
 	0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0, 0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0,
 	0x08, 0x88, 0x48, 0xC8, 0x28, 0xA8, 0x68, 0xE8, 0x18, 0x98, 0x58, 0xD8, 0x38, 0xB8, 0x78, 0xF8,
 	0x04, 0x84, 0x44, 0xC4, 0x24, 0xA4, 0x64, 0xE4, 0x14, 0x94, 0x54, 0xD4, 0x34, 0xB4, 0x74, 0xF4,
@@ -76,7 +76,7 @@ static func _mirror_fast(x: int, n: int) -> int:
 	return result
 
 
-static func rnc_crc(data: PoolByteArray) -> int:
+static func rnc_crc(data: PackedByteArray) -> int:
 	var val = 0
 	var dataSize = data.size()
 	for idx in range(dataSize):
@@ -85,15 +85,15 @@ static func rnc_crc(data: PoolByteArray) -> int:
 	return val & 0xFFFF
 
 
-static func blong(data: PoolByteArray, offset: int = 0) -> int:
+static func blong(data: PackedByteArray, offset: int = 0) -> int:
 	return (data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3]
 
 
-static func bword(data: PoolByteArray, offset: int = 0) -> int:
+static func bword(data: PackedByteArray, offset: int = 0) -> int:
 	return (data[offset] << 8) | data[offset + 1]
 
 
-static func rnc_unpack(packed: PoolByteArray):
+static func rnc_unpack(packed: PackedByteArray):
 	var packed_size = packed.size()
 	if packed_size < 18 or blong(packed, 0) != RNC_SIGNATURE:
 		return RNC_FILE_IS_NOT_RNC
@@ -110,7 +110,7 @@ static func rnc_unpack(packed: PoolByteArray):
 		return RNC_PACKED_CRC_ERROR
 	
 	var out_crc = bword(packed, 12)
-	var output = PoolByteArray()
+	var output = PackedByteArray()
 	output.resize(ret_len)
 	
 	var input_offset = 0
@@ -135,17 +135,17 @@ static func rnc_unpack(packed: PoolByteArray):
 	
 	var output_pos = 0
 	var chunk_num = 0
-	var raw_codes = PoolIntArray()
-	var raw_codelens = PoolIntArray()
-	var raw_values = PoolIntArray()
+	var raw_codes = PackedInt32Array()
+	var raw_codelens = PackedInt32Array()
+	var raw_values = PackedInt32Array()
 	var raw_num = 0
-	var dist_codes = PoolIntArray()
-	var dist_codelens = PoolIntArray()
-	var dist_values = PoolIntArray()
+	var dist_codes = PackedInt32Array()
+	var dist_codelens = PackedInt32Array()
+	var dist_values = PackedInt32Array()
 	var dist_num = 0
-	var len_codes = PoolIntArray()
-	var len_codelens = PoolIntArray()
-	var len_values = PoolIntArray()
+	var len_codes = PackedInt32Array()
+	var len_codelens = PackedInt32Array()
+	var len_values = PackedInt32Array()
 	var len_num = 0
 	raw_codes.resize(32)
 	raw_codelens.resize(32)
@@ -174,7 +174,7 @@ static func rnc_unpack(packed: PoolByteArray):
 			bitcount += 16
 		
 		if entry_num:
-			var leaflen = PoolIntArray()
+			var leaflen = PackedInt32Array()
 			leaflen.resize(entry_num)
 			var leafmax = 1
 			for i in range(entry_num):
@@ -219,7 +219,7 @@ static func rnc_unpack(packed: PoolByteArray):
 			bitcount += 16
 		
 		if entry_num:
-			var leaflen = PoolIntArray()
+			var leaflen = PackedInt32Array()
 			leaflen.resize(entry_num)
 			var leafmax = 1
 			for i in range(entry_num):
@@ -264,7 +264,7 @@ static func rnc_unpack(packed: PoolByteArray):
 			bitcount += 16
 		
 		if entry_num:
-			var leaflen = PoolIntArray()
+			var leaflen = PackedInt32Array()
 			leaflen.resize(entry_num)
 			var leafmax = 1
 			for i in range(entry_num):
@@ -450,43 +450,43 @@ static func rnc_unpack(packed: PoolByteArray):
 	return output if rnc_crc(output) == out_crc else RNC_UNPACKED_CRC_ERROR
 
 
-static func load_file(path: String) -> PoolByteArray:
+static func load_file(path: String) -> PackedByteArray:
 	var file = File.new()
 	if file.open(path, File.READ) != OK:
-		return PoolByteArray()
-	var data = file.get_buffer(file.get_len())
+		return PackedByteArray()
+	var data = file.get_buffer(file.get_length())
 	file.close()
 	return data
 
 
-func decompress_to_bytes(path: String) -> PoolByteArray:
+func decompress_to_bytes(path: String) -> PackedByteArray:
 	var packed_data = load_file(path)
-	if packed_data.empty():
-		return PoolByteArray()
+	if packed_data.is_empty():
+		return PackedByteArray()
 	var result = rnc_unpack(packed_data)
-	return result if typeof(result) != TYPE_INT else PoolByteArray()
+	return result if typeof(result) != TYPE_INT else PackedByteArray()
 
 
-func decompress(path: String) -> PoolByteArray:
+func decompress(path: String) -> PackedByteArray:
 	var file = File.new()
 	if file.open(path, File.READ) != OK:
-		return PoolByteArray()
+		return PackedByteArray()
 	
-	var file_data = file.get_buffer(file.get_len())
+	var file_data = file.get_buffer(file.get_length())
 	file.close()
 	
 	if file_data.size() < 4:
-		return PoolByteArray()
+		return PackedByteArray()
 	
 	if file_data[0] != 82 or file_data[1] != 78 or file_data[2] != 67 or file_data[3] != 1:
 		return file_data
 	
 	var decompressed_data = rnc_unpack(file_data)
-	if typeof(decompressed_data) == TYPE_INT or decompressed_data.empty():
-		return PoolByteArray()
+	if typeof(decompressed_data) == TYPE_INT or decompressed_data.is_empty():
+		return PackedByteArray()
 	
 	if file.open(path, File.WRITE) != OK:
-		return PoolByteArray()
+		return PackedByteArray()
 	file.store_buffer(decompressed_data)
 	file.close()
 	
@@ -495,7 +495,7 @@ func decompress(path: String) -> PoolByteArray:
 
 func check_for_rnc_compression(path) -> bool:
 	var file = File.new()
-	if file.open(path, File.READ) != OK or file.get_len() < 4:
+	if file.open(path, File.READ) != OK or file.get_length() < 4:
 		if file.is_open():
 			file.close()
 		return false

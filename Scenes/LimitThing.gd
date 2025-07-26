@@ -1,6 +1,6 @@
 extends GridContainer
-onready var oSelection = Nodelist.list["oSelection"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oSelection = Nodelist.list["oSelection"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
 func _process(delta):
 	var thingType = oSelection.paintThingType
@@ -40,7 +40,7 @@ func _process(delta):
 					limit = Things.ACTION_POINT_LIMIT
 				2:
 					typeName = "Lights"
-					groupName = "Light"
+					groupName = "Light3D"
 					limit = Things.LIGHT_LIMIT
 		_:
 			visible = false

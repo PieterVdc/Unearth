@@ -1,38 +1,38 @@
 extends Node2D
-onready var oSelector = Nodelist.list["oSelector"]
-onready var oDataSlab = Nodelist.list["oDataSlab"]
-onready var oDataOwnership = Nodelist.list["oDataOwnership"]
-onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
-onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
-onready var oOwnerSelection = Nodelist.list["oOwnerSelection"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oThingDetails = Nodelist.list["oThingDetails"]
-onready var oInstances = Nodelist.list["oInstances"]
-onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oSlabStyle = Nodelist.list["oSlabStyle"]
-onready var oDataSlx = Nodelist.list["oDataSlx"]
-onready var oDisplayOverlapping = Nodelist.list["oDisplayOverlapping"]
-onready var oOwnableNaturalTerrain = Nodelist.list["oOwnableNaturalTerrain"]
-onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
-onready var oRectangleSelection = Nodelist.list["oRectangleSelection"]
-onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
-onready var oInspector = Nodelist.list["oInspector"]
-onready var oCustomSlabsTab = Nodelist.list["oCustomSlabsTab"]
-onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
-onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
-onready var oEditingTools = Nodelist.list["oEditingTools"]
-onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oBrushPreview = Nodelist.list["oBrushPreview"]
-onready var oPlaceThingsAnywhere = Nodelist.list["oPlaceThingsAnywhere"]
-onready var oSlabSideViewer = Nodelist.list["oSlabSideViewer"]
-onready var oUseSlabOwnerCheckBox = Nodelist.list["oUseSlabOwnerCheckBox"]
-onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
-onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
+@onready var oSelector = Nodelist.list["oSelector"]
+@onready var oDataSlab = Nodelist.list["oDataSlab"]
+@onready var oDataOwnership = Nodelist.list["oDataOwnership"]
+@onready var oOverheadOwnership = Nodelist.list["oOverheadOwnership"]
+@onready var oPickSlabWindow = Nodelist.list["oPickSlabWindow"]
+@onready var oOwnerSelection = Nodelist.list["oOwnerSelection"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oThingDetails = Nodelist.list["oThingDetails"]
+@onready var oInstances = Nodelist.list["oInstances"]
+@onready var oSlabPlacement = Nodelist.list["oSlabPlacement"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oPickThingWindow = Nodelist.list["oPickThingWindow"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oSlabStyle = Nodelist.list["oSlabStyle"]
+@onready var oDataSlx = Nodelist.list["oDataSlx"]
+@onready var oDisplayOverlapping = Nodelist.list["oDisplayOverlapping"]
+@onready var oOwnableNaturalTerrain = Nodelist.list["oOwnableNaturalTerrain"]
+@onready var oPropertiesWindow = Nodelist.list["oPropertiesWindow"]
+@onready var oRectangleSelection = Nodelist.list["oRectangleSelection"]
+@onready var oOnlyOwnership = Nodelist.list["oOnlyOwnership"]
+@onready var oInspector = Nodelist.list["oInspector"]
+@onready var oCustomSlabsTab = Nodelist.list["oCustomSlabsTab"]
+@onready var oDataFakeSlab = Nodelist.list["oDataFakeSlab"]
+@onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
+@onready var oEditingTools = Nodelist.list["oEditingTools"]
+@onready var oMirrorPlacementCheckBox = Nodelist.list["oMirrorPlacementCheckBox"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oBrushPreview = Nodelist.list["oBrushPreview"]
+@onready var oPlaceThingsAnywhere = Nodelist.list["oPlaceThingsAnywhere"]
+@onready var oSlabSideViewer = Nodelist.list["oSlabSideViewer"]
+@onready var oUseSlabOwnerCheckBox = Nodelist.list["oUseSlabOwnerCheckBox"]
+@onready var oPlacingSettings = Nodelist.list["oPlacingSettings"]
+@onready var oSlabNameDisplay = Nodelist.list["oSlabNameDisplay"]
 
 enum {
 	CONSTRUCT_BRUSH
@@ -43,24 +43,24 @@ enum {
 
 var texBlueCursor = preload("res://Art/Cursor32x32Blue.png")
 var texGreenCursor = preload("res://Art/Cursor32x32.png")
-onready var TILE_SIZE = Constants.TILE_SIZE
-onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
+@onready var TILE_SIZE = Constants.TILE_SIZE
+@onready var SUBTILE_SIZE = Constants.SUBTILE_SIZE
 
 var cursorOverSlab = 0
 var cursorOverSlabOwner = 5
 var cursorOnInstancesArray = []
 
-var paintSlab = null setget newPaintSlab
-var paintThingType = null setget newPaintThingType
-var paintSubtype = null setget newPaintSubtype
-var paintOwnership = 0 setget newOwnership
+var paintSlab = null: set = newPaintSlab
+var paintThingType = null: set = newPaintThingType
+var paintSubtype = null: set = newPaintSubtype
+var paintOwnership = 0: set = newOwnership
 
 func _process(delta):
 	update_under_cursor()
 	clean_up_cursor_array()
 	
 	if oSelector.mode == oSelector.MODE_SUBTILE:
-		if cursorOnInstancesArray.empty() == false:
+		if cursorOnInstancesArray.is_empty() == false:
 			$"../SubtileSelector".texture = texBlueCursor
 		else:
 			$"../SubtileSelector".texture = texGreenCursor
@@ -68,7 +68,7 @@ func _process(delta):
 func _input(event):
 	if oLoadingBar.visible == true: return
 	
-	if cursorOnInstancesArray.empty() == false and is_instance_valid(cursorOnInstancesArray[0]) == true and oSelector.mode == oSelector.MODE_SUBTILE:
+	if cursorOnInstancesArray.is_empty() == false and is_instance_valid(cursorOnInstancesArray[0]) == true and oSelector.mode == oSelector.MODE_SUBTILE:
 		Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	elif Input.get_current_cursor_shape() == Input.CURSOR_POINTING_HAND:
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
@@ -124,11 +124,11 @@ func update_paint():
 				newPaintSlab(cursorOverSlab)
 				oPickSlabWindow.set_selection(cursorOverSlab)
 				
-				if cursorOverSlabOwner != 5 or oOwnableNaturalTerrain.pressed == true or Slabs.data[cursorOverSlab][Slabs.IS_OWNABLE] == true:
+				if cursorOverSlabOwner != 5 or oOwnableNaturalTerrain.button_pressed == true or Slabs.data[cursorOverSlab][Slabs.IS_OWNABLE] == true:
 					newOwnership(cursorOverSlabOwner)
 				
 		oSelector.MODE_SUBTILE:
-			if cursorOnInstancesArray.empty() == false:
+			if cursorOnInstancesArray.is_empty() == false:
 				if is_instance_valid(cursorOnInstancesArray[0]) == true:
 					newOwnership(cursorOnInstancesArray[0].ownership)
 					
@@ -217,13 +217,13 @@ func construct_shape_for_placement(constructType):
 	
 	if oSlabStyle.visible == true:
 		oDataSlx.set_tileset_shape(shapePositionArray)
-		if oMirrorPlacementCheckBox.pressed == true:
+		if oMirrorPlacementCheckBox.button_pressed == true:
 			oSlabPlacement.mirror_placement(shapePositionArray, oSlabPlacement.MIRROR_STYLE)
 	elif oOnlyOwnership.visible == true:
 		
 		oOverheadOwnership.ownership_paint_shape(shapePositionArray, paintOwnership)
 		oOverheadOwnership.ownership_update_things(shapePositionArray, paintOwnership)
-		if oMirrorPlacementCheckBox.pressed == true:
+		if oMirrorPlacementCheckBox.button_pressed == true:
 			oSlabPlacement.mirror_placement(shapePositionArray, oSlabPlacement.MIRROR_ONLY_OWNERSHIP)
 		
 		var updateNearby = some_manual_placements_dont_update_nearby()
@@ -235,7 +235,7 @@ func construct_shape_for_placement(constructType):
 			
 			oSlabPlacement.place_shape_of_slab_id(shapePositionArray, paintSlab, useOwner)
 			
-			if oMirrorPlacementCheckBox.pressed == true:
+			if oMirrorPlacementCheckBox.button_pressed == true:
 				oSlabPlacement.mirror_placement(shapePositionArray, oSlabPlacement.MIRROR_SLAB_AND_OWNER)
 			
 			var updateNearby = some_manual_placements_dont_update_nearby()
@@ -261,7 +261,7 @@ func place_subtile(placeSubtile):
 			return
 	oEditor.mapHasBeenEdited = true
 	
-	if oUseSlabOwnerCheckBox.pressed == true and visible == true:
+	if oUseSlabOwnerCheckBox.button_pressed == true and visible == true:
 		newOwnership(oDataOwnership.get_cellv_ownership(oSelector.cursorTile))
 	
 	if paintThingType != null:
@@ -273,15 +273,15 @@ func place_subtile(placeSubtile):
 				match paintSubtype:
 					1:
 						oInstances.place_new_action_point(paintThingType, paintSubtype, newPos, paintOwnership)
-						if oMirrorPlacementCheckBox.pressed == true:
+						if oMirrorPlacementCheckBox.button_pressed == true:
 							oInstances.mirror_instance_placement(paintThingType, paintSubtype, newPos, paintOwnership, oInstances.MIRROR_ACTIONPOINT)
 					2:
 						oInstances.place_new_light(paintThingType, paintSubtype, newPos, paintOwnership)
-						if oMirrorPlacementCheckBox.pressed == true:
+						if oMirrorPlacementCheckBox.button_pressed == true:
 							oInstances.mirror_instance_placement(paintThingType, paintSubtype, newPos, paintOwnership, oInstances.MIRROR_LIGHT)
 			_:
 				oInstances.place_new_thing(paintThingType, paintSubtype, newPos, paintOwnership)
-				if oMirrorPlacementCheckBox.pressed == true:
+				if oMirrorPlacementCheckBox.button_pressed == true:
 					oInstances.mirror_instance_placement(paintThingType, paintSubtype, newPos, paintOwnership, oInstances.MIRROR_THING)
 
 func clean_up_cursor_array():
@@ -302,7 +302,7 @@ func manually_delete_one_instance(inst):
 		if inst.is_in_group("ActionPoint"):
 			oScriptHelpers.start() # Update when action points change
 		
-		if oMirrorPlacementCheckBox.pressed == true:
+		if oMirrorPlacementCheckBox.button_pressed == true:
 			oInstances.mirror_deletion_of_instance(inst)
 		
 		oInstances.kill_instance(inst)

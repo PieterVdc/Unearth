@@ -1,7 +1,7 @@
 shader_type canvas_item;
 render_mode blend_mix;
 
-uniform vec4 flashSpecific : hint_color = vec4(0.00001,0.00002,0.00003,0.00004); //Default to something unique so nothing flashes
+uniform vec4 flashSpecific : source_color = vec4(0.00001,0.00002,0.00003,0.00004); //Default to something unique so nothing flashes
 
 void fragment() {
 	vec4 baseCol = texture(TEXTURE, UV);

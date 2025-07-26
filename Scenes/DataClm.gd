@@ -1,11 +1,11 @@
 extends 'res://Class/ClmClass.gd'
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oTimerUpdateColumnEntries = Nodelist.list["oTimerUpdateColumnEntries"]
-onready var oDataClmPos = Nodelist.list["oDataClmPos"]
-onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
-onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
-onready var oUniversalDetails = Nodelist.list["oUniversalDetails"]
-onready var oConfirmClmEntriesFull = Nodelist.list["oConfirmClmEntriesFull"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oTimerUpdateColumnEntries = Nodelist.list["oTimerUpdateColumnEntries"]
+@onready var oDataClmPos = Nodelist.list["oDataClmPos"]
+@onready var oFlashingColumns = Nodelist.list["oFlashingColumns"]
+@onready var oOverheadGraphics = Nodelist.list["oOverheadGraphics"]
+@onready var oUniversalDetails = Nodelist.list["oUniversalDetails"]
+@onready var oConfirmClmEntriesFull = Nodelist.list["oConfirmClmEntriesFull"]
 
 var column_count = 8192
 
@@ -23,7 +23,7 @@ var default_data = {}
 
 func _ready():
 	if is_instance_valid(oConfirmClmEntriesFull):
-		oConfirmClmEntriesFull.connect("confirmed", self, "_on_ConfirmClmEntriesFull_confirmed")
+		oConfirmClmEntriesFull.connect("confirmed", Callable(self, "_on_ConfirmClmEntriesFull_confirmed"))
 
 func store_default_data():
 	default_data["utilized"] = utilized.duplicate(true)
@@ -39,20 +39,20 @@ func store_default_data():
 
 
 func clm_data_exists():
-	if cubes.empty() == true:
+	if cubes.is_empty() == true:
 		return false # Nothing in arrays, so column data doesn't exist
 	else:
 		return true # Something in arrays, so column data exists
 
 
 func count_filled_clm_entries():
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	var numberOfFilledEntries = 0
 	for entry in column_count:
 		if cubes[entry] != [0,0,0,0, 0,0,0,0]:
 			numberOfFilledEntries += 1
 	oUniversalDetails.clmEntryCount = numberOfFilledEntries
-	print('count_filled_clm_entries: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('count_filled_clm_entries: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	return numberOfFilledEntries
 
 func index_entry(cubeArray, setFloorID):
@@ -83,7 +83,7 @@ func update_all_utilized():
 		return
 	a_column_has_changed_since_last_updating_utilized = false
 	
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	for clearIndex in column_count:
 		utilized[clearIndex] = 0
 	for y in (M.ySize*3):
@@ -91,7 +91,7 @@ func update_all_utilized():
 			var value = oDataClmPos.get_cell_clmpos(x,y)
 			utilized[value] += 1
 	
-	print('All CLM utilized updated in '+str(OS.get_ticks_msec()-CODETIME_START)+'ms')
+	print('All CLM utilized updated in '+str(Time.get_ticks_msec()-CODETIME_START)+'ms')
 
 
 func _on_ConfirmClmEntriesFull_confirmed():
@@ -113,7 +113,7 @@ func sort_columns_by_utilized():
 	
 	utilized[0] = 999999 # Pretend that the utilized value is maximum for column 0, so it's placed first when sorted. Set it back to 0 afterwards.
 	
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	for i in column_count:
 		array.append([
 			i,
@@ -128,7 +128,7 @@ func sort_columns_by_utilized():
 		])
 	
 	# Sort
-	array.sort_custom(self, "sorter_utilized")
+	array.sort_custom(Callable(self, "sorter_utilized"))
 	
 	for i in column_count:
 		var sourceIndex = array[i][0]
@@ -157,7 +157,7 @@ func sort_columns_by_utilized():
 	
 	utilized[0] = 0 # Pretend that the utilized value is maximum for column 0, so it's placed first. Set it back to 0 afterwards.
 	
-	print('Codetime: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('Codetime: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 
 static func sorter_utilized(a, b):
 	if a[1] == b[1]:

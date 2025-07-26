@@ -116,7 +116,7 @@ func get_top_cube_face(clmIndex):
 	for i in range(7, -1, -1):
 		var cubeID = cubeArray[i]
 		if cubeID != 0:
-			return Cube.tex[cubeID][Cube.SIDE_TOP] if cubeID <= Cube.CUBES_COUNT else 1
+			return Cube.tex[cubeID][Cube.MARGIN_TOP] if cubeID <= Cube.CUBES_COUNT else 1
 	return self.floorTexture[clmIndex]
 
 

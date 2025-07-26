@@ -1,16 +1,16 @@
 extends Node
 
-onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
-onready var oBuffers = Nodelist.list["oBuffers"]
-onready var oCurrentMap = Nodelist.list["oCurrentMap"]
-onready var oOpenMap = Nodelist.list["oOpenMap"]
-onready var oMessage = Nodelist.list["oMessage"]
-onready var oThreadedSaveUndo = Nodelist.list["oThreadedSaveUndo"]
-onready var oLoadingBar = Nodelist.list["oLoadingBar"]
-onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oMenu = Nodelist.list["oMenu"]
-onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
+@onready var oCurrentFormat = Nodelist.list["oCurrentFormat"]
+@onready var oBuffers = Nodelist.list["oBuffers"]
+@onready var oCurrentMap = Nodelist.list["oCurrentMap"]
+@onready var oOpenMap = Nodelist.list["oOpenMap"]
+@onready var oMessage = Nodelist.list["oMessage"]
+@onready var oThreadedSaveUndo = Nodelist.list["oThreadedSaveUndo"]
+@onready var oLoadingBar = Nodelist.list["oLoadingBar"]
+@onready var oNewMapWindow = Nodelist.list["oNewMapWindow"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oMenu = Nodelist.list["oMenu"]
+@onready var oMapSettingsWindow = Nodelist.list["oMapSettingsWindow"]
 
 
 var undo_history = []
@@ -40,11 +40,11 @@ func _process(delta):
 	if undo_save_queued == true:
 		set_process(false)
 		while true:
-			if Input.is_mouse_button_pressed(BUTTON_LEFT) or \
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or \
 				oLoadingBar.visible == true or \
 				oNewMapWindow.currently_creating_new_map == true or \
 				performing_undo == true:
-					yield(get_tree(), "idle_frame")
+					await get_tree().idle_frame
 			else:
 				break
 		oThreadedSaveUndo.semaphore.post()
@@ -76,7 +76,7 @@ func perform_undo():
 		oMessage.big("Undo state error", "previous_state is not a dictionary")
 		return
 	
-	var CODETIME_START = OS.get_ticks_msec()
+	var CODETIME_START = Time.get_ticks_msec()
 	performing_undo = true
 	
 	oCurrentMap.clear_map()
@@ -87,9 +87,9 @@ func perform_undo():
 			print("Undo state error: buffer '%s' is not a valid StreamPeerBuffer" % EXT)
 			oMessage.big("Undo state error", "Buffer '%s' is not a valid StreamPeerBuffer" % EXT)
 			continue
-		var undotimeExt = OS.get_ticks_msec()
+		var undotimeExt = Time.get_ticks_msec()
 		oBuffers.read_buffer_for_extension(buffer, EXT)
-		print(str(EXT) + ' Undotime: ' + str(OS.get_ticks_msec() - undotimeExt) + 'ms')
+		print(str(EXT) + ' Undotime: ' + str(Time.get_ticks_msec() - undotimeExt) + 'ms')
 
 	oOpenMap.continue_load(oCurrentMap.path)
 	undo_history.pop_front()
@@ -101,11 +101,11 @@ func perform_undo():
 	elif undo_history.size() <= 1:
 		oEditor.mapHasBeenEdited = false
 	
-	print('perform_undo: ' + str(OS.get_ticks_msec() - CODETIME_START) + 'ms')
+	print('perform_undo: ' + str(Time.get_ticks_msec() - CODETIME_START) + 'ms')
 	
-	var IDLE_FRAME_CODETIME_START = OS.get_ticks_msec()
+	var IDLE_FRAME_CODETIME_START = Time.get_ticks_msec()
 	
-	print('Idle frame (after undo): ' + str(OS.get_ticks_msec() - IDLE_FRAME_CODETIME_START) + 'ms')
+	print('Idle frame (after undo): ' + str(Time.get_ticks_msec() - IDLE_FRAME_CODETIME_START) + 'ms')
 	
 	performing_undo = false
 

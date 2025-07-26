@@ -1,35 +1,35 @@
-extends WindowDialog
+extends Window
 
 # Color Constants
 const UI_BACKGROUND = Color("#2c2a32")
 const UI_BORDER = Color8(44, 42, 50)
 const UI_TEXT_NORMAL = Color8(145, 142, 169)
-const UI_TEXT_MODIFIED = Color.white
+const UI_TEXT_MODIFIED = Color.WHITE
 const UI_TEXT_HOVER = Color8(255, 217, 193)
 const UI_TEXT_CONTROL_ALTERNATE = Color8(148, 145, 159)
 const UI_HEADER_NORMAL = Color("#ff9ea3")
 const UI_PANEL_NORMAL = Color(1, 1, 1, 1)
 const UI_PANEL_MODIFIED = Color(1.4, 1.4, 1.7, 1.0)
 
-onready var oTabRules = Nodelist.list["oTabRules"]
-onready var oRulesSacrifices = Nodelist.list["oRulesSacrifices"]
-onready var oRulesResearch = Nodelist.list["oRulesResearch"]
-onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
-onready var oCfgTabs = Nodelist.list["oCfgTabs"]
-onready var oLabelCfgComment = Nodelist.list["oLabelCfgComment"]
-onready var oPanelCfgComment = Nodelist.list["oPanelCfgComment"]
+@onready var oTabRules = Nodelist.list["oTabRules"]
+@onready var oRulesSacrifices = Nodelist.list["oRulesSacrifices"]
+@onready var oRulesResearch = Nodelist.list["oRulesResearch"]
+@onready var oConfigFileManager = Nodelist.list["oConfigFileManager"]
+@onready var oCfgTabs = Nodelist.list["oCfgTabs"]
+@onready var oLabelCfgComment = Nodelist.list["oLabelCfgComment"]
+@onready var oPanelCfgComment = Nodelist.list["oPanelCfgComment"]
 
-onready var main_panel = $CfgTabs/TabRules/MarginContainer/ScrollContainer/MarginContainer
-onready var main_container = $CfgTabs/TabRules/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer
-onready var scroll_container = $CfgTabs/TabRules/MarginContainer/ScrollContainer
-onready var revert_button_scene = preload("res://Class/GenericRevertButton.tscn")
+@onready var main_panel = $CfgTabs/TabRules/MarginContainer/ScrollContainer/MarginContainer
+@onready var main_container = $CfgTabs/TabRules/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer
+@onready var scroll_container = $CfgTabs/TabRules/MarginContainer/ScrollContainer
+@onready var revert_button_scene = preload("res://Class/GenericRevertButton.tscn")
 
 var ui_built: bool = false
-var font = DynamicFont.new()
+var font = FontFile.new()
 var control_references: Dictionary = {}
 var section_vboxes: Dictionary = {}
 var item_panels: Dictionary = {}
-var popup_selection: WindowDialog = null
+var popup_selection: Window = null
 var current_selection_callback: FuncRef = null
 
 func _ready():
@@ -37,8 +37,8 @@ func _ready():
 	oPanelCfgComment.visible = false
 	oPanelCfgComment.set_v_size_flags(Control.SIZE_SHRINK_END)
 	
-	connect("about_to_show", self, "_on_about_to_show")
-	oPanelCfgComment.connect("mouse_entered", self, "_on_panel_cfg_comment_mouse_entered")
+	connect("about_to_popup", Callable(self, "_on_about_to_show"))
+	oPanelCfgComment.connect("mouse_entered", Callable(self, "_on_panel_cfg_comment_mouse_entered"))
 	
 	#yield(get_tree(),'idle_frame')
 	#Utils.popup_centered(self)
@@ -78,15 +78,15 @@ func create_darker_border_stylebox():
 
 func setup_script_editor_font(control: Control):
 	if control is Label:
-		control.add_font_override("font", font)
+		control.add_theme_font_override("font", font)
 	elif control is LineEdit:
-		control.add_font_override("font", font)
+		control.add_theme_font_override("font", font)
 	elif control is Button:
-		control.add_font_override("font", font)
+		control.add_theme_font_override("font", font)
 	elif control is LinkButton:
-		control.add_font_override("font", font)
+		control.add_theme_font_override("font", font)
 	elif control is SpinBox:
-		control.get_line_edit().add_font_override("font", font)
+		control.get_line_edit().add_theme_font_override("font", font)
 
 
 func start():
@@ -99,29 +99,29 @@ func build_rules_editor():
 		child.queue_free()
 	
 	var rules_data = oConfigFileManager.DATA_RULES
-	if rules_data.empty():
+	if rules_data.is_empty():
 		create_no_data_label()
 		return
 	
 	var main_vbox = VBoxContainer.new()
 	main_vbox.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	main_vbox.add_constant_override("separation", 10)
+	main_vbox.add_theme_constant_override("separation", 10)
 	main_container.add_child(main_vbox)
 	
 	
 	var columns_container = HBoxContainer.new()
 	columns_container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	columns_container.add_constant_override("separation", 10)
+	columns_container.add_theme_constant_override("separation", 10)
 	main_vbox.add_child(columns_container)
 	
 	var left_column = VBoxContainer.new()
 	left_column.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	left_column.add_constant_override("separation", 10)
+	left_column.add_theme_constant_override("separation", 10)
 	columns_container.add_child(left_column)
 	
 	var right_column = VBoxContainer.new()
 	right_column.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	right_column.add_constant_override("separation", 10)
+	right_column.add_theme_constant_override("separation", 10)
 	columns_container.add_child(right_column)
 	
 	for section_name in rules_data.keys():
@@ -136,7 +136,7 @@ func build_rules_editor():
 func create_no_data_label():
 	var label = Label.new()
 	label.text = "No rules configuration loaded. Load a map first."
-	label.align = Label.ALIGN_CENTER
+	label.align = Label.ALIGNMENT_CENTER
 	setup_script_editor_font(label)
 	main_container.add_child(label)
 
@@ -153,7 +153,7 @@ func create_section_vbox_in_column(parent_column: VBoxContainer, section_name: S
 func create_section_container(parent: VBoxContainer, section_name: String) -> VBoxContainer:
 	var section_vbox = VBoxContainer.new()
 	section_vbox.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-	section_vbox.add_constant_override("separation", 0)
+	section_vbox.add_theme_constant_override("separation", 0)
 	parent.add_child(section_vbox)
 	section_vboxes[section_name] = section_vbox
 	return section_vbox
@@ -166,13 +166,13 @@ func create_section_header(section_vbox: VBoxContainer, section_name: String) ->
 	header_panel.add_child(header_container)
 	var header_label = Label.new()
 	header_label.text = "[" + section_name + "]"
-	header_label.align = Label.ALIGN_CENTER
+	header_label.align = Label.ALIGNMENT_CENTER
 	header_label.valign = Label.VALIGN_CENTER
 	header_label.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	setup_script_editor_font(header_label)
 	header_container.add_child(header_label)
-	var section_revert_button = revert_button_scene.instance()
-	section_revert_button.connect("pressed", self, "_on_revert_section_pressed", [section_name])
+	var section_revert_button = revert_button_scene.instantiate()
+	section_revert_button.connect("pressed", Callable(self, "_on_revert_section_pressed").bind(section_name))
 	header_container.add_child(section_revert_button)
 	section_vbox.add_child(header_panel)
 	return header_panel
@@ -195,18 +195,18 @@ func create_section_add_button(section_vbox: VBoxContainer, section_name: String
 		var button_container = HBoxContainer.new()
 		var add_button = Button.new()
 		add_button.text = "Add new"
-		add_button.rect_min_size.x = 120
+		add_button.custom_minimum_size.x = 120
 		add_button.set_h_size_flags(Control.SIZE_SHRINK_CENTER)
 		setup_script_editor_font(add_button)
 		button_container.add_child(add_button)
 		button_container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-		button_container.alignment = BoxContainer.ALIGN_CENTER
+		button_container.alignment = BoxContainer.ALIGNMENT_CENTER
 		section_vbox.add_child(button_container)
 		if section_name == "sacrifices":
-			add_button.connect("pressed", oRulesSacrifices, "_on_add_sacrifice_pressed", [section_name])
+			add_button.connect("pressed", Callable(oRulesSacrifices, "_on_add_sacrifice_pressed").bind(section_name))
 			oRulesSacrifices.add_button = add_button
 		else:
-			add_button.connect("pressed", oRulesResearch, "_on_add_research_pressed", [section_name])
+			add_button.connect("pressed", Callable(oRulesResearch, "_on_add_research_pressed").bind(section_name))
 			oRulesResearch.add_button = add_button
 
 
@@ -312,28 +312,28 @@ func rebuild_specific_section(section_name: String):
 		var button_container = HBoxContainer.new()
 		var add_button = Button.new()
 		add_button.text = "Add new"
-		add_button.hint_tooltip = "Add new sacrifice"
-		add_button.rect_min_size.x = 120
+		add_button.tooltip_text = "Add new sacrifice"
+		add_button.custom_minimum_size.x = 120
 		add_button.set_h_size_flags(Control.SIZE_SHRINK_CENTER)
 		setup_script_editor_font(add_button)
-		add_button.connect("pressed", oRulesSacrifices, "_on_add_sacrifice_pressed", [section_name])
+		add_button.connect("pressed", Callable(oRulesSacrifices, "_on_add_sacrifice_pressed").bind(section_name))
 		button_container.add_child(add_button)
 		button_container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-		button_container.alignment = BoxContainer.ALIGN_CENTER
+		button_container.alignment = BoxContainer.ALIGNMENT_CENTER
 		section_vbox.add_child(button_container)
 		oRulesSacrifices.add_button = add_button
 	elif section_name == "research":
 		var button_container = HBoxContainer.new()
 		var add_button = Button.new()
 		add_button.text = "Add new"
-		add_button.hint_tooltip = "Add new research"
-		add_button.rect_min_size.x = 120
+		add_button.tooltip_text = "Add new research"
+		add_button.custom_minimum_size.x = 120
 		add_button.set_h_size_flags(Control.SIZE_SHRINK_CENTER)
 		setup_script_editor_font(add_button)
-		add_button.connect("pressed", oRulesResearch, "_on_add_research_pressed", [section_name])
+		add_button.connect("pressed", Callable(oRulesResearch, "_on_add_research_pressed").bind(section_name))
 		button_container.add_child(add_button)
 		button_container.set_h_size_flags(Control.SIZE_EXPAND_FILL)
-		button_container.alignment = BoxContainer.ALIGN_CENTER
+		button_container.alignment = BoxContainer.ALIGNMENT_CENTER
 		section_vbox.add_child(button_container)
 		oRulesResearch.add_button = add_button
 	
@@ -361,14 +361,14 @@ func update_all_standard_controls(section_name: String):
 
 
 func _on_control_mouse_entered(key_label: Label, control_node: Control, section_name: String, key: String):
-	key_label.add_color_override("font_color", UI_TEXT_HOVER)
+	key_label.add_theme_color_override("font_color", UI_TEXT_HOVER)
 	if control_node != null:
 		if control_node is SpinBox:
-			control_node.get_line_edit().add_color_override("font_color", UI_TEXT_HOVER)
+			control_node.get_line_edit().add_theme_color_override("font_color", UI_TEXT_HOVER)
 		else:
-			control_node.add_color_override("font_color", UI_TEXT_HOVER)
+			control_node.add_theme_color_override("font_color", UI_TEXT_HOVER)
 	
-	yield(get_tree(),'idle_frame')
+	await get_tree().idle_frame
 	
 	var comments = oConfigFileManager.get_comments_for_key("rules.cfg", section_name, key)
 	if comments.size() > 0:
@@ -393,7 +393,7 @@ func _on_control_mouse_exited(key_label: Label, control_node: Control, section_n
 			update_control_color(section_name, key, control_node)
 
 func _on_spinbox_focus_entered(spinbox: SpinBox):
-	spinbox.get_line_edit().add_color_override("font_color", UI_TEXT_HOVER)
+	spinbox.get_line_edit().add_theme_color_override("font_color", UI_TEXT_HOVER)
 
 
 func _on_spinbox_focus_exited(spinbox: SpinBox, section_name: String, key: String):
@@ -403,15 +403,15 @@ func _on_spinbox_focus_exited(spinbox: SpinBox, section_name: String, key: Strin
 func update_item_color(section_name: String, key, label: Label):
 	var is_different = check_item_difference(section_name, key)
 	var color = UI_TEXT_MODIFIED if is_different else UI_TEXT_NORMAL
-	label.add_color_override("font_color", color)
+	label.add_theme_color_override("font_color", color)
 
 func update_control_color(section_name: String, key, control: Control):
 	var is_different = check_item_difference(section_name, key)
 	var color = UI_TEXT_MODIFIED if is_different else UI_TEXT_CONTROL_ALTERNATE
 	if control is SpinBox:
-		control.get_line_edit().add_color_override("font_color", color)
+		control.get_line_edit().add_theme_color_override("font_color", color)
 	else:
-		control.add_color_override("font_color", color)
+		control.add_theme_color_override("font_color", color)
 
 
 func update_panel_color(section_name: String, key, item_panel: PanelContainer):
@@ -423,7 +423,7 @@ func check_item_difference(section_name: String, key) -> bool:
 	if section_name == "sacrifices" and key is int:
 		return oRulesSacrifices.is_sacrifice_item_different(key)
 	elif section_name == "research":
-		if key is String and key.is_valid_integer():
+		if key is String and key.is_valid_int():
 			return oRulesResearch.is_research_item_different(int(key))
 		elif key is int:
 			return oRulesResearch.is_research_item_different(key)
@@ -436,15 +436,15 @@ func update_section_header_color(section_name: String, header_panel: PanelContai
 	var header_container = header_panel.get_child(0)
 	var header_label = header_container.get_child(0)
 	if oConfigFileManager.is_section_different(section_name):
-		header_label.add_color_override("font_color", UI_TEXT_MODIFIED)
+		header_label.add_theme_color_override("font_color", UI_TEXT_MODIFIED)
 		header_panel.modulate = UI_PANEL_MODIFIED
 	else:
-		header_label.add_color_override("font_color", UI_HEADER_NORMAL)
+		header_label.add_theme_color_override("font_color", UI_HEADER_NORMAL)
 		header_panel.modulate = UI_PANEL_NORMAL
 
 
 func update_colors_after_change(section_name: String, key):
-	yield(get_tree(), "idle_frame")
+	await get_tree().idle_frame
 	update_specific_item_colors(section_name, key)
 	update_specific_section_header_color(section_name)
 	if section_name == "sacrifices":
@@ -480,7 +480,7 @@ func update_specific_section_header_color(section_name: String):
 
 
 func ensure_add_button_visible(add_button: Button):
-	yield(get_tree(), 'idle_frame')
+	await get_tree().idle_frame
 	if add_button:
 		scroll_container.ensure_control_visible(add_button)
 
@@ -508,11 +508,11 @@ func rebuild_ui():
 
 func _update_scrollbars():
 	if scroll_container:
-		scroll_container.get_v_scrollbar().visible = false
-		scroll_container.get_h_scrollbar().visible = false
-		yield(get_tree(),'idle_frame')
-		scroll_container.get_v_scrollbar().visible = true
-		scroll_container.get_h_scrollbar().visible = true
+		scroll_container.get_v_scroll_bar().visible = false
+		scroll_container.get_h_scroll_bar().visible = false
+		await get_tree().idle_frame
+		scroll_container.get_v_scroll_bar().visible = true
+		scroll_container.get_h_scroll_bar().visible = true
 
 
 func _on_selection_item_pressed(selected_item: String):

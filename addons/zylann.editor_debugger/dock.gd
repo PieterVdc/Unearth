@@ -1,16 +1,16 @@
-tool
+@tool
 extends Control
 
 const Util = preload("util.gd")
 
 signal node_selected(node)
 
-onready var _popup_menu = get_node("PopupMenu")
-onready var _save_branch_as_scene_button = get_node("PopupMenu/SaveBranchAsSceneButton")
-onready var _inspection_checkbox = get_node("VBoxContainer/ShowInInspectorCheckbox")
-onready var _label = get_node("VBoxContainer/Label")
-onready var _tree_view = get_node("VBoxContainer/Tree")
-onready var _save_branch_file_dialog = get_node("SaveBranchFileDialog")
+@onready var _popup_menu = get_node("PopupMenu")
+@onready var _save_branch_as_scene_button = get_node("PopupMenu/SaveBranchAsSceneButton")
+@onready var _inspection_checkbox = get_node("VBoxContainer/ShowInInspectorCheckbox")
+@onready var _label = get_node("VBoxContainer/Label")
+@onready var _tree_view = get_node("VBoxContainer/Tree")
+@onready var _save_branch_file_dialog = get_node("SaveBranchFileDialog")
 
 var _update_interval = 1.0
 var _time_before_next_update = 0.0
@@ -147,8 +147,8 @@ func _highlight_node(node):
 		_control_highlighter.hide()
 	elif node is Control:
 		var r = node.get_global_rect()
-		_control_highlighter.rect_position = r.position
-		_control_highlighter.rect_size = r.size
+		_control_highlighter.position = r.position
+		_control_highlighter.size = r.size
 		_control_highlighter.show()
 	else:
 		_control_highlighter.hide()
@@ -231,7 +231,7 @@ func _on_Tree_nothing_selected():
 func _input(event):
 	if event is InputEventKey:
 		if event.pressed:
-			if event.scancode == KEY_F12:
+			if event.keycode == KEY_F12:
 				pick(get_viewport().get_mouse_position())
 
 
@@ -265,7 +265,7 @@ func _pick(root, mpos, level = 0):
 		if (child is CanvasItem and not child.visible):
 			#print(s, child, " is invisible or viewport")
 			continue
-		if child is Viewport:
+		if child is SubViewport:
 			continue
 		if child == _control_highlighter:
 			continue

@@ -1,8 +1,8 @@
 extends Node2D
-onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
-onready var oCamera2D = Nodelist.list["oCamera2D"]
-onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
-onready var oUi = Nodelist.list["oUi"]
+@onready var oCustomTooltip = Nodelist.list["oCustomTooltip"]
+@onready var oCamera2D = Nodelist.list["oCamera2D"]
+@onready var oScriptHelpers = Nodelist.list["oScriptHelpers"]
+@onready var oUi = Nodelist.list["oUi"]
 
 
 # Declare member variables here. Examples:
@@ -12,7 +12,7 @@ onready var oUi = Nodelist.list["oUi"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	oCamera2D.connect("zoom_level_changed",self,"_on_zoom_level_changed")
+	oCamera2D.connect("zoom_level_changed", Callable(self, "_on_zoom_level_changed"))
 	_on_zoom_level_changed(oCamera2D.zoom)
 
 

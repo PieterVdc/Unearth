@@ -1,15 +1,15 @@
 extends Control
-onready var oDataClm = Nodelist.list["oDataClm"]
-onready var oSelector3D = Nodelist.list["oSelector3D"]
-onready var oEditor = Nodelist.list["oEditor"]
-onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
-onready var oColumnListData = Nodelist.list["oColumnListData"]
-onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
-onready var oCustomSlabVoxelView = Nodelist.list["oCustomSlabVoxelView"]
-onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
-onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
-onready var oUi = Nodelist.list["oUi"]
-onready var oSelector = Nodelist.list["oSelector"]
+@onready var oDataClm = Nodelist.list["oDataClm"]
+@onready var oSelector3D = Nodelist.list["oSelector3D"]
+@onready var oEditor = Nodelist.list["oEditor"]
+@onready var oGenerateTerrain = Nodelist.list["oGenerateTerrain"]
+@onready var oColumnListData = Nodelist.list["oColumnListData"]
+@onready var oClmEditorVoxelView = Nodelist.list["oClmEditorVoxelView"]
+@onready var oCustomSlabVoxelView = Nodelist.list["oCustomSlabVoxelView"]
+@onready var oTabClmEditor = Nodelist.list["oTabClmEditor"]
+@onready var oSlabsetMapRegenerator = Nodelist.list["oSlabsetMapRegenerator"]
+@onready var oUi = Nodelist.list["oUi"]
+@onready var oSelector = Nodelist.list["oSelector"]
 
 var currentlyLookingAtNode = null
 var instanceType = 0
